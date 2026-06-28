@@ -6,9 +6,9 @@ export type PostListItem = {
   slug: string;
   excerpt: string | null;
   coverImage: string | null;
-  published: boolean;
+  status: string;
   createdAt: Date;
-  author: { name: string | null; image: string | null };
+  author: { username: string };
   category: { name: string; slug: string } | null;
   tags: { name: string; slug: string }[];
   _count: { comments: number };
@@ -17,14 +17,14 @@ export type PostListItem = {
 export type PostDetail = PostListItem & {
   content: string;
   updatedAt: Date;
+  publishedAt: Date | null;
   comments: CommentDetail[];
 };
 
 export type CommentDetail = {
   id: string;
   content: string;
-  approved: boolean;
   createdAt: Date;
-  author: { name: string | null; image: string | null };
+  author: { username: string };
   replies: CommentDetail[];
 };

@@ -5,11 +5,11 @@ import { createPost } from "@/services/post.service";
 
 export async function GET() {
   const posts = await prisma.post.findMany({
-    where: { published: true },
+    where: { status: "PUBLISHED" },
     include: {
-      author: { select: { name: true } },
+      author: { select: { username: true } },
       category: { select: { name: true, slug: true } },
-      tags: { select: { name: true, slug: true } },
+      tags: { include: { tag: { select: { name: true, slug: true } } } },
       _count: { select: { comments: true } },
     },
     orderBy: { createdAt: "desc" },

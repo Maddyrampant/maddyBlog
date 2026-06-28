@@ -28,7 +28,7 @@ export default async function BlogPage({
                 <p className="mt-1 text-zinc-600 dark:text-zinc-400">{post.excerpt}</p>
               )}
               <div className="mt-2 flex items-center gap-3 text-sm text-zinc-500">
-                <span>{post.author.name}</span>
+                <span>{post.author.username}</span>
                 <span>·</span>
                 <time>{new Date(post.createdAt).toLocaleDateString()}</time>
                 {post.category && (

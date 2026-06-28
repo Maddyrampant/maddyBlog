@@ -5,8 +5,7 @@ export const createPostSchema = z.object({
   content: z.string().min(1),
   excerpt: z.string().max(500).optional(),
   coverImage: z.string().url().optional(),
-  published: z.boolean().optional(),
-  featured: z.boolean().optional(),
+  status: z.enum(["DRAFT", "PUBLISHED"]).optional(),
   categoryId: z.string().optional(),
   tagIds: z.array(z.string()).optional(),
 });

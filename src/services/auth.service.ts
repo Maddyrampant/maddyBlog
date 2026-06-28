@@ -15,15 +15,15 @@ export async function registerUser(input: RegisterInput) {
 
   const user = await prisma.user.create({
     data: {
-      name: data.name,
+      username: data.username,
       email: data.email,
-      password: hashedPassword,
+      passwordHash: hashedPassword,
     },
   });
 
   await createSession({ userId: user.id, email: user.email, role: user.role });
 
-  return { id: user.id, name: user.name, email: user.email };
+  return { id: user.id, username: user.username, email: user.email };
 }
 
 export async function loginUser(input: LoginInput) {
@@ -34,14 +34,14 @@ export async function loginUser(input: LoginInput) {
     throw new Error("Invalid credentials");
   }
 
-  const valid = await bcrypt.compare(data.password, user.password);
+  const valid = await bcrypt.compare(data.password, user.passwordHash);
   if (!valid) {
     throw new Error("Invalid credentials");
   }
 
   await createSession({ userId: user.id, email: user.email, role: user.role });
 
-  return { id: user.id, name: user.name, email: user.email, role: user.role };
+  return { id: user.id, username: user.username, email: user.email, role: user.role };
 }
 
 export async function logoutUser() {

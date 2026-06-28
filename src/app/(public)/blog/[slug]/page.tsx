@@ -3,6 +3,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { getPostBySlug } from "@/services/post.service";
 
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({
   params,
 }: {
@@ -18,8 +20,6 @@ export async function generateMetadata({
     description: post.excerpt ?? undefined,
   };
 }
-
-export const dynamic = "force-dynamic";
 
 export default async function PostPage({
   params,
@@ -37,7 +37,7 @@ export default async function PostPage({
         <h1 className="text-4xl font-bold tracking-tight mb-4">{post.title}</h1>
 
         <div className="flex items-center gap-3 text-sm text-zinc-500 mb-4">
-          <span>{post.author.name}</span>
+          <span>{post.author.username}</span>
           <span>·</span>
           <time>{new Date(post.createdAt).toLocaleDateString()}</time>
           {post.category && (

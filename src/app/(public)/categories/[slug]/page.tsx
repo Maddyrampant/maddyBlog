@@ -4,6 +4,8 @@ import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import { getPostsByCategory } from "@/services/post.service";
 
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({
   params,
 }: {
@@ -19,8 +21,6 @@ export async function generateMetadata({
     description: `Browse all posts in ${category.name}`,
   };
 }
-
-export const dynamic = "force-dynamic";
 
 export default async function CategoryPage({
   params,

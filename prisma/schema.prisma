@@ -12,80 +12,98 @@ enum Role {
   ADMIN
 }
 
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+}
+
 model User {
-  id        String    @id @default(cuid())
-  name      String?
-  email     String    @unique
-  password  String
-  role      Role      @default(USER)
-  image     String?
-  posts     Post[]
-  comments  Comment[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id           String    @id @default(uuid())
+  email        String    @unique
+  username     String    @unique
+  passwordHash String
+  role         Role      @default(USER)
+
+  posts        Post[]
+  comments     Comment[]
+
+  createdAt    DateTime  @default(now())
 }
 
 model Post {
-  id          String    @id @default(cuid())
+  id          String     @id @default(uuid())
   title       String
-  slug        String    @unique
+  slug        String     @unique
   content     String
   excerpt     String?
   coverImage  String?
-  published   Boolean   @default(false)
-  featured    Boolean   @default(false)
-  authorId    String
-  author      User      @relation(fields: [authorId], references: [id])
-  categoryId  String?
-  category    Category? @relation(fields: [categoryId], references: [id])
-  tags        Tag[]
-  comments    Comment[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
 
-  @@index([published, createdAt])
-  @@index([slug])
+  status      PostStatus @default(DRAFT)
+
+  authorId    String
+  author      User       @relation(fields: [authorId], references: [id])
+
+  categoryId  String?
+  category    Category?  @relation(fields: [categoryId], references: [id])
+
+  comments    Comment[]
+  tags        PostTag[]
+
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  publishedAt DateTime?
+
   @@index([authorId])
   @@index([categoryId])
+  @@index([slug])
+}
+
+model Comment {
+  id        String    @id @default(uuid())
+  content   String
+
+  postId    String
+  post      Post      @relation(fields: [postId], references: [id])
+
+  authorId  String
+  author    User      @relation(fields: [authorId], references: [id])
+
+  parentId  String?
+  parent    Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
+  replies   Comment[] @relation("CommentReplies")
+
+  createdAt DateTime  @default(now())
+
+  @@index([postId])
 }
 
 model Category {
-  id        String   @id @default(cuid())
-  name      String   @unique
-  slug      String   @unique
-  posts     Post[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String  @id @default(uuid())
+  name        String
+  slug        String  @unique
+  description String?
+
+  posts       Post[]
 
   @@index([slug])
 }
 
 model Tag {
-  id        String   @id @default(cuid())
-  name      String   @unique
-  slug      String   @unique
-  posts     Post[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id    String    @id @default(uuid())
+  name  String
+  slug  String    @unique
+
+  posts PostTag[]
 
   @@index([slug])
 }
 
-model Comment {
-  id        String    @id @default(cuid())
-  content   String
-  approved  Boolean   @default(false)
-  authorId  String
-  author    User      @relation(fields: [authorId], references: [id])
-  postId    String
-  post      Post      @relation(fields: [postId], references: [id])
-  parentId  String?
-  parent    Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
-  replies   Comment[] @relation("CommentReplies")
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+model PostTag {
+  postId String
+  tagId  String
 
-  @@index([postId])
-  @@index([authorId])
-  @@index([parentId])
+  post Post @relation(fields: [postId], references: [id])
+  tag  Tag  @relation(fields: [tagId], references: [id])
+
+  @@id([postId, tagId])
 }

@@ -4,6 +4,8 @@ import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import { getPostsByTag } from "@/services/post.service";
 
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({
   params,
 }: {
@@ -19,8 +21,6 @@ export async function generateMetadata({
     description: `Browse all posts tagged with ${tag.name}`,
   };
 }
-
-export const dynamic = "force-dynamic";
 
 export default async function TagPage({
   params,

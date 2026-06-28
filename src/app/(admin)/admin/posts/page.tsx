@@ -7,7 +7,7 @@ export default async function AdminPostsPage() {
 
   const posts = await prisma.post.findMany({
     include: {
-      author: { select: { name: true } },
+      author: { select: { username: true } },
       _count: { select: { comments: true } },
     },
     orderBy: { createdAt: "desc" },
@@ -15,8 +15,8 @@ export default async function AdminPostsPage() {
     id: string;
     title: string;
     slug: string;
-    published: boolean;
-    author: { name: string | null };
+    status: string;
+    author: { username: string | null };
     _count: { comments: number };
   }>;
 
@@ -35,8 +35,8 @@ export default async function AdminPostsPage() {
             <div>
               <h2 className="font-semibold">{post.title}</h2>
               <p className="text-sm text-zinc-500">
-                {post.author.name} · {post._count.comments} comments
-                {!post.published && (
+                {post.author.username} · {post._count.comments} comments
+                {post.status === "DRAFT" && (
                   <span className="ml-2 text-yellow-600">Draft</span>
                 )}
               </p>

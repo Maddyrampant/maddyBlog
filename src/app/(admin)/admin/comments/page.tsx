@@ -6,16 +6,15 @@ export default async function AdminCommentsPage() {
 
   const comments = await prisma.comment.findMany({
     include: {
-      author: { select: { name: true, email: true } },
+      author: { select: { username: true, email: true } },
       post: { select: { title: true, slug: true } },
     },
     orderBy: { createdAt: "desc" },
   }) as unknown as Array<{
     id: string;
     content: string;
-    approved: boolean;
     createdAt: Date;
-    author: { name: string | null; email: string };
+    author: { username: string | null; email: string };
     post: { title: string; slug: string };
   }>;
 
@@ -30,17 +29,10 @@ export default async function AdminCommentsPage() {
             className="p-4 border border-zinc-200 dark:border-zinc-800 rounded-lg"
           >
             <div className="flex items-start justify-between mb-2">
-              <div>
-                <p className="font-medium">{comment.author.name ?? comment.author.email}</p>
-                <p className="text-sm text-zinc-500">
-                  on <span className="font-medium">{comment.post.title}</span>
-                </p>
-              </div>
-              {!comment.approved && (
-                <span className="px-2 py-1 text-xs bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 rounded">
-                  Pending
-                </span>
-              )}
+              <p className="font-medium">{comment.author.username ?? comment.author.email}</p>
+              <p className="text-sm text-zinc-500">
+                on <span className="font-medium">{comment.post.title}</span>
+              </p>
             </div>
             <p className="text-zinc-700 dark:text-zinc-300">{comment.content}</p>
             <p className="mt-2 text-xs text-zinc-500">
