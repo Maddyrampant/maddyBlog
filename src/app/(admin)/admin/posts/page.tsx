@@ -43,7 +43,7 @@ export default async function AdminPostsPage() {
             </div>
             <div className="flex gap-2 text-sm">
               <Link
-                href={`/blog/${post.slug}`}
+                href={`/posts/${post.slug}`}
                 className="px-3 py-1 border border-zinc-300 dark:border-zinc-700 rounded hover:bg-zinc-100 dark:hover:bg-zinc-800"
               >
                 View
