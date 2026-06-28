@@ -19,7 +19,7 @@
 <p align="center">
   <b>A modern, bleeding‑edge blogging platform</b><br/>
   built with love, TypeScript, and the best of the Next.js ecosystem.
-  <br/>⚡ Sexy. Modular. Production‑ready.
+  <br/>⚡ Lovly. Modular. Production‑ready.
 </p>
 
 <p align="center">
