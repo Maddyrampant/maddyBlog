@@ -14,7 +14,7 @@
   <img src="https://img.shields.io/badge/status-active-22c55e?style=flat-square" alt="Status"/>
 </p>
 
-<h1 align="center">🌸 maddyBlog</h1>
+<h1 align="center">🌸 maddy Blog</h1>
 
 <p align="center">
   <b>A modern, bleeding‑edge blogging platform</b><br/>
