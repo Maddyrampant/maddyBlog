@@ -2,9 +2,12 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getPostBySlug } from "@/services/blogService";
+import { commentService } from "@/features/comment/commentService";
 import ReadingTime from "@/components/blog/ReadingTime";
 import TagBadge from "@/components/blog/TagBadge";
 import CategoryBadge from "@/components/blog/CategoryBadge";
+import CommentForm from "@/components/blog/CommentForm";
+import CommentList from "@/components/blog/CommentList";
 
 export const dynamic = "force-dynamic";
 
@@ -50,6 +53,11 @@ export default async function PostPage({
   const post = await getPostBySlug(slug);
 
   if (!post) notFound();
+
+  const [commentTree, commentCount] = await Promise.all([
+    commentService.getCommentsTree(slug),
+    commentService.getCount(slug),
+  ]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -120,6 +128,21 @@ export default async function PostPage({
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
         </article>
+
+        <section className="mt-16 border-t border-zinc-200 dark:border-zinc-800 pt-12">
+          <h2 className="text-2xl font-bold mb-2">
+            نظرات ({commentCount})
+          </h2>
+          <p className="text-sm text-zinc-500 mb-8">
+            دیدگاه خود را درباره این مطلب بنویسید.
+          </p>
+
+          <div className="mb-10">
+            <CommentForm postId={post.id} />
+          </div>
+
+          <CommentList comments={commentTree} postId={post.id} />
+        </section>
       </main>
 
       <footer className="border-t border-zinc-200 dark:border-zinc-800">
