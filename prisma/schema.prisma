@@ -17,6 +17,12 @@ enum PostStatus {
   PUBLISHED
 }
 
+enum ReactionType {
+  LIKE
+  FIRE
+  CLAP
+}
+
 model User {
   id           String    @id @default(uuid())
   email        String    @unique
@@ -26,6 +32,8 @@ model User {
 
   posts        Post[]
   comments     Comment[]
+  bookmarks    Bookmark[]
+  reactions    Reaction[]
 
   createdAt    DateTime  @default(now())
 }
@@ -37,6 +45,7 @@ model Post {
   content     String
   excerpt     String?
   coverImage  String?
+  views       Int        @default(0)
 
   status      PostStatus @default(DRAFT)
 
@@ -48,6 +57,8 @@ model Post {
 
   comments    Comment[]
   tags        PostTag[]
+  bookmarks   Bookmark[]
+  reactions   Reaction[]
 
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
@@ -56,6 +67,7 @@ model Post {
   @@index([authorId])
   @@index([categoryId])
   @@index([slug])
+  @@index([views])
 }
 
 model Comment {
@@ -106,4 +118,41 @@ model PostTag {
   tag  Tag  @relation(fields: [tagId], references: [id])
 
   @@id([postId, tagId])
+}
+
+model Bookmark {
+  id        String   @id @default(uuid())
+  userId    String
+  postId    String
+
+  user      User     @relation(fields: [userId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, postId])
+  @@index([userId])
+  @@index([postId])
+}
+
+model Reaction {
+  id        String       @id @default(uuid())
+  type      ReactionType
+  userId    String
+  postId    String
+
+  user      User         @relation(fields: [userId], references: [id])
+  post      Post         @relation(fields: [postId], references: [id])
+
+  createdAt DateTime     @default(now())
+
+  @@unique([userId, postId, type])
+  @@index([postId])
+  @@index([userId])
+}
+
+model Subscriber {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
 }

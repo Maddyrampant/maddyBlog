@@ -19,7 +19,7 @@
 <p align="center">
   <b>A modern, bleeding‑edge blogging platform</b><br/>
   built with love, TypeScript, and the best of the Next.js ecosystem.
-  <br/>⚡ Lovly. Modular. Production‑ready.
+  <br/>⚡ Modular. Maintainable. Production‑ready.
 </p>
 
 <p align="center">
@@ -52,17 +52,26 @@
 
 ## ✨ Features
 
-| | |
-|---|---|
-| 📝 **Blog Posts** | Full Markdown support, publishing workflow |
-| 🏷️ **Categories & Tags** | Organize content with ease |
-| 🌐 **SEO Optimized** | Metadata, sitemap, RSS — all built‑in |
-| 💬 **Comments** | Nested threads with moderation |
-| 🎛️ **Admin Dashboard** | Manage everything in one place |
-| 🖼️ **Image Uploads** | Drag & drop, ready for CDN |
-| 🔍 **Search** | Full‑text search across posts |
-| 📄 **Pagination** | Butter‑smooth browsing |
-| 📱 **Responsive** | Looks stunning on every screen |
+|                          |                                                 |
+| ------------------------ | ----------------------------------------------- |
+| 📝 **Blog Posts**        | Full Markdown support, publishing workflow      |
+| 🏷️ **Categories & Tags** | Organize content with ease                      |
+| 🌐 **SEO Optimized**     | Metadata, sitemap, RSS, JSON-LD — all built‑in  |
+| 💬 **Nested Comments**   | Threaded discussions with reply trees           |
+| 🎛️ **Admin Dashboard**   | Manage posts, comments, and stats in one place  |
+| 🔍 **Full‑Text Search**  | PostgreSQL full‑text search across posts        |
+| 📈 **Trending Posts**    | Algorithm based on views, comments, and recency |
+| 🔖 **Bookmarks**         | Save posts for later reading                    |
+| ❤️ **Reactions**         | Like, Fire, and Clap reactions on posts         |
+| 📧 **Newsletter**        | Email subscription system with rate limiting    |
+| 🏷️ **Popular Tags**      | Discover trending topics                        |
+| 👁️ **View Tracking**     | Automatic post view analytics                   |
+| ⏱️ **Reading Time**      | Estimated reading time on every post            |
+| 📄 **Pagination**        | Butter‑smooth browsing                          |
+| 📱 **Responsive**        | Looks stunning on every screen                  |
+| 🧪 **Tested**            | Vitest unit tests for core utilities            |
+| 📚 **Storybook**         | Component documentation and visual testing      |
+| 🐳 **Docker**            | Multi‑stage build + docker‑compose              |
 
 <br/>
 
@@ -72,14 +81,15 @@
   <img src="https://skillicons.dev/icons?i=nextjs,typescript,react,tailwind,postgres,prisma" />
 </p>
 
-| Layer | Technology |
-|---|---|
-| 🎨 **Frontend** | Next.js 16 · TypeScript · React 19 · TailwindCSS |
-| ⚙️ **Backend** | Server Actions · API Routes |
-| 🗄️ **Database** | PostgreSQL · Prisma ORM (v7) |
-| ✅ **Validation** | Zod |
-| 🔐 **Auth** | JWT · jose · bcryptjs |
-| 🧹 **Dev Tools** | ESLint · TypeScript strict · GitHub CI |
+| Layer             | Technology                                                   |
+| ----------------- | ------------------------------------------------------------ |
+| 🎨 **Frontend**   | Next.js 16 · TypeScript · React 19 · TailwindCSS             |
+| ⚙️ **Backend**    | API Routes (REST)                                            |
+| 🗄️ **Database**   | PostgreSQL · Prisma ORM (v7)                                 |
+| ✅ **Validation** | Zod                                                          |
+| 🔐 **Auth**       | JWT · jose · bcryptjs · httpOnly cookies                     |
+| 🧹 **Dev Tools**  | ESLint · Prettier · Husky · lint‑staged · Vitest · Storybook |
+| 🐳 **Deploy**     | Docker · docker‑compose · GitHub CI                          |
 
 <br/>
 
@@ -87,22 +97,26 @@
 
 ```
 maddyBlog/
-├── prisma/                  # Schema & migrations
+├── prisma/                  # Schema, migrations & seed
 ├── src/
 │   ├── app/                 # Next.js App Router
-│   │   ├── (public)/        #  Blog pages
 │   │   ├── (admin)/         #  Admin dashboard
-│   │   └── api/             #  Route handlers
+│   │   ├── api/             #  REST route handlers
+│   │   └── posts/           #  Public blog pages
+│   ├── cli/                 #  Developer CLI tool
 │   ├── components/          #  Reusable UI
-│   │   ├── ui/              #  Primitives
 │   │   ├── blog/            #  Blog components
-│   │   └── admin/           #  Admin components
-│   ├── features/            #  Domain modules
-│   ├── services/            #  Business logic
+│   │   ├── admin/           #  Admin components
+│   │   └── seo/             #  SEO components
+│   ├── features/            #  Domain modules (auth, post, comment)
+│   ├── services/            #  Business logic layer
 │   ├── validations/         #  Zod schemas
-│   ├── lib/                 #  Utilities
+│   ├── lib/                 #  Utilities (JWT, env, errors, etc.)
+│   ├── stories/             #  Storybook stories
 │   └── types/               #  TypeScript types
-└── .github/                 #  CI & templates
+├── tests/                   #  Vitest unit tests
+├── docs/                    #  Architecture & development docs
+└── .github/                 #  CI & issue templates
 ```
 
 <br/>
@@ -123,6 +137,12 @@ cp .env.example .env
 # Generate Prisma client
 npx prisma generate
 
+# Run database migrations
+npx prisma migrate dev
+
+# Seed the database (optional)
+npm run seed
+
 # Start the dev server
 npm run dev
 ```
@@ -137,33 +157,73 @@ npm run dev
 DATABASE_URL=postgresql://user:password@localhost:5432/maddyblog
 JWT_SECRET=your-super-secret-key-change-in-production
 NEXT_PUBLIC_APP_URL=http://localhost:3000
+LOG_LEVEL=info
 ```
 
 <br/>
 
-## 🧠 Development Philosophy
+## 🧪 Testing
 
-This project dances to the rhythm of **Vibe Coding**:
+```bash
+# Run all tests
+npm run test
 
+# Watch mode
+npm run test:watch
+
+# Type check
+npm run typecheck
 ```
-①  Architecture first   →  ②  Database design
-③  Core systems        →  ④  Feature implementation
-⑤  Production polish
+
+<br/>
+
+## 🎨 Storybook
+
+```bash
+npm run storybook
 ```
 
-Every layer is **modular**, every component is **clean**. No shortcuts. No spaghetti.
+<br/>
+
+## 🐳 Docker
+
+```bash
+# Build and run with PostgreSQL
+docker compose up --build
+
+# Run migrations
+docker compose run --rm migrate
+```
+
+<br/>
+
+## 📦 Available Scripts
+
+| Script              | Description                    |
+| ------------------- | ------------------------------ |
+| `npm run dev`       | Start development server       |
+| `npm run build`     | Production build               |
+| `npm run start`     | Start production server        |
+| `npm run test`      | Run Vitest tests               |
+| `npm run seed`      | Seed database with sample data |
+| `npm run db:studio` | Open Prisma Studio             |
+| `npm run db:reset`  | Reset and re‑seed database     |
+| `npm run dev:cli`   | Developer CLI tool             |
+| `npm run typecheck` | TypeScript type checking       |
+| `npm run storybook` | Start Storybook                |
+| `npm run lint`      | Lint all files                 |
 
 <br/>
 
 ## 🗺️ Roadmap
 
 - [ ] Rich‑text editor (TipTap / Plate)
-- [ ] Full‑text search (pgvector)
-- [ ] Content scheduling
 - [ ] Analytics dashboard
-- [ ] Plugin system
+- [ ] Content scheduling
 - [ ] Multi‑author workspace
-- [ ] Newsletter & RSS
+- [ ] Image upload with CDN
+- [ ] Plugin system
+- [ ] i18n support
 
 <br/>
 
@@ -176,6 +236,8 @@ Contributions are **warmly welcomed**.
 3. **Commit**: `git commit -m "feat: add amazing feature"`
 4. **Push**: `git push origin feat/amazing-feature`
 5. Open a **Pull Request** 🚀
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for full guidelines.
 
 <br/>
 
