@@ -3,29 +3,25 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import { getPostsByTag } from "@/services/blogService";
+import { generatePaginatedMetadata } from "@/lib/seo";
 import PostList from "@/components/blog/PostList";
 import Pagination from "@/components/blog/Pagination";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 120;
 
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
-  const tag = await prisma.tag.findUnique({ where: { slug } });
-
-  if (!tag) return {};
-
-  return {
-    title: `#${tag.name} — maddyBlog`,
-    description: `Browse all posts tagged with ${tag.name}.`,
-    openGraph: {
-      title: `#${tag.name} | maddyBlog`,
-      description: `Browse all posts tagged with ${tag.name}.`,
-    },
-  };
+  try {
+    const { slug } = await params;
+    const tag = await prisma.tag.findUnique({ where: { slug } });
+    if (!tag) return {};
+    return generatePaginatedMetadata(`#${tag.name}`, `Browse all posts tagged with ${tag.name}.`);
+  } catch {
+    return {};
+  }
 }
 
 export default async function TagPage({
@@ -39,10 +35,17 @@ export default async function TagPage({
   const { page: pageStr } = await searchParams;
   const page = Number(pageStr) || 1;
 
-  const tag = await prisma.tag.findUnique({ where: { slug } });
-  if (!tag) notFound();
+  let tag, posts, total;
+  try {
+    tag = await prisma.tag.findUnique({ where: { slug } });
+    if (!tag) notFound();
+    const result = await getPostsByTag(slug, page, 12);
+    posts = result.posts;
+    total = result.total;
+  } catch {
+    notFound();
+  }
 
-  const { posts, total } = await getPostsByTag(slug, page, 12);
   const totalPages = Math.ceil(total / 12);
 
   return (

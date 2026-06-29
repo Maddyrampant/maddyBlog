@@ -156,3 +156,29 @@ export async function getAllCategories() {
     orderBy: { name: "asc" },
   });
 }
+
+export async function getAllPublishedPostsForSitemap() {
+  return prisma.post.findMany({
+    where: { status: "PUBLISHED" },
+    select: {
+      slug: true,
+      updatedAt: true,
+    },
+    orderBy: { updatedAt: "desc" },
+  });
+}
+
+export async function getAllPublishedPostsForRSS() {
+  return prisma.post.findMany({
+    where: { status: "PUBLISHED" },
+    select: {
+      title: true,
+      slug: true,
+      excerpt: true,
+      publishedAt: true,
+      createdAt: true,
+      author: { select: { username: true } },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+}

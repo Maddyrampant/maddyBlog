@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { PostCardData } from "@/services/blogService";
 import ReadingTime from "./ReadingTime";
 import CategoryBadge from "./CategoryBadge";
@@ -7,11 +8,13 @@ export default function PostCard({ post }: { post: PostCardData }) {
   return (
     <article className="group flex flex-col">
       {post.coverImage && (
-        <Link href={`/posts/${post.slug}`} className="block aspect-[16/9] overflow-hidden rounded-lg mb-4 bg-zinc-100 dark:bg-zinc-800">
-          <img
+        <Link href={`/posts/${post.slug}`} className="block aspect-[16/9] overflow-hidden rounded-lg mb-4 bg-zinc-100 dark:bg-zinc-800 relative">
+          <Image
             src={post.coverImage}
             alt={post.title}
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            fill
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             loading="lazy"
           />
         </Link>

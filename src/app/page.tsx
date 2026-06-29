@@ -1,25 +1,30 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getLatestPosts, getAllCategories } from "@/services/blogService";
+import { generatePaginatedMetadata } from "@/lib/seo";
 import FeaturedPost from "@/components/blog/FeaturedPost";
 import PostList from "@/components/blog/PostList";
 import SearchBar from "@/components/blog/SearchBar";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
-export const metadata: Metadata = {
-  title: "maddyBlog — Thoughts on code, design, and building things",
-  description: "A modern blog about software engineering, TypeScript, and building great products.",
-  openGraph: {
-    title: "maddyBlog",
-    description: "Thoughts on code, design, and building things.",
-    type: "website",
-  },
-};
+export const metadata: Metadata = generatePaginatedMetadata(
+  "maddyBlog",
+  "Thoughts on code, design, and building things that matter."
+);
 
 export default async function HomePage() {
-  const { posts } = await getLatestPosts(1, 9);
-  const categories = await getAllCategories();
+  let posts: Awaited<ReturnType<typeof getLatestPosts>>["posts"] = [];
+  let categories: Awaited<ReturnType<typeof getAllCategories>> = [];
+
+  try {
+    const result = await getLatestPosts(1, 9);
+    posts = result.posts;
+    categories = await getAllCategories();
+  } catch {
+    // Database not available — render empty state
+  }
+
   const [featured, ...rest] = posts;
 
   return (

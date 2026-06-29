@@ -3,29 +3,25 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import { getPostsByCategory } from "@/services/blogService";
+import { generatePaginatedMetadata } from "@/lib/seo";
 import PostList from "@/components/blog/PostList";
 import Pagination from "@/components/blog/Pagination";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 120;
 
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
-  const category = await prisma.category.findUnique({ where: { slug } });
-
-  if (!category) return {};
-
-  return {
-    title: `${category.name} — maddyBlog`,
-    description: `Browse all posts in the ${category.name} category.`,
-    openGraph: {
-      title: `${category.name} | maddyBlog`,
-      description: `Browse all posts in the ${category.name} category.`,
-    },
-  };
+  try {
+    const { slug } = await params;
+    const category = await prisma.category.findUnique({ where: { slug } });
+    if (!category) return {};
+    return generatePaginatedMetadata(category.name, `Browse all posts in the ${category.name} category.`);
+  } catch {
+    return {};
+  }
 }
 
 export default async function CategoryPage({
@@ -39,10 +35,17 @@ export default async function CategoryPage({
   const { page: pageStr } = await searchParams;
   const page = Number(pageStr) || 1;
 
-  const category = await prisma.category.findUnique({ where: { slug } });
-  if (!category) notFound();
+  let category, posts, total;
+  try {
+    category = await prisma.category.findUnique({ where: { slug } });
+    if (!category) notFound();
+    const result = await getPostsByCategory(slug, page, 12);
+    posts = result.posts;
+    total = result.total;
+  } catch {
+    notFound();
+  }
 
-  const { posts, total } = await getPostsByCategory(slug, page, 12);
   const totalPages = Math.ceil(total / 12);
 
   return (

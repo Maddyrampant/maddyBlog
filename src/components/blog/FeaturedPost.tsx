@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { PostCardData } from "@/services/blogService";
 import ReadingTime from "./ReadingTime";
 import CategoryBadge from "./CategoryBadge";
@@ -9,12 +10,15 @@ export default function FeaturedPost({ post }: { post: PostCardData }) {
       {post.coverImage && (
         <Link
           href={`/posts/${post.slug}`}
-          className="block aspect-[4/3] overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-800"
+          className="block aspect-[4/3] overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-800 relative"
         >
-          <img
+          <Image
             src={post.coverImage}
             alt={post.title}
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            fill
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            priority
           />
         </Link>
       )}

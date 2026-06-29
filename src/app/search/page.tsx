@@ -1,15 +1,13 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { searchPosts } from "@/services/blogService";
+import { generatePaginatedMetadata } from "@/lib/seo";
 import PostCard from "@/components/blog/PostCard";
 import SearchBar from "@/components/blog/SearchBar";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Search — maddyBlog",
-  description: "Search posts on maddyBlog.",
-};
+export const metadata: Metadata = generatePaginatedMetadata("Search", "Search posts on maddyBlog.");
 
 export default async function SearchPage({
   searchParams,
@@ -20,13 +18,17 @@ export default async function SearchPage({
   const query = q?.trim() || "";
   const page = Number(pageStr) || 1;
 
-  let posts: Array<{ id: string; title: string; slug: string; excerpt: string | null; coverImage: string | null; createdAt: Date; readingTime: number; author: { username: string }; category: { name: string; slug: string } | null; tags: { name: string; slug: string }[]; _count: { comments: number } }> = [];
+  let posts: Awaited<ReturnType<typeof searchPosts>>["posts"] = [];
   let total = 0;
 
   if (query.length > 0) {
-    const result = await searchPosts(query, page, 12);
-    posts = result.posts;
-    total = result.total;
+    try {
+      const result = await searchPosts(query, page, 12);
+      posts = result.posts;
+      total = result.total;
+    } catch {
+      // Database not available
+    }
   }
 
   return (
@@ -58,7 +60,7 @@ export default async function SearchPage({
           </div>
         ) : query ? (
           <p className="text-zinc-500 py-12 text-center">
-            No posts found for "{query}". Try a different search term.
+            No posts found for &ldquo;{query}&rdquo;. Try a different search term.
           </p>
         ) : (
           <p className="text-zinc-500 py-12 text-center">
