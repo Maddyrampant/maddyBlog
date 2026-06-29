@@ -47,6 +47,9 @@ model Post {
   coverImage  String?
   views       Int        @default(0)
 
+  analytics   PostAnalytics[]
+  views_log   PostView[]
+
   status      PostStatus @default(DRAFT)
 
   authorId    String
@@ -155,4 +158,36 @@ model Subscriber {
   id        String   @id @default(uuid())
   email     String   @unique
   createdAt DateTime @default(now())
+}
+
+model PostView {
+  id          String   @id @default(uuid())
+  postId      String
+  visitorHash String
+  referrer    String?
+  userAgent   String?
+
+  post        Post     @relation(fields: [postId], references: [id])
+
+  createdAt   DateTime @default(now())
+
+  @@index([postId])
+  @@index([visitorHash])
+  @@index([createdAt])
+}
+
+model PostAnalytics {
+  id             String   @id @default(uuid())
+  date           DateTime
+  postId         String
+  views          Int      @default(0)
+  uniqueVisitors Int      @default(0)
+  comments       Int      @default(0)
+  reactions      Int      @default(0)
+
+  post           Post     @relation(fields: [postId], references: [id])
+
+  @@unique([postId, date])
+  @@index([postId])
+  @@index([date])
 }

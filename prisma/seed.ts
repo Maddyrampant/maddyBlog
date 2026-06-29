@@ -71,7 +71,7 @@ async function main() {
     prisma.tag.create({ data: { name: "Security", slug: "security" } }),
   ]);
 
-  const [react, prismaTag, pg, testing, perf, security] = tags;
+  const [react, prismaTag, pg, , perf, security] = tags;
   console.log("  ✓ Tags created");
 
   // ── Posts ──

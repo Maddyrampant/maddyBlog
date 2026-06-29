@@ -1,5 +1,3 @@
-import CommentForm from "./CommentForm";
-
 type CommentAuthor = { id: string; username: string };
 
 type CommentNode = {
@@ -16,7 +14,13 @@ type CommentListProps = {
   postId: string;
 };
 
-function CommentItem({ comment, postId }: { comment: CommentNode; postId: string }) {
+function CommentItem({
+  comment,
+  postId,
+}: {
+  comment: CommentNode;
+  postId: string;
+}) {
   const date = new Date(comment.createdAt).toLocaleDateString("fa-IR", {
     year: "numeric",
     month: "long",
@@ -31,7 +35,9 @@ function CommentItem({ comment, postId }: { comment: CommentNode; postId: string
         </span>
         <span className="text-xs text-zinc-400 ml-3">{date}</span>
       </div>
-      <p className="text-sm text-zinc-700 dark:text-zinc-300 leading-relaxed">{comment.content}</p>
+      <p className="text-sm text-zinc-700 dark:text-zinc-300 leading-relaxed">
+        {comment.content}
+      </p>
 
       {comment.replies.length > 0 && (
         <div className="mt-4 space-y-4">

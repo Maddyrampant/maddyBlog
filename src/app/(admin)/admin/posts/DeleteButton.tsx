@@ -3,7 +3,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function DeleteButton({ id, title }: { id: string; title: string }) {
+export default function DeleteButton({
+  id,
+  title,
+}: {
+  id: string;
+  title: string;
+}) {
   const router = useRouter();
   const [confirming, setConfirming] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -45,6 +51,7 @@ export default function DeleteButton({ id, title }: { id: string; title: string 
   return (
     <button
       onClick={() => setConfirming(true)}
+      aria-label={title}
       className="text-xs px-2.5 py-1 border border-red-300 dark:border-red-800 text-red-600 dark:text-red-400 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
     >
       Delete

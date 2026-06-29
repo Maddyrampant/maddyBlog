@@ -1,12 +1,15 @@
 import { createComment } from "@/features/comment/commentController";
 import { getSession } from "@/lib/jwt";
 import { commentService } from "@/features/comment/commentService";
-import { errorResponse, NotFoundError } from "@/lib/errors";
+import { errorResponse } from "@/lib/errors";
 import { rateLimitMiddleware } from "@/lib/rateLimit";
 
 export async function POST(request: Request) {
   const ip = request.headers.get("x-forwarded-for") || "unknown";
-  const limited = rateLimitMiddleware(`comment:${ip}`, { windowMs: 60_000, maxRequests: 20 });
+  const limited = rateLimitMiddleware(`comment:${ip}`, {
+    windowMs: 60_000,
+    maxRequests: 20,
+  });
   if (limited) return limited;
 
   return createComment(request);

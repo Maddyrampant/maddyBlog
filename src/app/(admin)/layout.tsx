@@ -6,6 +6,7 @@ const navItems = [
   { href: "/admin/posts", label: "Posts" },
   { href: "/admin/posts/new", label: "New Post" },
   { href: "/admin/comments", label: "Comments" },
+  { href: "/admin/analytics", label: "Analytics" },
 ];
 
 export default async function AdminLayout({
