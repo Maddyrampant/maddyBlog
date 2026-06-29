@@ -30,5 +30,12 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "prisma/seed.ts",
+    ".storybook",
+    "tests",
+    "vitest.config.ts",
+    "src/cli"
+  ]
 }
