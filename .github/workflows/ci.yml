@@ -1,7 +1,10 @@
 name: CI
 
 on:
-  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
   lint:
@@ -24,6 +27,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - run: npx prisma generate --generator client
       - run: npx tsc --noEmit
 
   build:
@@ -35,4 +39,9 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - run: npx prisma generate --generator client
       - run: npm run build
+        env:
+          DATABASE_URL: postgresql://localhost:5432/maddyblog
+          JWT_SECRET: ci-build-secret-that-is-long-enough
+          NEXT_PUBLIC_APP_URL: http://localhost:3000
