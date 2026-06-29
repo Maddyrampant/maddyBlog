@@ -1,9 +1,9 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/Next.js%2016-1e1b2e?style=for-the-badge&logo=next.js&logoColor=c9a8e8" alt="Next.js 16"/>
-  <img src="https://img.shields.io/badge/TypeScript-2d1b4e?style=for-the-badge&logo=typescript&logoColor=d4b8ff" alt="TypeScript"/>
-  <img src="https://img.shields.io/badge/Tailwind%20CSS-1a1a3e?style=for-the-badge&logo=tailwindcss&logoColor=a8d8ea" alt="Tailwind CSS"/>
-  <img src="https://img.shields.io/badge/Prisma-1b1226?style=for-the-badge&logo=prisma&logoColor=e8a8d8" alt="Prisma"/>
-  <img src="https://img.shields.io/badge/PostgreSQL-0d1b2a?style=for-the-badge&logo=postgresql&logoColor=a8c8e8" alt="PostgreSQL"/>
+  <img src="https://img.shields.io/badge/Next.js%2016-000000?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js 16"/>
+  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript"/>
+  <img src="https://img.shields.io/badge/Tailwind%20CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS"/>
+  <img src="https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white" alt="Prisma"/>
+  <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL"/>
   <img src="https://img.shields.io/badge/Tiptap-1e122a?style=for-the-badge&logo=tiptap&logoColor=e8b8d8" alt="Tiptap"/>
 </p>
 
@@ -14,21 +14,21 @@
   <img src="https://img.shields.io/badge/status-active-a78bfa?style=flat-square" alt="Status"/>
 </p>
 
-<h1 align="center">🌙 maddyBlog</h1>
+<h1 align="center">maddyBlog</h1>
 
 <p align="center">
-  <b>a dark, lovely blogging platform</b><br/>
-  <sub>dokhtouraneh · gentle · type‑safe · production‑ready</sub>
+  <b>A modern, type‑safe blogging platform</b><br/>
+  <sub>Modular · Maintainable · Production‑ready</sub>
 </p>
 
 <p align="center">
-  <a href="#features">features</a>
+  <a href="#features">Features</a>
   ·
-  <a href="#quick-start">quick start</a>
+  <a href="#quick-start">Quick Start</a>
   ·
-  <a href="#tech-stack">tech stack</a>
+  <a href="#tech-stack">Tech Stack</a>
   ·
-  <a href="#project-structure">structure</a>
+  <a href="#project-structure">Structure</a>
 </p>
 
 <br/>
@@ -37,18 +37,18 @@
 
 <br/>
 
-## overview
+## Overview
 
-**maddyBlog** is an open‑source blogging platform with a **dark, dokhtouraneh soul** and a **lovely heart**.  
-Built from the ground up with Next.js 16, TypeScript, and PostgreSQL — every piece is modular, type‑safe, and designed to scale.
+**maddyBlog** is an open‑source blogging platform engineered for performance and scalability.  
+Built with Next.js 16, TypeScript, and PostgreSQL — every module is decoupled, type‑safe, and production‑ready.
 
-> ✦ modular · maintainable · production‑ready ✦
+> ✦ Modular · Maintainable · Production‑ready ✦
 
 <br/>
 
 ---
 
-## features
+## Features
 
 |                            |                                                                                     |
 | -------------------------- | ----------------------------------------------------------------------------------- |
@@ -80,7 +80,7 @@ Built from the ground up with Next.js 16, TypeScript, and PostgreSQL — every p
 
 ---
 
-## tech stack
+## Tech Stack
 
 <p align="center">
   <img src="https://skillicons.dev/icons?i=nextjs,typescript,react,tailwind,postgres,prisma" />
@@ -102,7 +102,7 @@ Built from the ground up with Next.js 16, TypeScript, and PostgreSQL — every p
 
 ---
 
-## project structure
+## Project Structure
 
 ```
 maddyBlog/
@@ -140,7 +140,7 @@ maddyBlog/
 
 ---
 
-## quick start
+## Quick Start
 
 ```bash
 # clone
@@ -172,7 +172,7 @@ npm run dev
 
 ---
 
-## environment
+## Environment
 
 ```env
 DATABASE_URL=postgresql://user:password@localhost:5432/maddyblog
@@ -185,7 +185,7 @@ LOG_LEVEL=info
 
 ---
 
-## scripts
+## Scripts
 
 | command             | does                     |
 | ------------------- | ------------------------ |
@@ -202,7 +202,7 @@ LOG_LEVEL=info
 
 ---
 
-## license
+## License
 
 **MIT** — see [LICENSE](LICENSE)
 
@@ -211,7 +211,7 @@ LOG_LEVEL=info
 ---
 
 <p align="center">
-  <sub>🌙 built with a dokhtouraneh soul and a lovely heart</sub>
+  <sub>built with love by a girl who code</sub>
   <br/>
   <sub>Maddyrampant © 2026</sub>
 </p>

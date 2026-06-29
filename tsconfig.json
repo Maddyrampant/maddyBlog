@@ -36,6 +36,7 @@
     ".storybook",
     "tests",
     "vitest.config.ts",
-    "src/cli"
+    "src/cli",
+    "plugins"
   ]
 }
