@@ -1,5 +1,12 @@
 import type { ReactNode } from "react";
-import type { HookType, Plugin, PluginEntry, PluginContext } from "./types";
+import type {
+  HookType,
+  Plugin,
+  PluginEntry,
+  PluginContext,
+  AIPromptHook,
+  ApiRouter,
+} from "./types";
 
 const dataHooks = new Map<
   HookType,
@@ -14,7 +21,11 @@ const uiHooks = new Map<
 >();
 const apiHooks: Array<{
   pluginName: string;
-  handler: (router: import("./types").ApiRouter) => void;
+  handler: (router: ApiRouter) => void;
+}> = [];
+const aiPromptHooks: Array<{
+  pluginName: string;
+  handler: AIPromptHook["handler"];
 }> = [];
 
 export function registerPluginHooks(plugin: Plugin, entry: PluginEntry): void {
@@ -43,6 +54,11 @@ export function registerPluginHooks(plugin: Plugin, entry: PluginEntry): void {
         pluginName: plugin.manifest.name,
         handler: hook.handler,
       });
+    } else if (hook.type === "ai") {
+      aiPromptHooks.push({
+        pluginName: plugin.manifest.name,
+        handler: hook.handler,
+      });
     }
   }
 }
@@ -59,6 +75,8 @@ export function unregisterPluginHooks(plugin: Plugin): void {
   }
   const apiIdx = apiHooks.findIndex((h) => h.pluginName === name);
   if (apiIdx >= 0) apiHooks.splice(apiIdx, 1);
+  const aiIdx = aiPromptHooks.findIndex((h) => h.pluginName === name);
+  if (aiIdx >= 0) aiPromptHooks.splice(aiIdx, 1);
 }
 
 export async function runDataHooks(
@@ -88,7 +106,14 @@ export function getUiHooks(
 
 export function getApiHookHandlers(): Array<{
   pluginName: string;
-  handler: (router: import("./types").ApiRouter) => void;
+  handler: (router: ApiRouter) => void;
 }> {
   return [...apiHooks];
+}
+
+export function getAIPromptHooks(): Array<{
+  pluginName: string;
+  handler: AIPromptHook["handler"];
+}> {
+  return [...aiPromptHooks];
 }

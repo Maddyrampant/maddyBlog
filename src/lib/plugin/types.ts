@@ -9,7 +9,9 @@ export type PluginPermission =
   | "MANAGE_COMMENTS"
   | "SEND_EMAIL"
   | "ACCESS_ANALYTICS"
-  | "MANAGE_PLUGINS";
+  | "MANAGE_PLUGINS"
+  | "USE_AI"
+  | "MANAGE_AI";
 
 export type PluginManifest = {
   name: string;
@@ -57,7 +59,23 @@ export type ApiHook = {
   handler: (router: ApiRouter) => void;
 };
 
-export type PluginHook = DataHook | UiHook | ApiHook;
+export type AIPromptHook = {
+  type: "ai";
+  hook: "registerPrompts";
+  handler: (
+    prompts: Record<
+      string,
+      {
+        system: string;
+        userPrompt: string;
+        temperature: number;
+        maxTokens: number;
+      }
+    >,
+  ) => void;
+};
+
+export type PluginHook = DataHook | UiHook | ApiHook | AIPromptHook;
 
 export type PluginLogger = {
   info: (msg: string, meta?: Record<string, unknown>) => void;

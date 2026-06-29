@@ -1,6 +1,7 @@
 "use client";
 
 import type { Editor } from "@tiptap/react";
+import AIActionMenu from "./ai/AIActionMenu";
 
 type ToolbarProps = {
   editor: Editor | null;
@@ -125,6 +126,8 @@ export default function EditorToolbar({ editor }: ToolbarProps) {
 
   return (
     <div className="flex flex-wrap items-center gap-0.5 px-3 py-2 border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 rounded-t-xl overflow-x-auto">
+      <AIActionMenu editor={editor} />
+      <div className="w-px h-5 mx-1 bg-zinc-300 dark:bg-zinc-700" />
       {tools.map((tool, i) =>
         "type" in tool ? (
           <div key={i} className="w-px h-5 mx-1 bg-zinc-300 dark:bg-zinc-700" />

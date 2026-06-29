@@ -55,9 +55,9 @@ export class PluginRegistry {
   }
 
   getByPermission(permission: string): PluginRegistryEntry[] {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return this.getAllEntries().filter((e) =>
-      e.manifest.permissions.includes(permission as any),
+    return this.getAllEntries().filter(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (e) => e.manifest.permissions.includes(permission as any),
     );
   }
 
