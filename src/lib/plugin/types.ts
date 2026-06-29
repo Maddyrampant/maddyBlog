@@ -59,19 +59,53 @@ export type ApiHook = {
 
 export type PluginHook = DataHook | UiHook | ApiHook;
 
+export type PluginLogger = {
+  info: (msg: string, meta?: Record<string, unknown>) => void;
+  warn: (msg: string, meta?: Record<string, unknown>) => void;
+  error: (msg: string, meta?: Record<string, unknown>) => void;
+};
+
+export type PluginConfig = {
+  get: (key: string) => string | undefined;
+  getAll: () => Record<string, string>;
+};
+
+export type PluginAuth = {
+  getCurrentUserId: () => Promise<string | null>;
+  hasRole: (role: string) => Promise<boolean>;
+  isAuthenticated: () => Promise<boolean>;
+};
+
+export type PluginPrisma = {
+  post: {
+    findMany: (args?: Record<string, unknown>) => Promise<unknown[]>;
+    findUnique: (args: Record<string, unknown>) => Promise<unknown>;
+    count: (args?: Record<string, unknown>) => Promise<number>;
+  };
+  comment: {
+    findMany: (args?: Record<string, unknown>) => Promise<unknown[]>;
+    count: (args?: Record<string, unknown>) => Promise<number>;
+  };
+  category: {
+    findMany: (args?: Record<string, unknown>) => Promise<unknown[]>;
+  };
+  tag: {
+    findMany: (args?: Record<string, unknown>) => Promise<unknown[]>;
+  };
+};
+
+export type PluginCoreServices = {
+  logger: PluginLogger;
+  config: PluginConfig;
+  auth: PluginAuth;
+  db: PluginPrisma;
+};
+
 export type PluginContext = {
   userId?: string;
   userRole?: string;
   requestId?: string;
-};
-
-export type Plugin = {
-  manifest: PluginManifest;
-  onInstall?: () => Promise<void>;
-  onActivate?: () => Promise<void>;
-  onDeactivate?: () => Promise<void>;
-  onUninstall?: () => Promise<void>;
-  hooks?: PluginHook[];
+  services: PluginCoreServices;
 };
 
 export type ApiRoute = {
@@ -103,3 +137,15 @@ export type PluginEvent = {
 };
 
 export type EventHandler = (event: PluginEvent) => void | Promise<void>;
+
+export type PluginLifecycle = {
+  onInstall?: () => Promise<void>;
+  onActivate?: () => Promise<void>;
+  onDeactivate?: () => Promise<void>;
+  onUninstall?: () => Promise<void>;
+};
+
+export type Plugin = PluginLifecycle & {
+  manifest: PluginManifest;
+  hooks?: PluginHook[];
+};

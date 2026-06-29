@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { requireAdmin } from "@/lib/jwt";
+import PluginInjector from "@/components/plugin/PluginInjector";
 
 const navItems = [
   { href: "/admin", label: "Dashboard" },
@@ -26,6 +27,7 @@ export default async function AdminLayout({
           <p className="text-xs text-zinc-500 mt-0.5">Admin Panel</p>
         </div>
         <nav className="flex-1 p-3 space-y-1">
+          <PluginInjector hook="injectAdminSidebar" />
           {navItems.map((item) => (
             <Link
               key={item.href}

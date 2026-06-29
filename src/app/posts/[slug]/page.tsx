@@ -11,6 +11,7 @@ import TagBadge from "@/components/blog/TagBadge";
 import CategoryBadge from "@/components/blog/CategoryBadge";
 import CommentForm from "@/components/blog/CommentForm";
 import CommentList from "@/components/blog/CommentList";
+import PluginInjector from "@/components/plugin/PluginInjector";
 
 export const revalidate = 300;
 
@@ -58,10 +59,16 @@ export default async function PostPage({
               maddyBlog
             </Link>
             <nav className="flex gap-6 text-sm">
-              <Link href="/" className="hover:text-zinc-600 dark:hover:text-zinc-400">
+              <Link
+                href="/"
+                className="hover:text-zinc-600 dark:hover:text-zinc-400"
+              >
                 Home
               </Link>
-              <Link href="/admin" className="hover:text-zinc-600 dark:hover:text-zinc-400">
+              <Link
+                href="/admin"
+                className="hover:text-zinc-600 dark:hover:text-zinc-400"
+              >
                 Admin
               </Link>
             </nav>
@@ -72,8 +79,16 @@ export default async function PostPage({
           <article>
             <header className="mb-10">
               <div className="flex items-center gap-3 mb-4">
-                {post.category && <CategoryBadge name={post.category.name} slug={post.category.slug} />}
-                {post.tags.length > 0 && post.tags.map((tag) => <TagBadge key={tag.slug} name={tag.name} slug={tag.slug} />)}
+                {post.category && (
+                  <CategoryBadge
+                    name={post.category.name}
+                    slug={post.category.slug}
+                  />
+                )}
+                {post.tags.length > 0 &&
+                  post.tags.map((tag) => (
+                    <TagBadge key={tag.slug} name={tag.name} slug={tag.slug} />
+                  ))}
               </div>
 
               <h1 className="text-4xl sm:text-5xl font-bold tracking-tight leading-tight mb-6">
@@ -123,10 +138,10 @@ export default async function PostPage({
             />
           </article>
 
+          <PluginInjector hook="injectPostFooter" />
+
           <section className="mt-16 border-t border-zinc-200 dark:border-zinc-800 pt-12">
-            <h2 className="text-2xl font-bold mb-2">
-              نظرات ({commentCount})
-            </h2>
+            <h2 className="text-2xl font-bold mb-2">نظرات ({commentCount})</h2>
             <p className="text-sm text-zinc-500 mb-8">
               دیدگاه خود را درباره این مطلب بنویسید.
             </p>
@@ -141,7 +156,8 @@ export default async function PostPage({
 
         <footer className="border-t border-zinc-200 dark:border-zinc-800">
           <div className="mx-auto max-w-4xl px-4 sm:px-6 py-8 text-center text-sm text-zinc-500">
-            &copy; {new Date().getFullYear()} maddyBlog. Published by {post.author.username}.
+            &copy; {new Date().getFullYear()} maddyBlog. Published by{" "}
+            {post.author.username}.
           </div>
         </footer>
       </div>

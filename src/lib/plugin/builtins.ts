@@ -1,8 +1,9 @@
-export function registerBuiltinPlugins(): void {
-  // Built-in plugins can be registered here:
+export async function registerBuiltinPlugins(): Promise<void> {
+  // Register built-in plugins here by calling registerBuiltinPlugin()
   //
-  //   import socialSharePlugin from "@/../plugins/social-share/index";
-  //   registerBuiltinPlugin(() => Promise.resolve({ plugin: socialSharePlugin }));
+  // Example:
+  //   const socialShare = await import("@/plugins/social-share");
+  //   registerBuiltinPlugin(() => Promise.resolve(socialShare));
   //
   // External plugins are loaded at runtime via pluginManager.registerFromModule()
 }
