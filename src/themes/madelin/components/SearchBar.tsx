@@ -3,7 +3,7 @@
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 
-export default function DefaultSearchBar() {
+export default function MadelinSearchBar() {
   const [query, setQuery] = useState("");
   const router = useRouter();
 
@@ -24,7 +24,18 @@ export default function DefaultSearchBar() {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search..."
-        className="w-40 sm:w-56 px-3 py-1.5 text-sm border border-zinc-300 dark:border-zinc-700 rounded-lg bg-transparent focus:outline-none focus:ring-2 focus:ring-zinc-400 dark:focus:ring-zinc-500"
+        className="w-40 sm:w-56 px-3 py-1.5 text-sm rounded-lg transition-all"
+        style={{
+          border: "1px solid var(--madelin-border)",
+          background: "transparent",
+          color: "var(--madelin-text)",
+        }}
+        onFocus={(e) =>
+          (e.currentTarget.style.borderColor = "var(--madelin-accent)")
+        }
+        onBlur={(e) =>
+          (e.currentTarget.style.borderColor = "var(--madelin-border)")
+        }
       />
     </form>
   );

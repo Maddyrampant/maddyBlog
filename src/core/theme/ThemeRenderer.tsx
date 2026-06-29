@@ -1,5 +1,6 @@
 import { themeRegistry } from "./ThemeRegistry";
 import * as DefaultTheme from "@/themes/default";
+import * as MadelinTheme from "@/themes/madelin";
 
 export type ThemeComponentName =
   | "Layout"
@@ -43,11 +44,36 @@ const defaultComponents: Record<string, AnyComponent | undefined> = {
   CommentForm: DefaultTheme.CommentForm,
 };
 
+const madelinComponents: Record<string, AnyComponent | undefined> = {
+  Layout: MadelinTheme.Layout,
+  PostPage: MadelinTheme.PostPage,
+  HomePage: MadelinTheme.HomePage,
+  Header: MadelinTheme.Header,
+  Footer: MadelinTheme.Footer,
+  AuthorCard: MadelinTheme.AuthorCard,
+  RelatedPosts: MadelinTheme.RelatedPosts,
+  Sidebar: MadelinTheme.Sidebar,
+  NewsletterSignup: MadelinTheme.NewsletterSignup,
+  PostCard: MadelinTheme.PostCard,
+  CategoryBadge: MadelinTheme.CategoryBadge,
+  TagBadge: MadelinTheme.TagBadge,
+  ReadingTime: MadelinTheme.ReadingTime,
+  SearchBar: MadelinTheme.SearchBar,
+  Pagination: MadelinTheme.Pagination,
+  CommentList: MadelinTheme.CommentList,
+  CommentForm: MadelinTheme.CommentForm,
+};
+
 const componentRegistry = new Map<string, Record<string, AnyComponent>>();
 
 componentRegistry.set(
   "default",
   defaultComponents as Record<string, AnyComponent>,
+);
+
+componentRegistry.set(
+  "madelin",
+  madelinComponents as Record<string, AnyComponent>,
 );
 
 export function registerThemeComponents(

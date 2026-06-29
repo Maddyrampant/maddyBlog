@@ -1,0 +1,114 @@
+:root {
+  --madelin-accent: #d97706;
+  --madelin-accent-light: #fef3c7;
+  --madelin-accent-glow: rgba(217, 119, 6, 0.15);
+  --madelin-font-family: "Inter", system-ui, sans-serif;
+  --madelin-glass-bg: rgba(255, 255, 255, 0.6);
+  --madelin-glass-border: rgba(255, 255, 255, 0.8);
+  --madelin-glass-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+  --madelin-warm-bg: #fefcf9;
+  --madelin-warm-subtle: #fdf6ee;
+  --madelin-text: #292524;
+  --madelin-text-muted: #a8a29e;
+  --madelin-border: #e7e5e4;
+  --madelin-card-bg: #ffffff;
+}
+
+.dark {
+  --madelin-accent: #f59e0b;
+  --madelin-accent-light: #451a03;
+  --madelin-accent-glow: rgba(245, 158, 11, 0.12);
+  --madelin-glass-bg: rgba(28, 25, 23, 0.7);
+  --madelin-glass-border: rgba(68, 64, 60, 0.5);
+  --madelin-glass-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+  --madelin-warm-bg: #1c1917;
+  --madelin-warm-subtle: #292524;
+  --madelin-text: #e7e5e4;
+  --madelin-text-muted: #78716c;
+  --madelin-border: #44403c;
+  --madelin-card-bg: #292524;
+}
+
+.madelin-gradient-text {
+  background: linear-gradient(135deg, var(--madelin-accent), #b45309);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.madelin-glass {
+  background: var(--madelin-glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--madelin-glass-border);
+  box-shadow: var(--madelin-glass-shadow);
+}
+
+.madelin-card {
+  background: var(--madelin-card-bg);
+  border: 1px solid var(--madelin-border);
+  border-radius: 1rem;
+  transition: all 0.25s ease;
+}
+
+.madelin-card:hover {
+  border-color: var(--madelin-accent);
+  box-shadow: 0 4px 20px var(--madelin-accent-glow);
+  transform: translateY(-2px);
+}
+
+.madelin-accent-border {
+  border-color: var(--madelin-accent);
+}
+
+.madelin-accent-ring:focus {
+  outline: none;
+  ring: 2px solid var(--madelin-accent);
+}
+
+@keyframes madelin-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.madelin-fade-in {
+  animation: madelin-fade-in 0.4s ease forwards;
+}
+
+@keyframes madelin-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.madelin-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--madelin-accent-glow) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: madelin-shimmer 3s ease-in-out infinite;
+}
+
+.madelin-divider {
+  border: none;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--madelin-accent),
+    transparent
+  );
+  opacity: 0.3;
+}

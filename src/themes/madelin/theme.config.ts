@@ -1,11 +1,12 @@
 import type { ThemeManifest, ThemeConfigValues } from "@/core/theme";
 
 export const manifest: ThemeManifest = {
-  name: "default",
+  name: "madelin",
   version: "1.0.0",
   author: "maddyBlog",
-  description: "The default theme for maddyBlog — clean, minimal, responsive.",
-  previewImage: "/themes/default/preview.png",
+  description:
+    "Madelin — an elegant, warm-toned theme with glassmorphism, gradient accents, and refined typography.",
+  previewImage: "/themes/madelin/preview.png",
   supportedFeatures: [
     "author-card",
     "related-posts",
@@ -20,11 +21,18 @@ export const manifest: ThemeManifest = {
   configurationSchema: {
     fields: [
       {
-        key: "primaryColor",
-        label: "Primary Color",
+        key: "accent",
+        label: "Accent Color",
         type: "color",
-        defaultValue: "#6366f1",
-        description: "Main accent color for links and highlights",
+        defaultValue: "#d97706",
+        description: "Main accent color for links, headings, and highlights",
+      },
+      {
+        key: "accentLight",
+        label: "Accent Light",
+        type: "color",
+        defaultValue: "#fef3c7",
+        description: "Light accent background tint",
       },
       {
         key: "fontFamily",
@@ -33,6 +41,7 @@ export const manifest: ThemeManifest = {
         defaultValue: "Inter",
         options: [
           { label: "Inter", value: "Inter" },
+          { label: "Lora", value: "Lora" },
           { label: "Georgia", value: "Georgia" },
           { label: "System UI", value: "system-ui" },
         ],
@@ -41,12 +50,19 @@ export const manifest: ThemeManifest = {
         key: "layout",
         label: "Layout Style",
         type: "select",
-        defaultValue: "classic",
+        defaultValue: "elegant",
         options: [
-          { label: "Classic", value: "classic" },
-          { label: "Compact", value: "compact" },
-          { label: "Magazine", value: "magazine" },
+          { label: "Elegant", value: "elegant" },
+          { label: "Minimal", value: "minimal" },
+          { label: "Wide", value: "wide" },
         ],
+      },
+      {
+        key: "glassOpacity",
+        label: "Glass Effect Opacity",
+        type: "number",
+        defaultValue: 0.6,
+        description: "Opacity of glassmorphism cards (0-1)",
       },
       {
         key: "showAuthorBox",
@@ -78,7 +94,13 @@ export const manifest: ThemeManifest = {
       {
         label: "Appearance",
         key: "appearance",
-        fields: ["primaryColor", "fontFamily", "layout"],
+        fields: [
+          "accent",
+          "accentLight",
+          "fontFamily",
+          "layout",
+          "glassOpacity",
+        ],
       },
       {
         label: "Content",
@@ -95,9 +117,11 @@ export const manifest: ThemeManifest = {
 };
 
 export const defaultConfig: ThemeConfigValues = {
-  primaryColor: "#6366f1",
+  accent: "#d97706",
+  accentLight: "#fef3c7",
   fontFamily: "Inter",
-  layout: "classic",
+  layout: "elegant",
+  glassOpacity: 0.6,
   showAuthorBox: true,
   showReadingTime: true,
   showRelatedPosts: true,

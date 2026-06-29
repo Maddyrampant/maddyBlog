@@ -11,9 +11,11 @@ type CommentListProps = {
   postId: string;
 };
 
-export default function DefaultCommentList({ comments }: CommentListProps) {
+export default function MadelinCommentList({ comments }: CommentListProps) {
   if (comments.length === 0) {
-    return <p className="text-zinc-500">No comments yet.</p>;
+    return (
+      <p style={{ color: "var(--madelin-text-muted)" }}>No comments yet.</p>
+    );
   }
 
   return (
@@ -27,16 +29,32 @@ export default function DefaultCommentList({ comments }: CommentListProps) {
 
 function CommentItem({ comment, depth }: { comment: Comment; depth: number }) {
   return (
-    <div className={`${depth > 0 ? "ml-6 border-l border-zinc-200 dark:border-zinc-800 pl-4" : ""}`}>
-      <div className="border border-zinc-200 dark:border-zinc-800 rounded-lg p-4">
-        <div className="flex items-center gap-2 text-sm text-zinc-500 mb-2">
-          <span className="font-medium text-zinc-700 dark:text-zinc-300">
+    <div
+      className={depth > 0 ? "ml-6 pl-4" : ""}
+      style={
+        depth > 0
+          ? { borderLeft: "1px solid var(--madelin-border)" }
+          : undefined
+      }
+    >
+      <div className="madelin-card p-5">
+        <div
+          className="flex items-center gap-2 text-sm mb-2"
+          style={{ color: "var(--madelin-text-muted)" }}
+        >
+          <span
+            className="font-medium"
+            style={{ color: "var(--madelin-text)" }}
+          >
             {comment.author.username}
           </span>
-          <span>·</span>
+          <span
+            className="w-1 h-1 rounded-full"
+            style={{ background: "var(--madelin-text-muted)" }}
+          />
           <time>{new Date(comment.createdAt).toLocaleDateString()}</time>
         </div>
-        <p className="text-zinc-700 dark:text-zinc-300">{comment.content}</p>
+        <p>{comment.content}</p>
       </div>
       {comment.replies.length > 0 && (
         <div className="mt-4 space-y-4">

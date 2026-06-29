@@ -8,13 +8,15 @@ type CommentFormProps = {
   onSuccess?: () => void;
 };
 
-export default function DefaultCommentForm({
+export default function MadelinCommentForm({
   postId,
   parentId,
   onSuccess,
 }: CommentFormProps) {
   const [content, setContent] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [status, setStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -39,7 +41,10 @@ export default function DefaultCommentForm({
 
   if (status === "success") {
     return (
-      <p className="text-sm text-green-600 dark:text-green-400">
+      <p
+        className="text-sm font-medium"
+        style={{ color: "var(--madelin-accent)" }}
+      >
         Comment posted successfully!
       </p>
     );
@@ -50,22 +55,43 @@ export default function DefaultCommentForm({
       <textarea
         value={content}
         onChange={(e) => setContent(e.target.value)}
-        placeholder={parentId ? "Write a reply..." : "Write a comment..."}
+        placeholder={parentId ? "Write a reply..." : "Share your thoughts..."}
         rows={4}
-        className="w-full px-4 py-3 text-sm border border-zinc-300 dark:border-zinc-700 rounded-lg bg-transparent focus:outline-none focus:ring-2 focus:ring-zinc-400 dark:focus:ring-zinc-500 resize-none"
+        className="w-full px-4 py-3 text-sm rounded-lg transition-all resize-none"
+        style={{
+          border: "1px solid var(--madelin-border)",
+          background: "transparent",
+          color: "var(--madelin-text)",
+        }}
+        onFocus={(e) =>
+          (e.currentTarget.style.borderColor = "var(--madelin-accent)")
+        }
+        onBlur={(e) =>
+          (e.currentTarget.style.borderColor = "var(--madelin-border)")
+        }
         required
       />
       <div className="flex items-center justify-between mt-3">
         <button
           type="submit"
           disabled={status === "loading" || !content.trim()}
-          className="px-5 py-2 text-sm font-medium bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-lg hover:bg-zinc-800 dark:hover:bg-zinc-200 disabled:opacity-50 transition-colors"
+          className="px-5 py-2 text-sm font-medium rounded-lg transition-all disabled:opacity-50"
+          style={{
+            background: "var(--madelin-accent)",
+            color: "#fff",
+          }}
         >
-          {status === "loading" ? "Posting..." : parentId ? "Reply" : "Post Comment"}
+          {status === "loading"
+            ? "Posting..."
+            : parentId
+              ? "Reply"
+              : "Post Comment"}
         </button>
       </div>
       {status === "error" && (
-        <p className="text-sm text-red-500 mt-2">Failed to post. Try again.</p>
+        <p className="text-sm mt-2" style={{ color: "#dc2626" }}>
+          Failed to post. Try again.
+        </p>
       )}
     </form>
   );

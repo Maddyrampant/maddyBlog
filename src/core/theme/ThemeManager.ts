@@ -3,6 +3,7 @@ import type {
   ThemeEntry,
   ThemeConfigValues,
   ThemeManifest,
+  ThemeStatus,
 } from "./ThemeTypes";
 import { themeRegistry } from "./ThemeRegistry";
 import { themeLoader } from "./ThemeLoader";
@@ -98,6 +99,11 @@ const DEFAULT_MANIFEST: ThemeManifest = {
   },
 };
 
+import {
+  manifest as MadelinManifest,
+  defaultConfig as MadelinConfig,
+} from "@/themes/madelin/theme.config";
+
 const DEFAULT_CONFIG: ThemeConfigValues = {
   primaryColor: "#6366f1",
   fontFamily: "Inter",
@@ -107,6 +113,22 @@ const DEFAULT_CONFIG: ThemeConfigValues = {
   showRelatedPosts: true,
   maxPostsPerPage: 9,
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let prismaClient: any = null;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function getPrisma(): Promise<any | null> {
+  if (typeof window !== "undefined") return null;
+  if (prismaClient) return prismaClient;
+  try {
+    const mod = await import("@/lib/prisma");
+    prismaClient = mod.prisma;
+    return prismaClient;
+  } catch {
+    return null;
+  }
+}
 
 class ThemeManager {
   private entries = new Map<string, ThemeEntry>();
@@ -119,22 +141,79 @@ class ThemeManager {
   }
 
   private async discoverThemes(): Promise<void> {
-    if (!this.entries.has("default")) {
-      const entry: ThemeEntry = {
-        manifest: DEFAULT_MANIFEST,
-        status: "inactive",
-        config: DEFAULT_CONFIG,
-        installedAt: new Date(),
-        directory: "themes/default",
-      };
-      this.entries.set("default", entry);
-      themeRegistry.register(
-        "default",
-        "themes/default",
-        DEFAULT_MANIFEST,
-        DEFAULT_CONFIG,
-      );
+    const prisma = await getPrisma();
+    if (prisma) {
+      try {
+        const dbThemes = await prisma.theme.findMany();
+        if (dbThemes.length > 0) {
+          for (const t of dbThemes) {
+            const config = this.safeParseConfig(t.config);
+            const entry: ThemeEntry = {
+              manifest: DEFAULT_MANIFEST,
+              status: this.toThemeStatus(t.status),
+              config,
+              installedAt: t.installedAt,
+              directory: t.directory,
+            };
+            this.entries.set(t.name, entry);
+            themeRegistry.register(
+              t.name,
+              t.directory,
+              DEFAULT_MANIFEST,
+              config,
+            );
+            themeRegistry.updateStatus(t.name, this.toThemeStatus(t.status));
+            if (t.status === "active") {
+              themeRegistry.setActive(t.name);
+            }
+          }
+          return;
+        }
+      } catch {
+        // DB unreachable — fall through to in-memory seed
+      }
     }
+
+    if (!this.entries.has("default")) {
+      this.seedDefaultInMemory();
+    }
+    if (!this.entries.has("madelin")) {
+      this.seedMadelinInMemory();
+    }
+  }
+
+  private seedDefaultInMemory(): void {
+    const entry: ThemeEntry = {
+      manifest: DEFAULT_MANIFEST,
+      status: "inactive",
+      config: DEFAULT_CONFIG,
+      installedAt: new Date(),
+      directory: "themes/default",
+    };
+    this.entries.set("default", entry);
+    themeRegistry.register(
+      "default",
+      "themes/default",
+      DEFAULT_MANIFEST,
+      DEFAULT_CONFIG,
+    );
+  }
+
+  private seedMadelinInMemory(): void {
+    const entry: ThemeEntry = {
+      manifest: MadelinManifest,
+      status: "inactive",
+      config: MadelinConfig,
+      installedAt: new Date(),
+      directory: "themes/madelin",
+    };
+    this.entries.set("madelin", entry);
+    themeRegistry.register(
+      "madelin",
+      "themes/madelin",
+      MadelinManifest,
+      MadelinConfig,
+    );
   }
 
   async activate(name: string): Promise<boolean> {
@@ -152,12 +231,14 @@ class ThemeManager {
         entry.status = "error";
         entry.error = "No valid components found";
         themeRegistry.updateStatus(name, "error", entry.error);
+        await this.persistStatus(name, "error");
         return false;
       }
 
       entry.status = "active";
       themeRegistry.updateStatus(name, "active");
       themeRegistry.setActive(name);
+      await this.persistStatus(name, "active");
 
       return true;
     } catch (error) {
@@ -165,6 +246,7 @@ class ThemeManager {
       entry.error =
         error instanceof Error ? error.message : "Activation failed";
       themeRegistry.updateStatus(name, "error", entry.error);
+      await this.persistStatus(name, "error");
       return false;
     }
   }
@@ -175,7 +257,8 @@ class ThemeManager {
 
     entry.status = "inactive";
     themeRegistry.updateStatus(name, "inactive");
-    themeLoader.clearCache(entry.directory);
+    themeLoader.clearCache(entry.manifest.name);
+    await this.persistStatus(name, "inactive");
 
     return true;
   }
@@ -197,6 +280,29 @@ class ThemeManager {
 
     this.entries.set(manifest.name, entry);
     themeRegistry.register(manifest.name, directory, manifest, config);
+
+    const hasComponents = await themeLoader.resolveComponent(
+      manifest.name,
+      "Layout",
+    );
+    if (!hasComponents) {
+      console.warn(
+        `Theme '${manifest.name}' installed but no components registered in ThemeLoader. ` +
+          `Components must be registered via registerThemeModules() before the theme can resolve.`,
+      );
+    }
+
+    await this.persistTheme({
+      name: manifest.name,
+      directory,
+      version: manifest.version,
+      author: manifest.author,
+      description: manifest.description,
+      status: "inactive",
+      config: JSON.stringify(config ?? {}),
+      installedAt: entry.installedAt,
+    });
+
     return true;
   }
 
@@ -212,7 +318,16 @@ class ThemeManager {
 
     this.entries.delete(name);
     themeRegistry.unregister(name);
-    themeLoader.clearCache(entry.directory);
+    themeLoader.clearCache(entry.manifest.name);
+
+    const prisma = await getPrisma();
+    if (prisma) {
+      try {
+        await prisma.theme.delete({ where: { name } });
+      } catch {
+        // Non-critical
+      }
+    }
 
     return true;
   }
@@ -223,7 +338,10 @@ class ThemeManager {
     const activeEntry = themeRegistry.getActiveEntry();
     if (!activeEntry) return null;
 
-    return themeLoader.resolveComponent(activeEntry.directory, componentName);
+    return themeLoader.resolveComponent(
+      activeEntry.manifest.name,
+      componentName,
+    );
   }
 
   async getActiveComponent(
@@ -250,11 +368,12 @@ class ThemeManager {
     return this.entries.get(activeName);
   }
 
-  updateConfig(name: string, config: ThemeConfigValues): void {
+  async updateConfig(name: string, config: ThemeConfigValues): Promise<void> {
     const entry = this.entries.get(name);
     if (entry) {
       entry.config = { ...entry.config, ...config };
       themeRegistry.updateConfig(name, config);
+      await this.persistConfig(name, entry.config);
     }
   }
 
@@ -265,6 +384,102 @@ class ThemeManager {
   getActiveConfig(): ThemeConfigValues | undefined {
     const active = this.getActiveEntry();
     return active?.config;
+  }
+
+  // ─── Prisma Persistence Helpers ────────────────────────────────────
+
+  private async persistStatus(
+    name: string,
+    status: ThemeStatus,
+  ): Promise<void> {
+    const prisma = await getPrisma();
+    if (!prisma) return;
+    try {
+      await prisma.theme.upsert({
+        where: { name },
+        update: { status },
+        create: this.buildCreateInput(name, status),
+      });
+    } catch {
+      // Non-critical — in-memory state is still correct
+    }
+  }
+
+  private async persistConfig(
+    name: string,
+    config: ThemeConfigValues,
+  ): Promise<void> {
+    const prisma = await getPrisma();
+    if (!prisma) return;
+    try {
+      await prisma.theme.upsert({
+        where: { name },
+        update: { config: JSON.stringify(config) },
+        create: this.buildCreateInput(name, "inactive", config),
+      });
+    } catch {
+      // Non-critical
+    }
+  }
+
+  private async persistTheme(data: {
+    name: string;
+    directory: string;
+    version: string;
+    author: string;
+    description: string;
+    status: string;
+    config: string;
+    installedAt: Date;
+  }): Promise<void> {
+    const prisma = await getPrisma();
+    if (!prisma) return;
+    try {
+      await prisma.theme.upsert({
+        where: { name: data.name },
+        update: {
+          directory: data.directory,
+          version: data.version,
+          author: data.author,
+          description: data.description,
+          status: data.status,
+          config: data.config,
+        },
+        create: data,
+      });
+    } catch {
+      // Non-critical
+    }
+  }
+
+  private buildCreateInput(
+    name: string,
+    status: ThemeStatus,
+    config?: ThemeConfigValues,
+  ) {
+    const entry = this.entries.get(name);
+    return {
+      name,
+      directory: entry?.directory ?? "themes/default",
+      version: entry?.manifest.version ?? DEFAULT_MANIFEST.version,
+      author: entry?.manifest.author ?? DEFAULT_MANIFEST.author,
+      description: entry?.manifest.description ?? DEFAULT_MANIFEST.description,
+      status,
+      config: JSON.stringify(config ?? entry?.config ?? DEFAULT_CONFIG),
+    };
+  }
+
+  private toThemeStatus(raw: string): ThemeStatus {
+    if (raw === "active" || raw === "error") return raw;
+    return "inactive";
+  }
+
+  private safeParseConfig(raw: string): ThemeConfigValues {
+    try {
+      return JSON.parse(raw) as ThemeConfigValues;
+    } catch {
+      return { ...DEFAULT_CONFIG };
+    }
   }
 }
 

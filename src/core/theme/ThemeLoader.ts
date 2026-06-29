@@ -2,10 +2,11 @@ import type { ThemeComponentName, ThemeManifest } from "./ThemeTypes";
 import { THEME_REQUIRED_COMPONENTS } from "./ThemeTypes";
 import { registerThemeComponents } from "./ThemeRenderer";
 import * as DefaultTheme from "@/themes/default";
+import * as MadelinTheme from "@/themes/madelin";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const themeModuleRegistry = new Map<
   string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Record<string, React.ComponentType<any>>
 >();
 
@@ -48,10 +49,34 @@ export class ThemeLoader {
 
     themeModuleRegistry.set("default", defaultModules);
     registerThemeComponents("default", defaultModules);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const madelinModules: Record<string, React.ComponentType<any>> = {
+      Layout: MadelinTheme.Layout,
+      PostPage: MadelinTheme.PostPage,
+      HomePage: MadelinTheme.HomePage,
+      Header: MadelinTheme.Header,
+      Footer: MadelinTheme.Footer,
+      AuthorCard: MadelinTheme.AuthorCard,
+      RelatedPosts: MadelinTheme.RelatedPosts,
+      Sidebar: MadelinTheme.Sidebar,
+      NewsletterSignup: MadelinTheme.NewsletterSignup,
+      PostCard: MadelinTheme.PostCard,
+      CategoryBadge: MadelinTheme.CategoryBadge,
+      TagBadge: MadelinTheme.TagBadge,
+      ReadingTime: MadelinTheme.ReadingTime,
+      SearchBar: MadelinTheme.SearchBar,
+      Pagination: MadelinTheme.Pagination,
+      CommentList: MadelinTheme.CommentList,
+      CommentForm: MadelinTheme.CommentForm,
+    };
+
+    themeModuleRegistry.set("madelin", madelinModules);
+    registerThemeComponents("madelin", madelinModules);
   }
 
   async loadThemeComponents(
-    directory: string,
+    _directory: string,
     manifest: ThemeManifest,
   ): Promise<
     {
@@ -69,12 +94,9 @@ export class ThemeLoader {
     const modules = themeModuleRegistry.get(themeName);
 
     if (!modules) {
-      if (THEME_REQUIRED_COMPONENTS.some((name) => !modules?.[name])) {
-        throw new Error(
-          `Theme "${themeName}" is not registered in the module registry`,
-        );
-      }
-      return [];
+      throw new Error(
+        `Theme "${themeName}" is not registered in the module registry`,
+      );
     }
 
     for (const [name, Component] of Object.entries(modules)) {
@@ -92,34 +114,33 @@ export class ThemeLoader {
   }
 
   async resolveComponent(
-    directory: string,
+    themeName: string,
     componentName: ThemeComponentName,
   ): Promise<React.ComponentType<unknown> | null> {
-    const themeCacheKey = directory;
-    if (!this.componentCache.has(themeCacheKey)) {
-      this.componentCache.set(themeCacheKey, new Map());
+    if (!this.componentCache.has(themeName)) {
+      this.componentCache.set(themeName, new Map());
     }
 
-    const cache = this.componentCache.get(themeCacheKey)!;
+    const cache = this.componentCache.get(themeName)!;
     if (cache.has(componentName)) {
       return cache.get(componentName) ?? null;
     }
 
-    // Find the theme name from the registry by directory
-    for (const [, entry] of themeModuleRegistry.entries()) {
-      const Component = entry[componentName];
-      if (Component) {
-        cache.set(componentName, Component);
-        return Component;
-      }
+    const modules = themeModuleRegistry.get(themeName);
+    if (!modules) return null;
+
+    const Component = modules[componentName];
+    if (Component) {
+      cache.set(componentName, Component);
+      return Component;
     }
 
     return null;
   }
 
-  clearCache(directory?: string): void {
-    if (directory) {
-      this.componentCache.delete(directory);
+  clearCache(themeName?: string): void {
+    if (themeName) {
+      this.componentCache.delete(themeName);
     } else {
       this.componentCache.clear();
     }
