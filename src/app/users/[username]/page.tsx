@@ -4,6 +4,7 @@ import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 import { getFollowCounts } from "@/services/socialService";
 import FollowButton from "@/components/social/FollowButton";
+import { ThemePageShell } from "@/components/layout/ThemePageShell";
 
 type Props = {
   params: Promise<{ username: string }>;
@@ -70,23 +71,7 @@ export default async function UserProfilePage({ params }: Props) {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="border-b border-zinc-200 dark:border-zinc-800">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 py-5 flex items-center justify-between">
-          <Link href="/" className="text-xl font-bold tracking-tight">
-            maddyBlog
-          </Link>
-          <nav className="flex gap-6 text-sm">
-            <Link
-              href="/"
-              className="hover:text-zinc-600 dark:hover:text-zinc-400"
-            >
-              Home
-            </Link>
-          </nav>
-        </div>
-      </header>
-
+    <ThemePageShell>
       <main className="flex-1 mx-auto max-w-4xl w-full px-4 sm:px-6 py-12">
         <div className="flex items-start gap-6 mb-10">
           <div className="w-20 h-20 rounded-full bg-zinc-200 dark:bg-zinc-700 overflow-hidden flex-shrink-0">
@@ -199,12 +184,6 @@ export default async function UserProfilePage({ params }: Props) {
           )}
         </div>
       </main>
-
-      <footer className="border-t border-zinc-200 dark:border-zinc-800">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 py-8 text-center text-sm text-zinc-500">
-          &copy; {new Date().getFullYear()} maddyBlog.
-        </div>
-      </footer>
-    </div>
+    </ThemePageShell>
   );
 }

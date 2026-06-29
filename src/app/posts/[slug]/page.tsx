@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
 import { getPostBySlug } from "@/services/blogService";
@@ -12,6 +11,7 @@ import CategoryBadge from "@/components/blog/CategoryBadge";
 import CommentForm from "@/components/blog/CommentForm";
 import CommentList from "@/components/blog/CommentList";
 import PluginInjector from "@/components/plugin/PluginInjector";
+import { ThemePageShell } from "@/components/layout/ThemePageShell";
 
 export const revalidate = 300;
 
@@ -52,29 +52,7 @@ export default async function PostPage({
   return (
     <>
       <StructuredData {...post} />
-      <div className="min-h-screen flex flex-col">
-        <header className="border-b border-zinc-200 dark:border-zinc-800">
-          <div className="mx-auto max-w-4xl px-4 sm:px-6 py-5 flex items-center justify-between">
-            <Link href="/" className="text-xl font-bold tracking-tight">
-              maddyBlog
-            </Link>
-            <nav className="flex gap-6 text-sm">
-              <Link
-                href="/"
-                className="hover:text-zinc-600 dark:hover:text-zinc-400"
-              >
-                Home
-              </Link>
-              <Link
-                href="/admin"
-                className="hover:text-zinc-600 dark:hover:text-zinc-400"
-              >
-                Admin
-              </Link>
-            </nav>
-          </div>
-        </header>
-
+      <ThemePageShell>
         <main className="flex-1 mx-auto max-w-4xl w-full px-4 sm:px-6 py-12">
           <article>
             <header className="mb-10">
@@ -153,14 +131,7 @@ export default async function PostPage({
             <CommentList comments={commentTree} postId={post.id} />
           </section>
         </main>
-
-        <footer className="border-t border-zinc-200 dark:border-zinc-800">
-          <div className="mx-auto max-w-4xl px-4 sm:px-6 py-8 text-center text-sm text-zinc-500">
-            &copy; {new Date().getFullYear()} maddyBlog. Published by{" "}
-            {post.author.username}.
-          </div>
-        </footer>
-      </div>
+      </ThemePageShell>
     </>
   );
 }

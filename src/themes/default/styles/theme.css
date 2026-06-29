@@ -1,0 +1,17 @@
+:root {
+  --theme-primary: #6366f1;
+  --theme-font-family: "Inter", system-ui, sans-serif;
+  --theme-layout: classic;
+}
+
+.theme-primary {
+  color: var(--theme-primary);
+}
+
+.theme-primary-bg {
+  background-color: var(--theme-primary);
+}
+
+.theme-primary-border {
+  border-color: var(--theme-primary);
+}

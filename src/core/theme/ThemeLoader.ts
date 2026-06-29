@@ -1,16 +1,22 @@
-import type {
-  ThemeComponent,
-  ThemeComponentName,
-  ThemeManifest,
-} from "./ThemeTypes";
+import type { ThemeComponentName, ThemeManifest } from "./ThemeTypes";
 import { THEME_REQUIRED_COMPONENTS } from "./ThemeTypes";
+import { registerThemeComponents } from "./ThemeRenderer";
+import * as DefaultTheme from "@/themes/default";
 
-export type ThemeComponentModules = Partial<
-  Record<
-    ThemeComponentName,
-    () => Promise<{ default: React.ComponentType<unknown> }>
-  >
->;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const themeModuleRegistry = new Map<
+  string,
+  Record<string, React.ComponentType<any>>
+>();
+
+export function registerThemeModules(
+  themeName: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  modules: Record<string, React.ComponentType<any>>,
+): void {
+  themeModuleRegistry.set(themeName, modules);
+  registerThemeComponents(themeName, modules);
+}
 
 export class ThemeLoader {
   private componentCache = new Map<
@@ -18,31 +24,68 @@ export class ThemeLoader {
     Map<ThemeComponentName, React.ComponentType<unknown>>
   >();
 
+  constructor() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const defaultModules: Record<string, React.ComponentType<any>> = {
+      Layout: DefaultTheme.Layout,
+      PostPage: DefaultTheme.PostPage,
+      HomePage: DefaultTheme.HomePage,
+      Header: DefaultTheme.Header,
+      Footer: DefaultTheme.Footer,
+      AuthorCard: DefaultTheme.AuthorCard,
+      RelatedPosts: DefaultTheme.RelatedPosts,
+      Sidebar: DefaultTheme.Sidebar,
+      NewsletterSignup: DefaultTheme.NewsletterSignup,
+      PostCard: DefaultTheme.PostCard,
+      CategoryBadge: DefaultTheme.CategoryBadge,
+      TagBadge: DefaultTheme.TagBadge,
+      ReadingTime: DefaultTheme.ReadingTime,
+      SearchBar: DefaultTheme.SearchBar,
+      Pagination: DefaultTheme.Pagination,
+      CommentList: DefaultTheme.CommentList,
+      CommentForm: DefaultTheme.CommentForm,
+    };
+
+    themeModuleRegistry.set("default", defaultModules);
+    registerThemeComponents("default", defaultModules);
+  }
+
   async loadThemeComponents(
     directory: string,
     manifest: ThemeManifest,
-  ): Promise<ThemeComponent[]> {
-    const components: ThemeComponent[] = [];
-    const modules = this.getComponentModules(directory);
+  ): Promise<
+    {
+      name: ThemeComponentName;
+      type: "required" | "optional";
+      component: () => React.ReactNode;
+    }[]
+  > {
+    const components: {
+      name: ThemeComponentName;
+      type: "required" | "optional";
+      component: () => React.ReactNode;
+    }[] = [];
+    const themeName = manifest.name;
+    const modules = themeModuleRegistry.get(themeName);
 
-    for (const [name, loader] of Object.entries(modules)) {
-      try {
-        const mod = await loader();
-        components.push({
-          name: name as ThemeComponentName,
-          type: THEME_REQUIRED_COMPONENTS.includes(name as ThemeComponentName)
-            ? "required"
-            : "optional",
-          component: mod.default as unknown as () => React.ReactNode,
-        });
-      } catch {
-        const componentName = name as ThemeComponentName;
-        if (THEME_REQUIRED_COMPONENTS.includes(componentName)) {
-          throw new Error(
-            `Theme "${manifest.name}" is missing required component: ${componentName}`,
-          );
-        }
+    if (!modules) {
+      if (THEME_REQUIRED_COMPONENTS.some((name) => !modules?.[name])) {
+        throw new Error(
+          `Theme "${themeName}" is not registered in the module registry`,
+        );
       }
+      return [];
+    }
+
+    for (const [name, Component] of Object.entries(modules)) {
+      const componentName = name as ThemeComponentName;
+      components.push({
+        name: componentName,
+        type: THEME_REQUIRED_COMPONENTS.includes(componentName)
+          ? "required"
+          : "optional",
+        component: Component as unknown as () => React.ReactNode,
+      });
     }
 
     return components;
@@ -53,7 +96,6 @@ export class ThemeLoader {
     componentName: ThemeComponentName,
   ): Promise<React.ComponentType<unknown> | null> {
     const themeCacheKey = directory;
-
     if (!this.componentCache.has(themeCacheKey)) {
       this.componentCache.set(themeCacheKey, new Map());
     }
@@ -63,17 +105,16 @@ export class ThemeLoader {
       return cache.get(componentName) ?? null;
     }
 
-    try {
-      const modules = this.getComponentModules(directory);
-      const loader = modules[componentName];
-      if (!loader) return null;
-
-      const mod = await loader();
-      cache.set(componentName, mod.default as React.ComponentType<unknown>);
-      return mod.default as React.ComponentType<unknown>;
-    } catch {
-      return null;
+    // Find the theme name from the registry by directory
+    for (const [, entry] of themeModuleRegistry.entries()) {
+      const Component = entry[componentName];
+      if (Component) {
+        cache.set(componentName, Component);
+        return Component;
+      }
     }
+
+    return null;
   }
 
   clearCache(directory?: string): void {
@@ -82,44 +123,6 @@ export class ThemeLoader {
     } else {
       this.componentCache.clear();
     }
-  }
-
-  private getComponentModules(directory: string): ThemeComponentModules {
-    const basePath = directory.startsWith("/")
-      ? directory
-      : `../../${directory}`;
-
-    return {
-      Layout: () => import(/* @vite-ignore */ `${basePath}/layout`),
-      PostPage: () => import(/* @vite-ignore */ `${basePath}/post`),
-      HomePage: () => import(/* @vite-ignore */ `${basePath}/home`),
-      Header: () => import(/* @vite-ignore */ `${basePath}/components/Header`),
-      Footer: () => import(/* @vite-ignore */ `${basePath}/components/Footer`),
-      AuthorCard: () =>
-        import(/* @vite-ignore */ `${basePath}/components/AuthorCard`),
-      RelatedPosts: () =>
-        import(/* @vite-ignore */ `${basePath}/components/RelatedPosts`),
-      Sidebar: () =>
-        import(/* @vite-ignore */ `${basePath}/components/Sidebar`),
-      NewsletterSignup: () =>
-        import(/* @vite-ignore */ `${basePath}/components/NewsletterSignup`),
-      PostCard: () =>
-        import(/* @vite-ignore */ `${basePath}/components/PostCard`),
-      CategoryBadge: () =>
-        import(/* @vite-ignore */ `${basePath}/components/CategoryBadge`),
-      TagBadge: () =>
-        import(/* @vite-ignore */ `${basePath}/components/TagBadge`),
-      ReadingTime: () =>
-        import(/* @vite-ignore */ `${basePath}/components/ReadingTime`),
-      SearchBar: () =>
-        import(/* @vite-ignore */ `${basePath}/components/SearchBar`),
-      Pagination: () =>
-        import(/* @vite-ignore */ `${basePath}/components/Pagination`),
-      CommentList: () =>
-        import(/* @vite-ignore */ `${basePath}/components/CommentList`),
-      CommentForm: () =>
-        import(/* @vite-ignore */ `${basePath}/components/CommentForm`),
-    };
   }
 }
 

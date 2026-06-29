@@ -4,9 +4,9 @@ import { getLatestPosts, getAllCategories } from "@/services/blogService";
 import { getTrendingPosts } from "@/services/trendingService";
 import { getPopularTags } from "@/services/tagService";
 import { generatePaginatedMetadata } from "@/lib/seo";
+import { ThemePageShell } from "@/components/layout/ThemePageShell";
 import FeaturedPost from "@/components/blog/FeaturedPost";
 import PostList from "@/components/blog/PostList";
-import SearchBar from "@/components/blog/SearchBar";
 
 export const revalidate = 60;
 
@@ -23,7 +23,7 @@ export default async function HomePage() {
 
   try {
     const [result, catResult, trendingResult, tagsResult] = await Promise.all([
-      getLatestPosts(1, 9),
+      getLatestPosts(1, 50),
       getAllCategories(),
       getTrendingPosts(5),
       getPopularTags(10),
@@ -39,32 +39,7 @@ export default async function HomePage() {
   const [featured, ...rest] = posts;
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="border-b border-zinc-200 dark:border-zinc-800">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 py-5 flex items-center justify-between">
-          <Link href="/" className="text-xl font-bold tracking-tight">
-            maddyBlog
-          </Link>
-          <div className="flex items-center gap-4">
-            <SearchBar />
-            <nav className="hidden sm:flex gap-6 text-sm">
-              <Link
-                href="/"
-                className="hover:text-zinc-600 dark:hover:text-zinc-400"
-              >
-                Home
-              </Link>
-              <Link
-                href="/admin"
-                className="hover:text-zinc-600 dark:hover:text-zinc-400"
-              >
-                Admin
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </header>
-
+    <ThemePageShell>
       <main className="flex-1 mx-auto max-w-6xl w-full px-4 sm:px-6 py-12">
         <section className="mb-16">
           <h1 className="text-5xl sm:text-6xl font-bold tracking-tight mb-4">
@@ -166,20 +141,6 @@ export default async function HomePage() {
           </section>
         )}
       </main>
-
-      <footer className="border-t border-zinc-200 dark:border-zinc-800">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 py-8 flex items-center justify-between text-sm text-zinc-500">
-          <span>
-            &copy; {new Date().getFullYear()} maddyBlog. All rights reserved.
-          </span>
-          <Link
-            href="/"
-            className="hover:text-zinc-700 dark:hover:text-zinc-300"
-          >
-            maddyBlog
-          </Link>
-        </div>
-      </footer>
-    </div>
+    </ThemePageShell>
   );
 }

@@ -3,11 +3,14 @@ import type { Metadata } from "next";
 import { searchPosts } from "@/services/blogService";
 import { generatePaginatedMetadata } from "@/lib/seo";
 import PostCard from "@/components/blog/PostCard";
-import SearchBar from "@/components/blog/SearchBar";
+import { ThemePageShell } from "@/components/layout/ThemePageShell";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = generatePaginatedMetadata("Search", "Search posts on maddyBlog.");
+export const metadata: Metadata = generatePaginatedMetadata(
+  "Search",
+  "Search posts on maddyBlog.",
+);
 
 export default async function SearchPage({
   searchParams,
@@ -32,14 +35,7 @@ export default async function SearchPage({
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="border-b border-zinc-200 dark:border-zinc-800">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 py-5 flex items-center justify-between">
-          <Link href="/" className="text-xl font-bold tracking-tight">maddyBlog</Link>
-          <SearchBar />
-        </div>
-      </header>
-
+    <ThemePageShell>
       <main className="flex-1 mx-auto max-w-4xl w-full px-4 sm:px-6 py-12">
         <section className="mb-12">
           <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-2">
@@ -60,7 +56,8 @@ export default async function SearchPage({
           </div>
         ) : query ? (
           <p className="text-zinc-500 py-12 text-center">
-            No posts found for &ldquo;{query}&rdquo;. Try a different search term.
+            No posts found for &ldquo;{query}&rdquo;. Try a different search
+            term.
           </p>
         ) : (
           <p className="text-zinc-500 py-12 text-center">
@@ -90,6 +87,6 @@ export default async function SearchPage({
           </nav>
         )}
       </main>
-    </div>
+    </ThemePageShell>
   );
 }

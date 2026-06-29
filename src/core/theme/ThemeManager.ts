@@ -7,6 +7,107 @@ import type {
 import { themeRegistry } from "./ThemeRegistry";
 import { themeLoader } from "./ThemeLoader";
 
+const DEFAULT_MANIFEST: ThemeManifest = {
+  name: "default",
+  version: "1.0.0",
+  author: "maddyBlog",
+  description: "The default theme for maddyBlog — clean, minimal, responsive.",
+  supportedFeatures: [
+    "author-card",
+    "related-posts",
+    "sidebar",
+    "newsletter",
+    "search",
+    "categories",
+    "tags",
+    "reading-time",
+    "dark-mode",
+  ],
+  configurationSchema: {
+    fields: [
+      {
+        key: "primaryColor",
+        label: "Primary Color",
+        type: "color",
+        defaultValue: "#6366f1",
+      },
+      {
+        key: "fontFamily",
+        label: "Font Family",
+        type: "font",
+        defaultValue: "Inter",
+        options: [
+          { label: "Inter", value: "Inter" },
+          { label: "Georgia", value: "Georgia" },
+          { label: "System UI", value: "system-ui" },
+        ],
+      },
+      {
+        key: "layout",
+        label: "Layout Style",
+        type: "select",
+        defaultValue: "classic",
+        options: [
+          { label: "Classic", value: "classic" },
+          { label: "Compact", value: "compact" },
+          { label: "Magazine", value: "magazine" },
+        ],
+      },
+      {
+        key: "showAuthorBox",
+        label: "Show Author Box",
+        type: "boolean",
+        defaultValue: true,
+      },
+      {
+        key: "showReadingTime",
+        label: "Show Reading Time",
+        type: "boolean",
+        defaultValue: true,
+      },
+      {
+        key: "showRelatedPosts",
+        label: "Show Related Posts",
+        type: "boolean",
+        defaultValue: true,
+      },
+      {
+        key: "maxPostsPerPage",
+        label: "Posts Per Page",
+        type: "number",
+        defaultValue: 9,
+      },
+    ],
+    groups: [
+      {
+        label: "Appearance",
+        key: "appearance",
+        fields: ["primaryColor", "fontFamily", "layout"],
+      },
+      {
+        label: "Content",
+        key: "content",
+        fields: [
+          "showAuthorBox",
+          "showReadingTime",
+          "showRelatedPosts",
+          "maxPostsPerPage",
+        ],
+      },
+    ],
+  },
+};
+
+const DEFAULT_CONFIG: ThemeConfigValues = {
+  primaryColor: "#6366f1",
+  fontFamily: "Inter",
+  layout: "classic",
+  showAuthorBox: true,
+  showReadingTime: true,
+  showRelatedPosts: true,
+  maxPostsPerPage: 9,
+};
+
 class ThemeManager {
   private entries = new Map<string, ThemeEntry>();
   private initialized = false;
@@ -18,40 +119,21 @@ class ThemeManager {
   }
 
   private async discoverThemes(): Promise<void> {
-    const builtinTheme = await this.loadThemeFromDirectory("themes/default");
-    if (builtinTheme) {
-      const name = builtinTheme.manifest.name;
-      this.entries.set(name, builtinTheme);
-      themeRegistry.register(
-        name,
-        builtinTheme.directory,
-        builtinTheme.manifest,
-        builtinTheme.config,
-      );
-    }
-  }
-
-  private async loadThemeFromDirectory(
-    directory: string,
-  ): Promise<ThemeEntry | null> {
-    try {
-      const mod = await import(
-        /* @vite-ignore */ `@/${directory}/theme.config`
-      );
-      const manifest: ThemeManifest = mod.manifest;
-      const defaultConfig: ThemeConfigValues = mod.defaultConfig ?? {};
-
-      if (!manifest?.name) return null;
-
-      return {
-        manifest,
+    if (!this.entries.has("default")) {
+      const entry: ThemeEntry = {
+        manifest: DEFAULT_MANIFEST,
         status: "inactive",
-        config: defaultConfig,
+        config: DEFAULT_CONFIG,
         installedAt: new Date(),
-        directory,
+        directory: "themes/default",
       };
-    } catch {
-      return null;
+      this.entries.set("default", entry);
+      themeRegistry.register(
+        "default",
+        "themes/default",
+        DEFAULT_MANIFEST,
+        DEFAULT_CONFIG,
+      );
     }
   }
 
