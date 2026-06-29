@@ -3,13 +3,13 @@ import { prisma } from "@/lib/prisma";
 import DeleteButton from "./DeleteButton";
 
 export default async function AdminPostsPage() {
-  const posts = await prisma.post.findMany({
+  const posts = (await prisma.post.findMany({
     include: {
       author: { select: { username: true } },
       _count: { select: { comments: true } },
     },
     orderBy: { createdAt: "desc" },
-  }) as unknown as Array<{
+  })) as unknown as Array<{
     id: string;
     title: string;
     slug: string;
@@ -43,16 +43,25 @@ export default async function AdminPostsPage() {
             </thead>
             <tbody>
               {posts.map((post) => (
-                <tr key={post.id} className="border-b border-zinc-200 dark:border-zinc-800 last:border-0 hover:bg-zinc-50 dark:hover:bg-zinc-900/50">
-                  <td className="p-3 font-medium max-w-xs truncate">{post.title}</td>
+                <tr
+                  key={post.id}
+                  className="border-b border-zinc-200 dark:border-zinc-800 last:border-0 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
+                >
+                  <td className="p-3 font-medium max-w-xs truncate">
+                    {post.title}
+                  </td>
                   <td className="p-3 text-zinc-500">{post.author.username}</td>
                   <td className="p-3">
-                    <span className={`text-xs px-2 py-0.5 rounded-full ${post.status === "PUBLISHED" ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" : "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400"}`}>
+                    <span
+                      className={`text-xs px-2 py-0.5 rounded-full ${post.status === "PUBLISHED" ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" : "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400"}`}
+                    >
                       {post.status}
                     </span>
                   </td>
                   <td className="p-3 text-zinc-500">{post._count.comments}</td>
-                  <td className="p-3 text-zinc-500">{new Date(post.createdAt).toLocaleDateString()}</td>
+                  <td className="p-3 text-zinc-500">
+                    {new Date(post.createdAt).toLocaleDateString()}
+                  </td>
                   <td className="p-3">
                     <div className="flex items-center gap-2">
                       <Link
@@ -60,6 +69,12 @@ export default async function AdminPostsPage() {
                         className="text-xs px-2.5 py-1 border border-zinc-300 dark:border-zinc-700 rounded hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
                       >
                         View
+                      </Link>
+                      <Link
+                        href={`/admin/posts/${post.id}/edit`}
+                        className="text-xs px-2.5 py-1 border border-zinc-300 dark:border-zinc-700 rounded hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                      >
+                        Edit
                       </Link>
                       <DeleteButton id={post.id} title={post.title} />
                     </div>

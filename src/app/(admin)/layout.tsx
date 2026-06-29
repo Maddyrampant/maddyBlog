@@ -4,10 +4,15 @@ import { requireAdmin } from "@/lib/jwt";
 const navItems = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/posts", label: "Posts" },
+  { href: "/admin/posts/new", label: "New Post" },
   { href: "/admin/comments", label: "Comments" },
 ];
 
-export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   await requireAdmin();
 
   return (
@@ -39,9 +44,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           </Link>
         </div>
       </aside>
-      <main className="flex-1 overflow-auto">
-        {children}
-      </main>
+      <main className="flex-1 overflow-auto">{children}</main>
     </div>
   );
 }
