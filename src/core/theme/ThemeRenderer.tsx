@@ -1,6 +1,7 @@
 import { themeRegistry } from "./ThemeRegistry";
 import * as DefaultTheme from "@/themes/default";
 import * as MadelinTheme from "@/themes/madelin";
+import * as ZoomjiTheme from "@/themes/zoomji";
 
 export type ThemeComponentName =
   | "Layout"
@@ -64,6 +65,26 @@ const madelinComponents: Record<string, AnyComponent | undefined> = {
   CommentForm: MadelinTheme.CommentForm,
 };
 
+const zoomjiComponents: Record<string, AnyComponent | undefined> = {
+  Layout: ZoomjiTheme.Layout,
+  PostPage: ZoomjiTheme.PostPage,
+  HomePage: ZoomjiTheme.HomePage,
+  Header: ZoomjiTheme.Header,
+  Footer: ZoomjiTheme.Footer,
+  AuthorCard: ZoomjiTheme.AuthorCard,
+  RelatedPosts: ZoomjiTheme.RelatedPosts,
+  Sidebar: ZoomjiTheme.Sidebar,
+  NewsletterSignup: ZoomjiTheme.NewsletterSignup,
+  PostCard: ZoomjiTheme.PostCard,
+  CategoryBadge: ZoomjiTheme.CategoryBadge,
+  TagBadge: ZoomjiTheme.TagBadge,
+  ReadingTime: ZoomjiTheme.ReadingTime,
+  SearchBar: ZoomjiTheme.SearchBar,
+  Pagination: ZoomjiTheme.Pagination,
+  CommentList: ZoomjiTheme.CommentList,
+  CommentForm: ZoomjiTheme.CommentForm,
+};
+
 const componentRegistry = new Map<string, Record<string, AnyComponent>>();
 
 componentRegistry.set(
@@ -74,6 +95,11 @@ componentRegistry.set(
 componentRegistry.set(
   "madelin",
   madelinComponents as Record<string, AnyComponent>,
+);
+
+componentRegistry.set(
+  "zoomji",
+  zoomjiComponents as Record<string, AnyComponent>,
 );
 
 export function registerThemeComponents(

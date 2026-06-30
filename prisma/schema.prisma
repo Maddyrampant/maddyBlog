@@ -44,6 +44,7 @@ model User {
   comments     Comment[]
   bookmarks    Bookmark[]
   reactions    Reaction[]
+  stories      Story[]
 
   followers    Follow[]  @relation("following")
   following    Follow[]  @relation("follower")
@@ -64,6 +65,8 @@ model Post {
   excerpt     String?
   coverImage  String?
   views       Int        @default(0)
+  isFeatured  Boolean    @default(false)
+  featuredOrder Int      @default(0)
 
   analytics   PostAnalytics[]
   views_log   PostView[]
@@ -80,6 +83,7 @@ model Post {
   tags        PostTag[]
   bookmarks   Bookmark[]
   reactions   Reaction[]
+  slides      Slide[]
 
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
@@ -89,6 +93,7 @@ model Post {
   @@index([categoryId])
   @@index([slug])
   @@index([views])
+  @@index([isFeatured, featuredOrder])
 }
 
 model Comment {
@@ -269,6 +274,36 @@ model Activity {
   createdAt DateTime     @default(now())
 
   @@index([userId, createdAt])
+}
+
+model Story {
+  id          String    @id @default(uuid())
+  title       String
+  imageUrl    String
+  linkUrl     String?
+  authorId    String
+  author      User      @relation(fields: [authorId], references: [id])
+  active      Boolean   @default(true)
+  order       Int       @default(0)
+  createdAt   DateTime  @default(now())
+  expiresAt   DateTime?
+
+  @@index([active, order])
+}
+
+model Slide {
+  id          String    @id @default(uuid())
+  title       String
+  subtitle    String?
+  imageUrl    String
+  linkUrl     String?
+  postId      String?
+  post        Post?     @relation(fields: [postId], references: [id])
+  active      Boolean   @default(true)
+  order       Int       @default(0)
+  createdAt   DateTime  @default(now())
+
+  @@index([active, order])
 }
 
 model Theme {

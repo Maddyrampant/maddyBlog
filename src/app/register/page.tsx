@@ -68,6 +68,7 @@ export default function RegisterPage() {
         <form
           onSubmit={handleSubmit}
           className="space-y-5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-6"
+          suppressHydrationWarning
         >
           {error && (
             <div className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-900 rounded-lg px-3 py-2">

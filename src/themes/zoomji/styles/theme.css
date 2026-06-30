@@ -1,0 +1,118 @@
+:root {
+  --zoomji-accent: #2563eb;
+  --zoomji-accent-light: #dbeafe;
+  --zoomji-accent-glow: rgba(37, 99, 235, 0.12);
+  --zoomji-font-family: "Inter", system-ui, sans-serif;
+  --zoomji-bg: #ffffff;
+  --zoomji-bg-subtle: #f8fafc;
+  --zoomji-text: #0f172a;
+  --zoomji-text-muted: #64748b;
+  --zoomji-border: #e2e8f0;
+  --zoomji-card-bg: #ffffff;
+  --zoomji-overlay: rgba(15, 23, 42, 0.5);
+}
+
+.dark {
+  --zoomji-accent: #60a5fa;
+  --zoomji-accent-light: #1e3a5f;
+  --zoomji-accent-glow: rgba(96, 165, 250, 0.12);
+  --zoomji-bg: #0f172a;
+  --zoomji-bg-subtle: #1e293b;
+  --zoomji-text: #f1f5f9;
+  --zoomji-text-muted: #94a3b8;
+  --zoomji-border: #334155;
+  --zoomji-card-bg: #1e293b;
+  --zoomji-overlay: rgba(0, 0, 0, 0.6);
+}
+
+.zoomji-gradient-text {
+  background: linear-gradient(135deg, var(--zoomji-accent), #7c3aed);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.zoomji-card {
+  background: var(--zoomji-card-bg);
+  border: 1px solid var(--zoomji-border);
+  border-radius: 0.75rem;
+  transition: all 0.2s ease;
+}
+
+.zoomji-card:hover {
+  border-color: var(--zoomji-accent);
+  box-shadow: 0 4px 16px var(--zoomji-accent-glow);
+}
+
+.zoomji-section-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--zoomji-accent);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.zoomji-section-title::before {
+  content: "";
+  width: 2rem;
+  height: 2px;
+  background: var(--zoomji-accent);
+}
+
+@keyframes zoomji-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.zoomji-fade-in {
+  animation: zoomji-fade-in 0.4s ease forwards;
+}
+
+@keyframes zoomji-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.zoomji-slide-up {
+  animation: zoomji-slide-up 0.5s ease forwards;
+}
+
+.zoomji-divider {
+  border: none;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--zoomji-border),
+    transparent
+  );
+}
+
+.zoomji-image-overlay {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.75rem;
+}
+
+.zoomji-image-overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, var(--zoomji-overlay), transparent 60%);
+  pointer-events: none;
+}

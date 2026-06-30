@@ -104,6 +104,11 @@ import {
   defaultConfig as MadelinConfig,
 } from "@/themes/madelin/theme.config";
 
+import {
+  manifest as ZoomjiManifest,
+  defaultConfig as ZoomjiConfig,
+} from "@/themes/zoomji/theme.config";
+
 const DEFAULT_CONFIG: ThemeConfigValues = {
   primaryColor: "#6366f1",
   fontFamily: "Inter",
@@ -180,6 +185,9 @@ class ThemeManager {
     if (!this.entries.has("madelin")) {
       this.seedMadelinInMemory();
     }
+    if (!this.entries.has("zoomji")) {
+      this.seedZoomjiInMemory();
+    }
   }
 
   private seedDefaultInMemory(): void {
@@ -213,6 +221,23 @@ class ThemeManager {
       "themes/madelin",
       MadelinManifest,
       MadelinConfig,
+    );
+  }
+
+  private seedZoomjiInMemory(): void {
+    const entry: ThemeEntry = {
+      manifest: ZoomjiManifest,
+      status: "inactive",
+      config: ZoomjiConfig,
+      installedAt: new Date(),
+      directory: "themes/zoomji",
+    };
+    this.entries.set("zoomji", entry);
+    themeRegistry.register(
+      "zoomji",
+      "themes/zoomji",
+      ZoomjiManifest,
+      ZoomjiConfig,
     );
   }
 

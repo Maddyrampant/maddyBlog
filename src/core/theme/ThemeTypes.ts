@@ -23,7 +23,10 @@ export type ThemeSupportedFeature =
   | "tags"
   | "reading-time"
   | "social-share"
-  | "dark-mode";
+  | "dark-mode"
+  | "stories"
+  | "featured-slider"
+  | "category-sections";
 
 export type ThemeConfigFieldType =
   "text" | "color" | "select" | "number" | "boolean" | "font";

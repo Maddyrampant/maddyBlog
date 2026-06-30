@@ -9,6 +9,8 @@ const prisma = new PrismaClient({ adapter });
 async function main() {
   console.log("🌱 Seeding database...");
 
+  await prisma.slide.deleteMany();
+  await prisma.story.deleteMany();
   await prisma.activity.deleteMany();
   await prisma.notification.deleteMany();
   await prisma.follow.deleteMany();
@@ -372,10 +374,10 @@ async function main() {
 
   for (const post of allPublishedPosts) {
     await prisma.postView.create({
-      data: { postId: post.id, viewedAt: new Date(Date.now() - Math.random() * 7 * 86400000) },
+      data: { postId: post.id, visitorHash: "seed-" + post.id.slice(0, 8) },
     });
     await prisma.postAnalytics.create({
-      data: { postId: post.id, date: new Date("2026-06-01"), views: Math.floor(Math.random() * 500) + 50, likes: Math.floor(Math.random() * 80) + 5, comments: Math.floor(Math.random() * 15) + 1 },
+      data: { postId: post.id, date: new Date("2026-06-01"), views: Math.floor(Math.random() * 500) + 50, uniqueVisitors: Math.floor(Math.random() * 200) + 20, comments: Math.floor(Math.random() * 15) + 1, reactions: Math.floor(Math.random() * 80) + 5 },
     });
   }
 
@@ -394,6 +396,52 @@ async function main() {
   });
 
   console.log("  ✓ 7 follow relationships created");
+
+  const publishedSlugs = await prisma.post.findMany({
+    where: { status: "PUBLISHED" },
+    select: { id: true, slug: true, coverImage: true, title: true },
+  });
+
+  const getPostId = (slug: string) => publishedSlugs.find((p) => p.slug.includes(slug))?.id;
+
+  const storiesData = [
+    { title: "New Release", imageUrl: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=200&h=200&fit=crop", linkUrl: null, authorId: admin.id },
+    { title: "DevOps Tips", imageUrl: "https://images.unsplash.com/photo-1518432031352-d6fc5c10da5a?w=200&h=200&fit=crop", linkUrl: "/categories/devops", authorId: alex.id },
+    { title: "React 2026", imageUrl: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=200&h=200&fit=crop", linkUrl: "/search?q=react", authorId: sarah.id },
+    { title: "TypeScript", imageUrl: "https://images.unsplash.com/photo-1587620962725-abab7fe55159?w=200&h=200&fit=crop", linkUrl: "/categories/typescript", authorId: admin.id },
+    { title: "Database", imageUrl: "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?w=200&h=200&fit=crop", linkUrl: "/categories/database", authorId: alex.id },
+  ];
+
+  for (let i = 0; i < storiesData.length; i++) {
+    await prisma.story.create({ data: { ...storiesData[i], order: i } });
+  }
+  console.log("  ✓ 5 stories created");
+
+  const slidesData = [
+    { title: "Building Scalable Applications with Next.js 16", subtitle: "The App Router revolution is here", imageUrl: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1400&h=600&fit=crop", linkUrl: null, postId: getPostId("building-scalable"), active: true, order: 0 },
+    { title: "TypeScript Patterns for Clean Architecture", subtitle: "Write maintainable, testable code", imageUrl: "https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=1400&h=600&fit=crop", linkUrl: null, postId: getPostId("typescript-patterns"), active: true, order: 1 },
+    { title: "Modern CSS with Tailwind v4", subtitle: "CSS-first configuration and a brand new engine", imageUrl: "https://images.unsplash.com/photo-1507721999472-8ed4421c4af2?w=1400&h=600&fit=crop", linkUrl: "/tags/tailwind-css", postId: null, active: true, order: 2 },
+  ];
+
+  for (const slide of slidesData) {
+    await prisma.slide.create({ data: slide });
+  }
+  console.log("  ✓ 3 slides created");
+
+  const buildingScalableId = getPostId("building-scalable");
+  const typescriptPatternsId = getPostId("typescript-patterns");
+  const jwtId = getPostId("jwt-authentication");
+
+  if (buildingScalableId) {
+    await prisma.post.update({ where: { id: buildingScalableId }, data: { isFeatured: true, featuredOrder: 0 } });
+  }
+  if (typescriptPatternsId) {
+    await prisma.post.update({ where: { id: typescriptPatternsId }, data: { isFeatured: true, featuredOrder: 1 } });
+  }
+  if (jwtId) {
+    await prisma.post.update({ where: { id: jwtId }, data: { isFeatured: true, featuredOrder: 2 } });
+  }
+  console.log("  ✓ 3 featured posts assigned");
 
   console.log("\n✅ Seed complete!");
   console.log("\n─── Login ───");

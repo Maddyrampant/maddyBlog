@@ -3,6 +3,7 @@ import { THEME_REQUIRED_COMPONENTS } from "./ThemeTypes";
 import { registerThemeComponents } from "./ThemeRenderer";
 import * as DefaultTheme from "@/themes/default";
 import * as MadelinTheme from "@/themes/madelin";
+import * as ZoomjiTheme from "@/themes/zoomji";
 
 const themeModuleRegistry = new Map<
   string,
@@ -73,6 +74,30 @@ export class ThemeLoader {
 
     themeModuleRegistry.set("madelin", madelinModules);
     registerThemeComponents("madelin", madelinModules);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const zoomjiModules: Record<string, React.ComponentType<any>> = {
+      Layout: ZoomjiTheme.Layout,
+      PostPage: ZoomjiTheme.PostPage,
+      HomePage: ZoomjiTheme.HomePage,
+      Header: ZoomjiTheme.Header,
+      Footer: ZoomjiTheme.Footer,
+      AuthorCard: ZoomjiTheme.AuthorCard,
+      RelatedPosts: ZoomjiTheme.RelatedPosts,
+      Sidebar: ZoomjiTheme.Sidebar,
+      NewsletterSignup: ZoomjiTheme.NewsletterSignup,
+      PostCard: ZoomjiTheme.PostCard,
+      CategoryBadge: ZoomjiTheme.CategoryBadge,
+      TagBadge: ZoomjiTheme.TagBadge,
+      ReadingTime: ZoomjiTheme.ReadingTime,
+      SearchBar: ZoomjiTheme.SearchBar,
+      Pagination: ZoomjiTheme.Pagination,
+      CommentList: ZoomjiTheme.CommentList,
+      CommentForm: ZoomjiTheme.CommentForm,
+    };
+
+    themeModuleRegistry.set("zoomji", zoomjiModules);
+    registerThemeComponents("zoomji", zoomjiModules);
   }
 
   async loadThemeComponents(
