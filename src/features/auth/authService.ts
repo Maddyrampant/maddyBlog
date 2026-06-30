@@ -1,6 +1,11 @@
 import { hashPassword, verifyPassword } from "@/lib/hash";
 import { createSession } from "@/lib/jwt";
-import { registerSchema, loginSchema, type RegisterInput, type LoginInput } from "@/validations/authSchema";
+import {
+  registerSchema,
+  loginSchema,
+  type RegisterInput,
+  type LoginInput,
+} from "@/validations/authSchema";
 import * as authRepository from "./authRepository";
 
 export async function register(input: RegisterInput) {
@@ -32,7 +37,7 @@ export async function register(input: RegisterInput) {
 export async function login(input: LoginInput) {
   const data = loginSchema.parse(input);
 
-  const user = await authRepository.findByEmail(data.email);
+  const user = await authRepository.findByEmailOrUsername(data.email);
   if (!user) {
     throw new Error("Invalid email or password");
   }
@@ -44,5 +49,10 @@ export async function login(input: LoginInput) {
 
   await createSession({ userId: user.id, email: user.email, role: user.role });
 
-  return { id: user.id, username: user.username, email: user.email, role: user.role };
+  return {
+    id: user.id,
+    username: user.username,
+    email: user.email,
+    role: user.role,
+  };
 }

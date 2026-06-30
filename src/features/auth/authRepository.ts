@@ -16,6 +16,14 @@ export async function findByUsername(username: string) {
   return prisma.user.findUnique({ where: { username } });
 }
 
+export async function findByEmailOrUsername(identifier: string) {
+  return prisma.user.findFirst({
+    where: {
+      OR: [{ email: identifier }, { username: identifier }],
+    },
+  });
+}
+
 export async function create(data: Prisma.UserCreateInput) {
   return prisma.user.create({ data });
 }

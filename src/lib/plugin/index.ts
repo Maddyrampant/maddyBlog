@@ -6,6 +6,8 @@ export { runDataHooks, getUiHooks, getAIPromptHooks } from "./hookSystem";
 export { registerBuiltinPlugin } from "./loader";
 export { BasePlugin } from "./basePlugin";
 export { buildPluginContext } from "./context";
+export { hookEngine, PluginRuntime, pluginRuntime } from "./runtime";
+export type { HookEngine } from "./runtime/HookEngine";
 export { uiExtensionRegistry } from "./ui/UIExtensionRegistry";
 export type {
   UIExtensionPoint,

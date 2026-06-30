@@ -6,7 +6,10 @@ export const registerSchema = z
       .string()
       .min(3, "Username must be at least 3 characters")
       .max(30, "Username must be at most 30 characters")
-      .regex(/^[a-zA-Z0-9_-]+$/, "Username can only contain letters, numbers, hyphens, and underscores"),
+      .regex(
+        /^[a-zA-Z0-9_-]+$/,
+        "Username can only contain letters, numbers, hyphens, and underscores",
+      ),
     email: z
       .string()
       .email("Invalid email address")
@@ -26,7 +29,7 @@ export const registerSchema = z
   });
 
 export const loginSchema = z.object({
-  email: z.string().email("Invalid email address"),
+  email: z.string().min(1, "Email or username is required"),
   password: z.string().min(1, "Password is required"),
 });
 
