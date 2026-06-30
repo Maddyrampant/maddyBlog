@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 
@@ -32,7 +34,11 @@ type PostPageProps = {
   commentCount?: number;
 };
 
-export default function ZoomgPostPage({ post, commentTree, commentCount }: PostPageProps) {
+export default function ZoomgPostPage({
+  post,
+  commentTree,
+  commentCount,
+}: PostPageProps) {
   return (
     <main className="flex-1" dir="rtl">
       <div
@@ -91,7 +97,10 @@ export default function ZoomgPostPage({ post, commentTree, commentCount }: PostP
                 borderBottom: "1px solid var(--zoomg-border)",
               }}
             >
-              <span className="font-medium" style={{ color: "var(--zoomg-text-primary)" }}>
+              <span
+                className="font-medium"
+                style={{ color: "var(--zoomg-text-primary)" }}
+              >
                 {post.author.username}
               </span>
               <span
@@ -189,7 +198,10 @@ export default function ZoomgPostPage({ post, commentTree, commentCount }: PostP
                     className="flex items-center gap-2 text-sm mb-2"
                     style={{ color: "var(--zoomg-text-muted)" }}
                   >
-                    <span className="font-medium" style={{ color: "var(--zoomg-text-primary)" }}>
+                    <span
+                      className="font-medium"
+                      style={{ color: "var(--zoomg-text-primary)" }}
+                    >
                       {comment.author.username}
                     </span>
                     <span
@@ -200,7 +212,9 @@ export default function ZoomgPostPage({ post, commentTree, commentCount }: PostP
                       {new Date(comment.createdAt).toLocaleDateString("fa-IR")}
                     </time>
                   </div>
-                  <p style={{ color: "var(--zoomg-text-primary)" }}>{comment.content}</p>
+                  <p style={{ color: "var(--zoomg-text-primary)" }}>
+                    {comment.content}
+                  </p>
                   {comment.replies.length > 0 && (
                     <div
                       className="mt-4 mr-6 space-y-4 pr-4"
@@ -212,7 +226,10 @@ export default function ZoomgPostPage({ post, commentTree, commentCount }: PostP
                             className="flex items-center gap-2 text-sm mb-1"
                             style={{ color: "var(--zoomg-text-muted)" }}
                           >
-                            <span className="font-medium" style={{ color: "var(--zoomg-text-primary)" }}>
+                            <span
+                              className="font-medium"
+                              style={{ color: "var(--zoomg-text-primary)" }}
+                            >
                               {reply.author.username}
                             </span>
                             <span
@@ -220,10 +237,14 @@ export default function ZoomgPostPage({ post, commentTree, commentCount }: PostP
                               style={{ background: "var(--zoomg-text-muted)" }}
                             />
                             <time>
-                              {new Date(reply.createdAt).toLocaleDateString("fa-IR")}
+                              {new Date(reply.createdAt).toLocaleDateString(
+                                "fa-IR",
+                              )}
                             </time>
                           </div>
-                          <p style={{ color: "var(--zoomg-text-primary)" }}>{reply.content}</p>
+                          <p style={{ color: "var(--zoomg-text-primary)" }}>
+                            {reply.content}
+                          </p>
                         </div>
                       ))}
                     </div>
@@ -233,7 +254,8 @@ export default function ZoomgPostPage({ post, commentTree, commentCount }: PostP
             </div>
           ) : (
             <p style={{ color: "var(--zoomg-text-muted)" }}>
-              هنوز دیدگاهی ثبت نشده. اولین نفری باشید که نظر خود را به اشتراک می‌گذارد!
+              هنوز دیدگاهی ثبت نشده. اولین نفری باشید که نظر خود را به اشتراک
+              می‌گذارد!
             </p>
           )}
         </section>

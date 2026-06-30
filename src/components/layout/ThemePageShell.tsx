@@ -9,12 +9,12 @@ type ThemePageShellProps = {
 
 export function ThemePageShell({ children, hideFooter }: ThemePageShellProps) {
   return (
-    <>
+    <ThemeRenderer name="Layout">
       <ThemeRenderer name="Header" fallback={<DefaultFallbackHeader />} />
       {children}
       {!hideFooter && (
         <ThemeRenderer name="Footer" fallback={<DefaultFallbackFooter />} />
       )}
-    </>
+    </ThemeRenderer>
   );
 }

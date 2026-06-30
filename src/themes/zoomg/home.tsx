@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 
 type HomePageProps = {
@@ -136,12 +138,14 @@ export default function ZoomgHomePage({
                         className="transition-colors px-2 py-1 rounded"
                         style={{ color: "var(--zoomg-text-muted)" }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.background = "var(--zoomg-accent-light)";
+                          e.currentTarget.style.background =
+                            "var(--zoomg-accent-light)";
                           e.currentTarget.style.color = "var(--zoomg-accent)";
                         }}
                         onMouseLeave={(e) => {
                           e.currentTarget.style.background = "transparent";
-                          e.currentTarget.style.color = "var(--zoomg-text-muted)";
+                          e.currentTarget.style.color =
+                            "var(--zoomg-text-muted)";
                         }}
                       >
                         {cat.name}
@@ -224,12 +228,15 @@ export default function ZoomgHomePage({
                         color: "var(--zoomg-text-muted)",
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.borderColor = "var(--zoomg-accent)";
-                        e.currentTarget.style.background = "var(--zoomg-accent-light)";
+                        e.currentTarget.style.borderColor =
+                          "var(--zoomg-accent)";
+                        e.currentTarget.style.background =
+                          "var(--zoomg-accent-light)";
                         e.currentTarget.style.color = "var(--zoomg-accent)";
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.borderColor = "var(--zoomg-border)";
+                        e.currentTarget.style.borderColor =
+                          "var(--zoomg-border)";
                         e.currentTarget.style.background = "transparent";
                         e.currentTarget.style.color = "var(--zoomg-text-muted)";
                       }}
@@ -285,11 +292,15 @@ function FeaturedSlider({ slides }: { slides: HomePageProps["slides"] }) {
   const slide = slides![0];
   if (!slide) return null;
 
-  const href = slide.linkUrl || (slide.post ? `/posts/${slide.post.slug}` : "#");
+  const href =
+    slide.linkUrl || (slide.post ? `/posts/${slide.post.slug}` : "#");
   const img = slide.imageUrl || slide.post?.coverImage;
 
   return (
-    <Link href={href} className="zoomg-image-overlay block aspect-[21/9] max-h-[420px]">
+    <Link
+      href={href}
+      className="zoomg-image-overlay block aspect-[21/9] max-h-[420px]"
+    >
       {img && (
         <img
           src={img}
@@ -365,7 +376,10 @@ function FeaturedPostCard({ post }: { post: HomePageProps["posts"][0] }) {
             className="flex items-center gap-3 mt-3 text-xs"
             style={{ color: "var(--zoomg-text-muted)" }}
           >
-            <span className="font-medium" style={{ color: "var(--zoomg-text-primary)" }}>
+            <span
+              className="font-medium"
+              style={{ color: "var(--zoomg-text-primary)" }}
+            >
               {post.author.username}
             </span>
             <span
@@ -430,7 +444,10 @@ function PostCard({ post }: { post: HomePageProps["posts"][0] }) {
           className="flex items-center gap-2 mt-3 text-xs"
           style={{ color: "var(--zoomg-text-muted)" }}
         >
-          <span className="font-medium" style={{ color: "var(--zoomg-text-primary)" }}>
+          <span
+            className="font-medium"
+            style={{ color: "var(--zoomg-text-primary)" }}
+          >
             {post.author.username}
           </span>
         </div>

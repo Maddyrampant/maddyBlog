@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 
 type FooterProps = {
@@ -28,8 +30,8 @@ export default function ZoomgFooter({ authorName }: FooterProps) {
               className="text-sm leading-relaxed"
               style={{ color: "var(--zoomg-text-muted)" }}
             >
-              وب سایت نقد و بررسی بازی، سینما، تلویزیون، فیلم، اخبار بازی و پوشش کامل کنفرانس
-              و مراسم‌های معروف دنیای گیمینگ.
+              وب سایت نقد و بررسی بازی، سینما، تلویزیون، فیلم، اخبار بازی و پوشش
+              کامل کنفرانس و مراسم‌های معروف دنیای گیمینگ.
             </p>
           </div>
 
@@ -45,8 +47,12 @@ export default function ZoomgFooter({ authorName }: FooterProps) {
                 href="/"
                 className="text-sm transition-colors"
                 style={{ color: "var(--zoomg-text-muted)" }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = "var(--zoomg-accent)")}
-                onMouseLeave={(e) => (e.currentTarget.style.color = "var(--zoomg-text-muted)")}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.color = "var(--zoomg-accent)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.color = "var(--zoomg-text-muted)")
+                }
               >
                 خانه
               </Link>
@@ -54,8 +60,12 @@ export default function ZoomgFooter({ authorName }: FooterProps) {
                 href="/admin"
                 className="text-sm transition-colors"
                 style={{ color: "var(--zoomg-text-muted)" }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = "var(--zoomg-accent)")}
-                onMouseLeave={(e) => (e.currentTarget.style.color = "var(--zoomg-text-muted)")}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.color = "var(--zoomg-accent)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.color = "var(--zoomg-text-muted)")
+                }
               >
                 پنل مدیریت
               </Link>
@@ -118,7 +128,8 @@ export default function ZoomgFooter({ authorName }: FooterProps) {
           className="text-xs text-center mt-6"
           style={{ color: "var(--zoomg-text-muted)" }}
         >
-          ساخته شده با <span className="zoomg-gradient-text font-bold">MaddyBlog</span>
+          ساخته شده با{" "}
+          <span className="zoomg-gradient-text font-bold">MaddyBlog</span>
         </p>
       </div>
     </footer>

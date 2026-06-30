@@ -3,6 +3,11 @@ import { Geist, Geist_Mono } from "next/font/google";
 import ThemeClientWrapper from "@/components/theme/ThemeClientWrapper";
 import { I18nProvider } from "@/i18n/provider";
 import "./globals.css";
+import "@/themes/default/styles/theme.css";
+import "@/themes/zoomg/styles/theme.css";
+import "@/themes/madelin/styles/theme.css";
+import "@/themes/zoomji/styles/theme.css";
+import { themeManager } from "@/core/theme";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,11 +27,13 @@ export const metadata: Metadata = {
   description: "A modern blogging platform",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  await themeManager.initialize();
+
   return (
     <html
       lang="en"

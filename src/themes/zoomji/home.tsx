@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import "../zoomji/styles/theme.css";
 
@@ -81,7 +83,10 @@ export default function ZoomjiHomePage({
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <p className="text-xs text-center mt-2 truncate w-20" style={{ color: "var(--zoomji-text-muted)" }}>
+                <p
+                  className="text-xs text-center mt-2 truncate w-20"
+                  style={{ color: "var(--zoomji-text-muted)" }}
+                >
                   {story.title}
                 </p>
               </Link>
@@ -118,8 +123,12 @@ export default function ZoomjiHomePage({
                   href={`/categories/${cat.slug}`}
                   className="transition-colors"
                   style={{ color: "var(--zoomji-text-muted)" }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = "var(--zoomji-accent)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = "var(--zoomji-text-muted)")}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.color = "var(--zoomji-accent)")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.color = "var(--zoomji-text-muted)")
+                  }
                 >
                   {cat.name}
                 </Link>
@@ -135,7 +144,10 @@ export default function ZoomjiHomePage({
           </div>
         ) : (
           <div className="text-center py-16">
-            <p className="text-lg" style={{ color: "var(--zoomji-text-muted)" }}>
+            <p
+              className="text-lg"
+              style={{ color: "var(--zoomji-text-muted)" }}
+            >
               No posts published yet. Check back soon.
             </p>
           </div>
@@ -168,7 +180,10 @@ export default function ZoomjiHomePage({
                     >
                       {post.title}
                     </h3>
-                    <p className="text-xs mt-1" style={{ color: "var(--zoomji-text-muted)" }}>
+                    <p
+                      className="text-xs mt-1"
+                      style={{ color: "var(--zoomji-text-muted)" }}
+                    >
                       {post.views} views
                     </p>
                   </div>
@@ -196,7 +211,8 @@ export default function ZoomjiHomePage({
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.borderColor = "var(--zoomji-accent)";
-                  e.currentTarget.style.background = "var(--zoomji-accent-light)";
+                  e.currentTarget.style.background =
+                    "var(--zoomji-accent-light)";
                   e.currentTarget.style.color = "var(--zoomji-accent)";
                 }}
                 onMouseLeave={(e) => {
@@ -227,7 +243,10 @@ export default function ZoomjiHomePage({
                 style={{ background: "var(--zoomji-bg-subtle)" }}
               >
                 <span className="block text-lg font-semibold">{cat.name}</span>
-                <span className="text-sm" style={{ color: "var(--zoomji-text-muted)" }}>
+                <span
+                  className="text-sm"
+                  style={{ color: "var(--zoomji-text-muted)" }}
+                >
                   {cat._count.posts} {cat._count.posts === 1 ? "post" : "posts"}
                 </span>
               </Link>
@@ -245,11 +264,15 @@ function FeaturedSlider({ slides }: { slides: HomePageProps["slides"] }) {
   const slide = slides![0];
   if (!slide) return null;
 
-  const href = slide.linkUrl || (slide.post ? `/posts/${slide.post.slug}` : "#");
+  const href =
+    slide.linkUrl || (slide.post ? `/posts/${slide.post.slug}` : "#");
   const img = slide.imageUrl || slide.post?.coverImage;
 
   return (
-    <Link href={href} className="zoomji-image-overlay block aspect-[21/9] max-h-[420px]">
+    <Link
+      href={href}
+      className="zoomji-image-overlay block aspect-[21/9] max-h-[420px]"
+    >
       {img && (
         <img
           src={img}
@@ -304,15 +327,27 @@ function FeaturedPostCard({ post }: { post: HomePageProps["posts"][0] }) {
             {post.title}
           </h3>
           {post.excerpt && (
-            <p className="mt-2 text-sm line-clamp-2" style={{ color: "var(--zoomji-text-muted)" }}>
+            <p
+              className="mt-2 text-sm line-clamp-2"
+              style={{ color: "var(--zoomji-text-muted)" }}
+            >
               {post.excerpt}
             </p>
           )}
-          <div className="flex items-center gap-4 mt-4 text-xs" style={{ color: "var(--zoomji-text-muted)" }}>
-            <span className="font-medium" style={{ color: "var(--zoomji-text)" }}>
+          <div
+            className="flex items-center gap-4 mt-4 text-xs"
+            style={{ color: "var(--zoomji-text-muted)" }}
+          >
+            <span
+              className="font-medium"
+              style={{ color: "var(--zoomji-text)" }}
+            >
               {post.author.username}
             </span>
-            <span className="w-1 h-1 rounded-full" style={{ background: "var(--zoomji-text-muted)" }} />
+            <span
+              className="w-1 h-1 rounded-full"
+              style={{ background: "var(--zoomji-text-muted)" }}
+            />
             <time>{new Date(post.createdAt).toLocaleDateString()}</time>
           </div>
         </div>
@@ -323,7 +358,10 @@ function FeaturedPostCard({ post }: { post: HomePageProps["posts"][0] }) {
 
 function PostCard({ post }: { post: HomePageProps["posts"][0] }) {
   return (
-    <Link href={`/posts/${post.slug}`} className="zoomji-card block group overflow-hidden">
+    <Link
+      href={`/posts/${post.slug}`}
+      className="zoomji-card block group overflow-hidden"
+    >
       {post.coverImage && (
         <div className="aspect-[16/9] overflow-hidden">
           <img
@@ -351,11 +389,17 @@ function PostCard({ post }: { post: HomePageProps["posts"][0] }) {
           {post.title}
         </h3>
         {post.excerpt && (
-          <p className="text-xs mt-1 line-clamp-2" style={{ color: "var(--zoomji-text-muted)" }}>
+          <p
+            className="text-xs mt-1 line-clamp-2"
+            style={{ color: "var(--zoomji-text-muted)" }}
+          >
             {post.excerpt}
           </p>
         )}
-        <div className="flex items-center gap-3 mt-3 text-xs" style={{ color: "var(--zoomji-text-muted)" }}>
+        <div
+          className="flex items-center gap-3 mt-3 text-xs"
+          style={{ color: "var(--zoomji-text-muted)" }}
+        >
           <span>{post.author.username}</span>
         </div>
       </div>

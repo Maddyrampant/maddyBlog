@@ -9,6 +9,7 @@ import { useTranslation } from "@/i18n/provider";
 
 export default function AdminPostsPage() {
   const t = useTranslation();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -22,7 +23,10 @@ export default function AdminPostsPage() {
   if (loading) {
     return (
       <div>
-        <PageHeader title={t("posts.title")} subtitle={t("posts.subtitle", { count: 0 })} />
+        <PageHeader
+          title={t("posts.title")}
+          subtitle={t("posts.subtitle", { count: 0 })}
+        />
         <div className="admin-card p-12 text-center">
           <div className="animate-spin w-6 h-6 border-2 border-theme-primary border-t-transparent rounded-full mx-auto" />
         </div>
@@ -45,7 +49,9 @@ export default function AdminPostsPage() {
 
       <div className="admin-card">
         {posts.length === 0 ? (
-          <p className="p-6 text-sm text-zinc-400 text-center">{t("posts.noPosts")}</p>
+          <p className="p-6 text-sm text-zinc-400 text-center">
+            {t("posts.noPosts")}
+          </p>
         ) : (
           <div className="overflow-x-auto">
             <table className="data-table">
@@ -61,30 +67,56 @@ export default function AdminPostsPage() {
                 </tr>
               </thead>
               <tbody>
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                 {posts.map((post: any) => (
                   <tr key={post.id}>
                     <td className="font-medium max-w-xs truncate">
                       <div className="flex items-center gap-2">
-                        <FileText size={14} className="text-zinc-300 shrink-0" />
+                        <FileText
+                          size={14}
+                          className="text-zinc-300 shrink-0"
+                        />
                         <span className="truncate">{post.title}</span>
                       </div>
                     </td>
                     <td className="text-zinc-500">{post.author?.username}</td>
                     <td className="text-zinc-500">{post.views || 0}</td>
-                    <td className="text-zinc-500">{post._count?.comments || 0}</td>
+                    <td className="text-zinc-500">
+                      {post._count?.comments || 0}
+                    </td>
                     <td>
-                      <span className={`status-badge ${post.status === "PUBLISHED" ? "published" : "draft"}`}>
-                        <span className={`w-1.5 h-1.5 rounded-full ${post.status === "PUBLISHED" ? "bg-emerald-500" : "bg-amber-500"}`} />
-                        {post.status === "PUBLISHED" ? t("posts.published") : t("posts.draft")}
+                      <span
+                        className={`status-badge ${post.status === "PUBLISHED" ? "published" : "draft"}`}
+                      >
+                        <span
+                          className={`w-1.5 h-1.5 rounded-full ${post.status === "PUBLISHED" ? "bg-emerald-500" : "bg-amber-500"}`}
+                        />
+                        {post.status === "PUBLISHED"
+                          ? t("posts.published")
+                          : t("posts.draft")}
                       </span>
                     </td>
                     <td className="text-zinc-400 text-xs whitespace-nowrap">
-                      {new Date(post.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                      {new Date(post.createdAt).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
                     </td>
                     <td className="text-right">
                       <div className="flex items-center justify-end gap-1.5">
-                        <Link href={`/posts/${post.slug}`} className="admin-btn admin-btn-outline admin-btn-xs">{t("posts.view")}</Link>
-                        <Link href={`/admin/posts/${post.id}/edit`} className="admin-btn admin-btn-outline admin-btn-xs">{t("posts.edit")}</Link>
+                        <Link
+                          href={`/posts/${post.slug}`}
+                          className="admin-btn admin-btn-outline admin-btn-xs"
+                        >
+                          {t("posts.view")}
+                        </Link>
+                        <Link
+                          href={`/admin/posts/${post.id}/edit`}
+                          className="admin-btn admin-btn-outline admin-btn-xs"
+                        >
+                          {t("posts.edit")}
+                        </Link>
                         <DeleteButton id={post.id} title={post.title} />
                       </div>
                     </td>
