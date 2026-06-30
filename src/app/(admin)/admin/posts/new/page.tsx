@@ -15,7 +15,7 @@ export default async function NewPostPage() {
   }
 
   return (
-    <div className="p-8">
+    <div>
       <PostForm categories={categories} tags={tags} />
     </div>
   );

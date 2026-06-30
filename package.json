@@ -32,6 +32,7 @@
     ]
   },
   "dependencies": {
+    "@fontsource-variable/vazirmatn": "^5.2.8",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
     "@tiptap/extension-code-block-lowlight": "^3.27.1",
@@ -49,7 +50,9 @@
     "bcryptjs": "^3.0.3",
     "jose": "^6.2.3",
     "lowlight": "^3.3.0",
+    "lucide-react": "^1.22.0",
     "next": "16.2.9",
+    "next-intl": "^4.13.0",
     "openai": "^6.45.0",
     "pg": "^8.22.0",
     "pino": "^10.3.1",

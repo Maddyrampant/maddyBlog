@@ -43,7 +43,7 @@ export default async function EditPostPage({
   if (!post) notFound();
 
   return (
-    <div className="p-8">
+    <div>
       <PostForm categories={categories} tags={tags} post={post} />
     </div>
   );

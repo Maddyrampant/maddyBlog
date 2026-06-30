@@ -4,6 +4,7 @@ import { registerThemeComponents } from "./ThemeRenderer";
 import * as DefaultTheme from "@/themes/default";
 import * as MadelinTheme from "@/themes/madelin";
 import * as ZoomjiTheme from "@/themes/zoomji";
+import * as ZoomgTheme from "@/themes/zoomg";
 
 const themeModuleRegistry = new Map<
   string,
@@ -98,6 +99,30 @@ export class ThemeLoader {
 
     themeModuleRegistry.set("zoomji", zoomjiModules);
     registerThemeComponents("zoomji", zoomjiModules);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const zoomgModules: Record<string, React.ComponentType<any>> = {
+      Layout: ZoomgTheme.Layout,
+      PostPage: ZoomgTheme.PostPage,
+      HomePage: ZoomgTheme.HomePage,
+      Header: ZoomgTheme.Header,
+      Footer: ZoomgTheme.Footer,
+      AuthorCard: ZoomgTheme.AuthorCard,
+      RelatedPosts: ZoomgTheme.RelatedPosts,
+      Sidebar: ZoomgTheme.Sidebar,
+      NewsletterSignup: ZoomgTheme.NewsletterSignup,
+      PostCard: ZoomgTheme.PostCard,
+      CategoryBadge: ZoomgTheme.CategoryBadge,
+      TagBadge: ZoomgTheme.TagBadge,
+      ReadingTime: ZoomgTheme.ReadingTime,
+      SearchBar: ZoomgTheme.SearchBar,
+      Pagination: ZoomgTheme.Pagination,
+      CommentList: ZoomgTheme.CommentList,
+      CommentForm: ZoomgTheme.CommentForm,
+    };
+
+    themeModuleRegistry.set("zoomg", zoomgModules);
+    registerThemeComponents("zoomg", zoomgModules);
   }
 
   async loadThemeComponents(

@@ -23,8 +23,24 @@ export type UIExtensionEntry = {
   icon?: string;
 };
 
+const EMPTY_EXTENSIONS: UIExtensionEntry[] = [];
+
 class UIExtensionRegistry {
   private extensions = new Map<UIExtensionPoint, UIExtensionEntry[]>();
+  private listeners = new Set<() => void>();
+
+  private notify(): void {
+    for (const listener of this.listeners) {
+      listener();
+    }
+  }
+
+  subscribe(listener: () => void): () => void {
+    this.listeners.add(listener);
+    return () => {
+      this.listeners.delete(listener);
+    };
+  }
 
   register(
     point: UIExtensionPoint,
@@ -44,10 +60,11 @@ class UIExtensionRegistry {
       icon: options?.icon,
     });
     list.sort((a, b) => a.priority - b.priority);
+    this.notify();
   }
 
   getExtensions(point: UIExtensionPoint): UIExtensionEntry[] {
-    return this.extensions.get(point) ?? [];
+    return this.extensions.get(point) ?? EMPTY_EXTENSIONS;
   }
 
   hasExtensions(point: UIExtensionPoint): boolean {
@@ -55,13 +72,20 @@ class UIExtensionRegistry {
   }
 
   unregisterAll(pluginName: string): void {
+    let changed = false;
     for (const [point, list] of this.extensions.entries()) {
       const filtered = list.filter((e) => e.pluginName !== pluginName);
+      if (filtered.length !== list.length) {
+        changed = true;
+      }
       if (filtered.length === 0) {
         this.extensions.delete(point);
       } else {
         this.extensions.set(point, filtered);
       }
+    }
+    if (changed) {
+      this.notify();
     }
   }
 
@@ -83,6 +107,7 @@ class UIExtensionRegistry {
 
   clear(): void {
     this.extensions.clear();
+    this.notify();
   }
 }
 

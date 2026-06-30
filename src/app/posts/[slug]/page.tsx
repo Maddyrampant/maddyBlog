@@ -116,7 +116,7 @@ export default async function PostPage({
             />
           </article>
 
-          <PluginInjector hook="injectPostFooter" />
+          <PluginInjector extensionPoint="post:after:content" />
 
           <section className="mt-16 border-t border-zinc-200 dark:border-zinc-800 pt-12">
             <h2 className="text-2xl font-bold mb-2">نظرات ({commentCount})</h2>

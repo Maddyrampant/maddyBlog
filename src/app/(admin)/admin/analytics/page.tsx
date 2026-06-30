@@ -1,39 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  CartesianGrid,
-} from "recharts";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import Link from "next/link";
+import { Eye, Users, FileText, MessageSquare, Heart, TrendingUp, ArrowUpRight } from "lucide-react";
+import PageHeader from "@/components/admin/PageHeader";
+import { useTranslation } from "@/i18n/provider";
+import PluginInjector from "@/components/plugin/PluginInjector";
 
-type Overview = {
-  totalViews: number;
-  todayViews: number;
-  totalUniqueVisitors: number;
-  totalPosts: number;
-  totalComments: number;
-  totalReactions: number;
-};
-
+type Overview = { totalViews: number; todayViews: number; totalUniqueVisitors: number; totalPosts: number; totalComments: number; totalReactions: number };
 type ChartPoint = { date: string; views: number };
 type TrafficSource = { source: string; count: number };
-type TopPost = {
-  id: string;
-  title: string;
-  slug: string;
-  views: number;
-  comments: number;
-  reactions: number;
-  author: { username: string };
-};
+type TopPost = { id: string; title: string; slug: string; views: number; comments: number; reactions: number; author: { username: string } };
 
 export default function AnalyticsPage() {
+  const t = useTranslation();
   const [overview, setOverview] = useState<Overview | null>(null);
   const [chart, setChart] = useState<ChartPoint[]>([]);
   const [traffic, setTraffic] = useState<TrafficSource[]>([]);
@@ -43,186 +24,128 @@ export default function AnalyticsPage() {
   useEffect(() => {
     async function load() {
       try {
-        const [overviewRes, postsRes] = await Promise.all([
-          fetch("/api/analytics/overview"),
-          fetch("/api/analytics/posts"),
-        ]);
-
-        if (overviewRes.ok) {
-          const data = await overviewRes.json();
-          setOverview(data.overview);
-          setChart(data.viewsChart || []);
-          setTraffic(data.trafficSources || []);
-        }
-
-        if (postsRes.ok) {
-          const data = await postsRes.json();
-          setTopPosts(data.posts || []);
-        }
-      } catch {
-        // silently fail
-      } finally {
-        setLoading(false);
-      }
+        const [overviewRes, postsRes] = await Promise.all([fetch("/api/analytics/overview"), fetch("/api/analytics/posts")]);
+        if (overviewRes.ok) { const data = await overviewRes.json(); setOverview(data.overview); setChart(data.viewsChart || []); setTraffic(data.trafficSources || []); }
+        if (postsRes.ok) setTopPosts((await postsRes.json()).posts || []);
+      } catch { /* ignore */ } finally { setLoading(false); }
     }
     load();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="p-8">
-        <h1 className="text-2xl font-bold mb-8">Analytics</h1>
-        <p className="text-zinc-500">Loading analytics data…</p>
-      </div>
-    );
-  }
+  const overviewCards = [
+    { key: "totalViews" as const, label: t("analytics.totalViews"), icon: Eye, gradient: "gradient-primary" },
+    { key: "todayViews" as const, label: t("analytics.today"), icon: TrendingUp, gradient: "gradient-success" },
+    { key: "totalUniqueVisitors" as const, label: t("analytics.uniqueVisitors"), icon: Users, gradient: "gradient-info" },
+    { key: "totalPosts" as const, label: t("analytics.posts"), icon: FileText, gradient: "gradient-warning" },
+    { key: "totalComments" as const, label: t("analytics.comments"), icon: MessageSquare, gradient: "gradient-danger" },
+    { key: "totalReactions" as const, label: t("analytics.reactions"), icon: Heart, gradient: "gradient-primary" },
+  ];
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-8">Analytics</h1>
+    <div>
+      <PageHeader title={t("analytics.title")} subtitle={t("analytics.subtitle")} />
 
-      {overview && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-10">
-          <StatCard
-            label="Total Views"
-            value={overview.totalViews.toLocaleString()}
-          />
-          <StatCard
-            label="Today"
-            value={overview.todayViews.toLocaleString()}
-          />
-          <StatCard
-            label="Unique Visitors"
-            value={overview.totalUniqueVisitors.toLocaleString()}
-          />
-          <StatCard
-            label="Posts"
-            value={overview.totalPosts.toLocaleString()}
-          />
-          <StatCard
-            label="Comments"
-            value={overview.totalComments.toLocaleString()}
-          />
-          <StatCard
-            label="Reactions"
-            value={overview.totalReactions.toLocaleString()}
-          />
+      {loading ? (
+        <div className="admin-card p-12 text-center">
+          <div className="animate-spin w-6 h-6 border-2 border-theme-primary border-t-transparent rounded-full mx-auto" />
         </div>
-      )}
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
-        <div className="lg:col-span-2 border border-zinc-200 dark:border-zinc-800 rounded-xl p-5">
-          <h2 className="text-sm font-semibold mb-4">Views (Last 7 Days)</h2>
-          {chart.length > 0 ? (
-            <ResponsiveContainer width="100%" height={250}>
-              <BarChart data={chart}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e4e4e7" />
-                <XAxis
-                  dataKey="date"
-                  tick={{ fontSize: 11 }}
-                  tickFormatter={(v) => v.slice(5)}
-                />
-                <YAxis tick={{ fontSize: 11 }} />
-                <Tooltip />
-                <Bar dataKey="views" fill="#18181b" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          ) : (
-            <p className="text-sm text-zinc-500">No data yet</p>
-          )}
-        </div>
-
-        <div className="border border-zinc-200 dark:border-zinc-800 rounded-xl p-5">
-          <h2 className="text-sm font-semibold mb-4">Traffic Sources</h2>
-          {traffic.length > 0 ? (
-            <div className="space-y-3">
-              {traffic.map((t) => (
-                <div key={t.source}>
-                  <div className="flex justify-between text-sm mb-1">
-                    <span className="text-zinc-600 dark:text-zinc-400 truncate">
-                      {t.source}
-                    </span>
-                    <span className="font-medium">{t.count}</span>
+      ) : (
+        <>
+          {overview && (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+              {overviewCards.map((card) => {
+                const Icon = card.icon;
+                const value = overview[card.key];
+                return (
+                  <div key={card.key} className="stat-card">
+                    <div className="flex items-start justify-between mb-2">
+                      <div className={`stat-icon w-10 h-10 ${card.gradient} text-white`}><Icon size={18} /></div>
+                    </div>
+                    <p className="text-2xl font-bold">{typeof value === "number" ? value.toLocaleString() : value}</p>
+                    <p className="text-xs text-zinc-400 mt-0.5">{card.label}</p>
                   </div>
-                  <div className="w-full h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-zinc-900 dark:bg-white rounded-full"
-                      style={{
-                        width: `${(t.count / Math.max(...traffic.map((x) => x.count))) * 100}%`,
-                      }}
-                    />
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
-          ) : (
-            <p className="text-sm text-zinc-500">No traffic data yet</p>
           )}
-        </div>
-      </div>
 
-      <div className="border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden">
-        <div className="px-5 py-4 border-b border-zinc-200 dark:border-zinc-800">
-          <h2 className="text-sm font-semibold">Top Posts</h2>
-        </div>
-        {topPosts.length > 0 ? (
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 text-left">
-                <th className="p-3 font-medium text-zinc-500">Title</th>
-                <th className="p-3 font-medium text-zinc-500">Author</th>
-                <th className="p-3 font-medium text-zinc-500 text-right">
-                  Views
-                </th>
-                <th className="p-3 font-medium text-zinc-500 text-right">
-                  Comments
-                </th>
-                <th className="p-3 font-medium text-zinc-500 text-right">
-                  Reactions
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {topPosts.map((post) => (
-                <tr
-                  key={post.id}
-                  className="border-b border-zinc-200 dark:border-zinc-800 last:border-0 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
-                >
-                  <td className="p-3 font-medium max-w-xs truncate">
-                    <Link
-                      href={`/posts/${post.slug}`}
-                      className="hover:text-blue-600 transition-colors"
-                    >
-                      {post.title}
-                    </Link>
-                  </td>
-                  <td className="p-3 text-zinc-500">{post.author.username}</td>
-                  <td className="p-3 text-right font-medium">
-                    {post.views.toLocaleString()}
-                  </td>
-                  <td className="p-3 text-right text-zinc-500">
-                    {post.comments}
-                  </td>
-                  <td className="p-3 text-right text-zinc-500">
-                    {post.reactions}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        ) : (
-          <p className="p-5 text-sm text-zinc-500">No posts yet</p>
-        )}
-      </div>
-    </div>
-  );
-}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-8">
+            <div className="lg:col-span-2 admin-card p-5">
+              <h2 className="text-sm font-semibold mb-4 flex items-center gap-2">
+                <TrendingUp size={16} className="text-theme-primary" /> {t("analytics.viewsChart")}
+              </h2>
+              {chart.length > 0 ? (
+                <ResponsiveContainer width="100%" height={280}>
+                  <BarChart data={chart}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e4e4e7" strokeOpacity={0.5} />
+                    <XAxis dataKey="date" tick={{ fontSize: 11 }} tickFormatter={(v) => { const d = new Date(v); return d.toLocaleDateString("en-US", { month: "short", day: "numeric" }); }} axisLine={false} tickLine={false} />
+                    <YAxis tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
+                    <Tooltip contentStyle={{ borderRadius: "8px", border: "1px solid #e4e4e7", boxShadow: "0 4px 12px rgba(0,0,0,0.08)" }} />
+                    <Bar dataKey="views" fill="#6366f1" radius={[6, 6, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : <div className="flex items-center justify-center h-[280px] text-sm text-zinc-400">{t("analytics.noData")}</div>}
+            </div>
+            <div className="admin-card p-5">
+              <h2 className="text-sm font-semibold mb-4 flex items-center gap-2">
+                <ArrowUpRight size={16} className="text-theme-primary" /> {t("analytics.trafficSources")}
+              </h2>
+              {traffic.length > 0 ? (
+                <div className="space-y-4">
+                  {traffic.map((tItem) => {
+                    const maxCount = Math.max(...traffic.map((x) => x.count));
+                    return (
+                      <div key={tItem.source}>
+                        <div className="flex justify-between text-sm mb-1.5">
+                          <span className="text-zinc-600 dark:text-zinc-400 truncate text-xs font-medium">{tItem.source}</span>
+                          <span className="font-semibold text-xs">{tItem.count}</span>
+                        </div>
+                        <div className="w-full h-2 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+                          <div className="h-full rounded-full gradient-primary" style={{ width: `${maxCount > 0 ? (tItem.count / maxCount) * 100 : 0}%` }} />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : <div className="flex items-center justify-center h-[280px] text-sm text-zinc-400">{t("analytics.noTraffic")}</div>}
+            </div>
+          </div>
 
-function StatCard({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="border border-zinc-200 dark:border-zinc-800 rounded-xl p-4">
-      <p className="text-2xl font-bold">{value}</p>
-      <p className="text-xs text-zinc-500 mt-1">{label}</p>
+          <PluginInjector extensionPoint="admin:analytics:chart" context={{ overview, chart, traffic }} />
+
+          <div className="admin-card">
+            <div className="px-6 py-4 border-b border-zinc-100 dark:border-zinc-800">
+              <h2 className="text-sm font-semibold flex items-center gap-2"><FileText size={16} className="text-theme-primary" /> {t("analytics.topPosts")}</h2>
+            </div>
+            {topPosts.length > 0 ? (
+              <div className="overflow-x-auto">
+                <table className="data-table">
+                  <thead>
+                    <tr>
+                      <th>{t("posts.titleLabel")}</th>
+                      <th>{t("posts.author")}</th>
+                      <th className="text-right">{t("analytics.totalViews")}</th>
+                      <th className="text-right">{t("analytics.comments")}</th>
+                      <th className="text-right">{t("analytics.reactions")}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {topPosts.map((post) => (
+                      <tr key={post.id}>
+                        <td className="font-medium max-w-xs truncate"><Link href={`/posts/${post.slug}`} className="hover:text-theme-primary transition-colors">{post.title}</Link></td>
+                        <td className="text-zinc-500">{post.author.username}</td>
+                        <td className="text-right font-semibold">{post.views.toLocaleString()}</td>
+                        <td className="text-right text-zinc-500">{post.comments}</td>
+                        <td className="text-right text-zinc-500">{post.reactions}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : <p className="p-6 text-sm text-zinc-400 text-center">{t("analytics.noPosts")}</p>}
+          </div>
+        </>
+      )}
     </div>
   );
 }

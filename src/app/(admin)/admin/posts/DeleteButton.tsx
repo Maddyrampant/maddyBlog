@@ -2,14 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Trash2 } from "lucide-react";
 
-export default function DeleteButton({
-  id,
-  title,
-}: {
-  id: string;
-  title: string;
-}) {
+export default function DeleteButton({ id, title }: { id: string; title: string }) {
   const router = useRouter();
   const [confirming, setConfirming] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -30,17 +25,17 @@ export default function DeleteButton({
 
   if (confirming) {
     return (
-      <div className="flex items-center gap-1.5">
+      <div className="flex items-center gap-1">
         <button
           onClick={handleDelete}
           disabled={deleting}
-          className="text-xs px-2.5 py-1 bg-red-600 text-white rounded hover:bg-red-700 disabled:opacity-50 transition-colors"
+          className="admin-btn admin-btn-danger admin-btn-xs"
         >
           {deleting ? "..." : "Confirm"}
         </button>
         <button
           onClick={() => setConfirming(false)}
-          className="text-xs px-2.5 py-1 border border-zinc-300 dark:border-zinc-700 rounded hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+          className="admin-btn admin-btn-outline admin-btn-xs"
         >
           Cancel
         </button>
@@ -51,9 +46,9 @@ export default function DeleteButton({
   return (
     <button
       onClick={() => setConfirming(true)}
-      aria-label={title}
-      className="text-xs px-2.5 py-1 border border-red-300 dark:border-red-800 text-red-600 dark:text-red-400 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+      className="admin-btn admin-btn-outline admin-btn-xs text-red-500 border-red-200 dark:border-red-900 hover:bg-red-50 dark:hover:bg-red-950"
     >
+      <Trash2 size={12} />
       Delete
     </button>
   );

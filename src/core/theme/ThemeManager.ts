@@ -109,6 +109,11 @@ import {
   defaultConfig as ZoomjiConfig,
 } from "@/themes/zoomji/theme.config";
 
+import {
+  manifest as ZoomgManifest,
+  defaultConfig as ZoomgConfig,
+} from "@/themes/zoomg/theme.config";
+
 const DEFAULT_CONFIG: ThemeConfigValues = {
   primaryColor: "#6366f1",
   fontFamily: "Inter",
@@ -188,6 +193,9 @@ class ThemeManager {
     if (!this.entries.has("zoomji")) {
       this.seedZoomjiInMemory();
     }
+    if (!this.entries.has("zoomg")) {
+      this.seedZoomgInMemory();
+    }
   }
 
   private seedDefaultInMemory(): void {
@@ -238,6 +246,23 @@ class ThemeManager {
       "themes/zoomji",
       ZoomjiManifest,
       ZoomjiConfig,
+    );
+  }
+
+  private seedZoomgInMemory(): void {
+    const entry: ThemeEntry = {
+      manifest: ZoomgManifest,
+      status: "inactive",
+      config: ZoomgConfig,
+      installedAt: new Date(),
+      directory: "themes/zoomg",
+    };
+    this.entries.set("zoomg", entry);
+    themeRegistry.register(
+      "zoomg",
+      "themes/zoomg",
+      ZoomgManifest,
+      ZoomgConfig,
     );
   }
 

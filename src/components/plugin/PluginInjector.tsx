@@ -1,23 +1,57 @@
 "use client";
 
-import { getUiHooks } from "@/lib/plugin/hookSystem";
+import {
+  useSyncExternalStore,
+  useCallback,
+  createContext,
+  useContext,
+} from "react";
+import { uiExtensionRegistry } from "@/lib/plugin/ui/UIExtensionRegistry";
+import type { UIExtensionPoint } from "@/lib/plugin/ui/UIExtensionRegistry";
 
 type PluginInjectorProps = {
-  hook: string;
+  extensionPoint: UIExtensionPoint;
+  context?: Record<string, unknown>;
 };
 
-export default function PluginInjector({ hook }: PluginInjectorProps) {
-  const hooks = getUiHooks(hook);
+const PluginInjectorContext = createContext<Record<string, unknown>>({});
 
-  if (hooks.length === 0) return null;
+export function usePluginInjectorContext() {
+  return useContext(PluginInjectorContext);
+}
+
+export default function PluginInjector({
+  extensionPoint,
+  context = {},
+}: PluginInjectorProps) {
+  const subscribe = useCallback(
+    (onStoreChange: () => void) => uiExtensionRegistry.subscribe(onStoreChange),
+    [],
+  );
+  const getSnapshot = useCallback(
+    () => uiExtensionRegistry.getExtensions(extensionPoint),
+    [extensionPoint],
+  );
+  const getServerSnapshot = useCallback(
+    () => uiExtensionRegistry.getExtensions(extensionPoint),
+    [extensionPoint],
+  );
+
+  const extensions = useSyncExternalStore(
+    subscribe,
+    getSnapshot,
+    getServerSnapshot,
+  );
+
+  if (extensions.length === 0) return null;
 
   return (
-    <>
-      {hooks.map((h) => (
-        <div key={h.pluginName} data-plugin={h.pluginName}>
-          {h.component()}
+    <PluginInjectorContext.Provider value={context}>
+      {extensions.map((ext) => (
+        <div key={ext.pluginName} data-plugin={ext.pluginName}>
+          {ext.component()}
         </div>
       ))}
-    </>
+    </PluginInjectorContext.Provider>
   );
 }

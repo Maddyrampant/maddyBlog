@@ -7,7 +7,7 @@ export { registerBuiltinPlugin } from "./loader";
 export { BasePlugin } from "./basePlugin";
 export { buildPluginContext } from "./context";
 export { hookEngine, PluginRuntime, pluginRuntime } from "./runtime";
-export type { HookEngine } from "./runtime/HookEngine";
+export type { HookEngine, HookRegistration } from "./runtime/HookEngine";
 export { uiExtensionRegistry } from "./ui/UIExtensionRegistry";
 export type {
   UIExtensionPoint,

@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       { protocol: "https", hostname: "**" },
     ],
+    unoptimized: true,
   },
   turbopack: {
     root: __dirname,
