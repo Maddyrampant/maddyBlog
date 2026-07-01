@@ -2,6 +2,13 @@
   --theme-primary: #6366f1;
   --theme-font-family: "Inter", system-ui, sans-serif;
   --theme-layout: classic;
+  --default-bg: #ffffff;
+  --default-text: #0f172a;
+}
+
+.dark {
+  --default-bg: #0f172a;
+  --default-text: #f8fafc;
 }
 
 .theme-primary {

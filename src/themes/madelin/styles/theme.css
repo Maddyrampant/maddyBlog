@@ -12,6 +12,7 @@
   --madelin-text-muted: #a8a29e;
   --madelin-border: #e7e5e4;
   --madelin-card-bg: #ffffff;
+  --madelin-bg: var(--madelin-warm-bg);
 }
 
 .dark {
@@ -27,6 +28,7 @@
   --madelin-text-muted: #78716c;
   --madelin-border: #44403c;
   --madelin-card-bg: #292524;
+  --madelin-bg: var(--madelin-warm-bg);
 }
 
 .madelin-gradient-text {
