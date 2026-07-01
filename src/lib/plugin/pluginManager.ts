@@ -6,6 +6,7 @@ import type {
   PluginPermission,
 } from "./types";
 import { loadBuiltinPlugins } from "./loader";
+import { registerBuiltinPlugins } from "./builtins";
 import {
   registerPluginHooks,
   unregisterPluginHooks,
@@ -32,6 +33,7 @@ export class PluginManager {
 
   async initialize(): Promise<void> {
     if (this.initialized) return;
+    await registerBuiltinPlugins();
     const loaded = await loadBuiltinPlugins();
     for (const entry of loaded) {
       if (entry.plugin) {
