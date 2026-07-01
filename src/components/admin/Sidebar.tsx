@@ -11,6 +11,7 @@ import {
   MessageSquare,
   BarChart3,
   Palette,
+  Puzzle,
   ExternalLink,
   Tags,
   FolderTree,
@@ -41,21 +42,34 @@ export default function Sidebar() {
         { href: "/admin/posts/new", label: t("nav.newPost"), icon: PlusSquare },
         { href: "/admin/featured", label: t("nav.featured"), icon: Star },
         { href: "/admin/stories", label: t("nav.stories"), icon: BookOpen },
-        { href: "/admin/comments", label: t("nav.comments"), icon: MessageSquare },
-        { href: "/admin/categories", label: t("nav.categories"), icon: FolderTree },
+        {
+          href: "/admin/comments",
+          label: t("nav.comments"),
+          icon: MessageSquare,
+        },
+        {
+          href: "/admin/categories",
+          label: t("nav.categories"),
+          icon: FolderTree,
+        },
         { href: "/admin/tags", label: t("nav.tags"), icon: Tags },
       ],
     },
     {
       title: t("nav.insights"),
       items: [
-        { href: "/admin/analytics", label: t("nav.analytics"), icon: BarChart3 },
+        {
+          href: "/admin/analytics",
+          label: t("nav.analytics"),
+          icon: BarChart3,
+        },
       ],
     },
     {
       title: t("nav.customize"),
       items: [
         { href: "/admin/themes", label: t("nav.appearance"), icon: Palette },
+        { href: "/admin/plugins", label: t("nav.plugins"), icon: Puzzle },
         { href: "/admin/media", label: t("nav.media"), icon: Image },
         { href: "/admin/users", label: t("nav.users"), icon: Users },
         { href: "/admin/subscribers", label: t("nav.subscribers"), icon: Mail },
@@ -71,7 +85,10 @@ export default function Sidebar() {
           M
         </div>
         <div>
-          <Link href="/admin" className="text-base font-bold tracking-tight block leading-tight">
+          <Link
+            href="/admin"
+            className="text-base font-bold tracking-tight block leading-tight"
+          >
             {t("app.name")}
           </Link>
           <span className="text-[10px] font-medium text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
@@ -86,7 +103,8 @@ export default function Sidebar() {
             <div className="sidebar-section-title">{section.title}</div>
             {section.items.map((item) => {
               const Icon = item.icon;
-              const isActive = pathname === item.href || 
+              const isActive =
+                pathname === item.href ||
                 (item.href !== "/admin" && pathname.startsWith(item.href));
               return (
                 <Link
@@ -106,7 +124,10 @@ export default function Sidebar() {
       </nav>
 
       <div className="border-t border-zinc-100 dark:border-zinc-800/50 p-3 mt-auto">
-        <Link href="/" className="sidebar-item text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300">
+        <Link
+          href="/"
+          className="sidebar-item text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+        >
           <ExternalLink className="sidebar-icon" />
           <span>{t("nav.viewSite")}</span>
         </Link>

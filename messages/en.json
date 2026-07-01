@@ -22,7 +22,8 @@
     "subscribers": "Subscribers",
     "media": "Media",
     "settings": "Settings",
-    "viewSite": "View Site"
+    "viewSite": "View Site",
+    "plugins": "Plugins"
   },
   "header": {
     "search": "Search...",
