@@ -1,4 +1,4 @@
-export { default as Layout } from "./layout";
+export { default as Layout } from "./Layout";
 export { default as PostPage } from "./post";
 export { default as HomePage } from "./home";
 export { default as Header } from "./components/Header";

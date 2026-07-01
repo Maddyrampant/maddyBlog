@@ -1,6 +1,6 @@
 "use client";
 
-import "../gameverse/styles/theme.css";
+import "./styles/theme.css";
 
 export default function GameverseLayout({
   children,

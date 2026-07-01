@@ -5,6 +5,11 @@ import * as DefaultTheme from "@/themes/default";
 import * as MadelinTheme from "@/themes/madelin";
 import * as ZoomjiTheme from "@/themes/zoomji";
 import * as ZoomgTheme from "@/themes/zoomg";
+import * as DigiTechTheme from "@/themes/digitech";
+import * as GameVerseTheme from "@/themes/gameverse";
+import * as PersonalBlogTheme from "@/themes/personalblog";
+import * as NewsWireTheme from "@/themes/newswire";
+import * as EduProTheme from "@/themes/edupro";
 
 const themeModuleRegistry = new Map<
   string,
@@ -123,6 +128,126 @@ export class ThemeLoader {
 
     themeModuleRegistry.set("zoomg", zoomgModules);
     registerThemeComponents("zoomg", zoomgModules);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const digitechModules: Record<string, React.ComponentType<any>> = {
+      Layout: DigiTechTheme.Layout,
+      PostPage: DigiTechTheme.PostPage,
+      HomePage: DigiTechTheme.HomePage,
+      Header: DigiTechTheme.Header,
+      Footer: DigiTechTheme.Footer,
+      AuthorCard: DigiTechTheme.AuthorCard,
+      RelatedPosts: DigiTechTheme.RelatedPosts,
+      Sidebar: DigiTechTheme.Sidebar,
+      NewsletterSignup: DigiTechTheme.NewsletterSignup,
+      PostCard: DigiTechTheme.PostCard,
+      CategoryBadge: DigiTechTheme.CategoryBadge,
+      TagBadge: DigiTechTheme.TagBadge,
+      ReadingTime: DigiTechTheme.ReadingTime,
+      SearchBar: DigiTechTheme.SearchBar,
+      Pagination: DigiTechTheme.Pagination,
+      CommentList: DigiTechTheme.CommentList,
+      CommentForm: DigiTechTheme.CommentForm,
+    };
+
+    themeModuleRegistry.set("digitech", digitechModules);
+    registerThemeComponents("digitech", digitechModules);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const gameverseModules: Record<string, React.ComponentType<any>> = {
+      Layout: GameVerseTheme.Layout,
+      PostPage: GameVerseTheme.PostPage,
+      HomePage: GameVerseTheme.HomePage,
+      Header: GameVerseTheme.Header,
+      Footer: GameVerseTheme.Footer,
+      AuthorCard: GameVerseTheme.AuthorCard,
+      RelatedPosts: GameVerseTheme.RelatedPosts,
+      Sidebar: GameVerseTheme.Sidebar,
+      NewsletterSignup: GameVerseTheme.NewsletterSignup,
+      PostCard: GameVerseTheme.PostCard,
+      CategoryBadge: GameVerseTheme.CategoryBadge,
+      TagBadge: GameVerseTheme.TagBadge,
+      ReadingTime: GameVerseTheme.ReadingTime,
+      SearchBar: GameVerseTheme.SearchBar,
+      Pagination: GameVerseTheme.Pagination,
+      CommentList: GameVerseTheme.CommentList,
+      CommentForm: GameVerseTheme.CommentForm,
+    };
+
+    themeModuleRegistry.set("gameverse", gameverseModules);
+    registerThemeComponents("gameverse", gameverseModules);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const personalblogModules: Record<string, React.ComponentType<any>> = {
+      Layout: PersonalBlogTheme.Layout,
+      PostPage: PersonalBlogTheme.PostPage,
+      HomePage: PersonalBlogTheme.HomePage,
+      Header: PersonalBlogTheme.Header,
+      Footer: PersonalBlogTheme.Footer,
+      AuthorCard: PersonalBlogTheme.AuthorCard,
+      RelatedPosts: PersonalBlogTheme.RelatedPosts,
+      Sidebar: PersonalBlogTheme.Sidebar,
+      NewsletterSignup: PersonalBlogTheme.NewsletterSignup,
+      PostCard: PersonalBlogTheme.PostCard,
+      CategoryBadge: PersonalBlogTheme.CategoryBadge,
+      TagBadge: PersonalBlogTheme.TagBadge,
+      ReadingTime: PersonalBlogTheme.ReadingTime,
+      SearchBar: PersonalBlogTheme.SearchBar,
+      Pagination: PersonalBlogTheme.Pagination,
+      CommentList: PersonalBlogTheme.CommentList,
+      CommentForm: PersonalBlogTheme.CommentForm,
+    };
+
+    themeModuleRegistry.set("personalblog", personalblogModules);
+    registerThemeComponents("personalblog", personalblogModules);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const newswireModules: Record<string, React.ComponentType<any>> = {
+      Layout: NewsWireTheme.Layout,
+      PostPage: NewsWireTheme.PostPage,
+      HomePage: NewsWireTheme.HomePage,
+      Header: NewsWireTheme.Header,
+      Footer: NewsWireTheme.Footer,
+      AuthorCard: NewsWireTheme.AuthorCard,
+      RelatedPosts: NewsWireTheme.RelatedPosts,
+      Sidebar: NewsWireTheme.Sidebar,
+      NewsletterSignup: NewsWireTheme.NewsletterSignup,
+      PostCard: NewsWireTheme.PostCard,
+      CategoryBadge: NewsWireTheme.CategoryBadge,
+      TagBadge: NewsWireTheme.TagBadge,
+      ReadingTime: NewsWireTheme.ReadingTime,
+      SearchBar: NewsWireTheme.SearchBar,
+      Pagination: NewsWireTheme.Pagination,
+      CommentList: NewsWireTheme.CommentList,
+      CommentForm: NewsWireTheme.CommentForm,
+    };
+
+    themeModuleRegistry.set("newswire", newswireModules);
+    registerThemeComponents("newswire", newswireModules);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const eduproModules: Record<string, React.ComponentType<any>> = {
+      Layout: EduProTheme.Layout,
+      PostPage: EduProTheme.PostPage,
+      HomePage: EduProTheme.HomePage,
+      Header: EduProTheme.Header,
+      Footer: EduProTheme.Footer,
+      AuthorCard: EduProTheme.AuthorCard,
+      RelatedPosts: EduProTheme.RelatedPosts,
+      Sidebar: EduProTheme.Sidebar,
+      NewsletterSignup: EduProTheme.NewsletterSignup,
+      PostCard: EduProTheme.PostCard,
+      CategoryBadge: EduProTheme.CategoryBadge,
+      TagBadge: EduProTheme.TagBadge,
+      ReadingTime: EduProTheme.ReadingTime,
+      SearchBar: EduProTheme.SearchBar,
+      Pagination: EduProTheme.Pagination,
+      CommentList: EduProTheme.CommentList,
+      CommentForm: EduProTheme.CommentForm,
+    };
+
+    themeModuleRegistry.set("edupro", eduproModules);
+    registerThemeComponents("edupro", eduproModules);
   }
 
   async loadThemeComponents(
