@@ -1,13 +1,16 @@
 "use client";
 
-import { useState } from "react";
-import { Languages, ChevronDown } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Languages } from "lucide-react";
 import { useI18n } from "@/i18n/provider";
 import { locales, localeNames } from "@/i18n/config";
 
 export default function LanguageSwitcher() {
   const { locale, setLocale } = useI18n();
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
 
   return (
     <div className="relative">
@@ -16,7 +19,9 @@ export default function LanguageSwitcher() {
         className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors text-sm"
       >
         <Languages size={16} className="text-zinc-500" />
-        <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">{locale.toUpperCase()}</span>
+        <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400 min-w-[26px] text-center">
+          {mounted ? locale.toUpperCase() : "EN"}
+        </span>
       </button>
 
       {open && (

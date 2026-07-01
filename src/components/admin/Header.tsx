@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, Bell, ChevronDown, LogOut, User, Settings } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -14,6 +14,9 @@ export default function Header() {
   const { dir } = useI18n();
   const [searchOpen, setSearchOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
 
   async function handleLogout() {
     try {
@@ -25,7 +28,7 @@ export default function Header() {
   }
 
   return (
-    <header className="admin-header flex items-center justify-between px-6" dir={dir}>
+    <header className="admin-header flex items-center justify-between px-6" dir={mounted ? dir : "ltr"}>
       <div className="flex items-center gap-4">
         <button
           onClick={() => setSearchOpen(!searchOpen)}

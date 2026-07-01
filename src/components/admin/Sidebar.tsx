@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -28,6 +29,9 @@ export default function Sidebar() {
   const pathname = usePathname();
   const t = useTranslation();
   const { dir } = useI18n();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
 
   const navSections = [
     {
@@ -81,7 +85,7 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="admin-sidebar custom-scroll" dir={dir}>
+    <aside className="admin-sidebar custom-scroll" dir={mounted ? dir : "ltr"}>
       <div className="flex items-center gap-3 px-5 h-[70px] border-b border-zinc-100 dark:border-zinc-800/50">
         <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center text-white font-bold text-sm">
           M
