@@ -15,6 +15,16 @@ import PageHeader from "@/components/admin/PageHeader";
 import { useTranslation } from "@/i18n/provider";
 import PluginInjector from "@/components/plugin/PluginInjector";
 
+interface PostSummary {
+  id: string;
+  title: string;
+  status: string;
+  views: number;
+  createdAt: string;
+  author?: { username: string };
+  _count?: { comments: number };
+}
+
 export default function AdminDashboard() {
   const t = useTranslation();
   const [stats, setStats] = useState({
@@ -25,34 +35,25 @@ export default function AdminDashboard() {
     totalUsers: 0,
     totalViews: 0,
   });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [recentPosts, setRecentPosts] = useState<any[]>([]);
+  const [recentPosts, setRecentPosts] = useState<PostSummary[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function load() {
       try {
-        const [postsRes, commentsRes, usersRes, viewsRes] = await Promise.all([
+        const [postsRes, commentsRes, usersRes] = await Promise.all([
           fetch("/api/posts"),
           fetch("/api/comments?count=true"),
           fetch("/api/users"),
-          fetch("/api/analytics/overview"),
         ]);
-        const posts = await postsRes.json();
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const published = posts.filter(
-          (p: any) => p.status === "PUBLISHED",
-        ).length;
+        const posts: PostSummary[] = await postsRes.json();
+        const published = posts.filter((p) => p.status === "PUBLISHED").length;
         const draft = posts.length - published;
         const comments = commentsRes.ok
           ? ((await commentsRes.json()).length ?? 0)
           : 0;
         const users = usersRes.ok ? ((await usersRes.json()).length ?? 0) : 0;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const views = posts.reduce(
-          (sum: number, p: any) => sum + (p.views || 0),
-          0,
-        );
+        const views = posts.reduce((sum, p) => sum + (p.views || 0), 0);
         setStats({
           totalPosts: posts.length,
           publishedPosts: published,
@@ -187,8 +188,7 @@ export default function AdminDashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                  {recentPosts.map((post: any) => (
+                  {recentPosts.map((post) => (
                     <tr key={post.id}>
                       <td className="font-medium max-w-[250px] truncate">
                         {post.title}
