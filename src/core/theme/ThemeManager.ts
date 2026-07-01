@@ -155,115 +155,81 @@ class ThemeManager {
     if (prisma) {
       try {
         const dbThemes = await prisma.theme.findMany();
-        if (dbThemes.length > 0) {
-          for (const t of dbThemes) {
-            const config = this.safeParseConfig(t.config);
-            const entry: ThemeEntry = {
-              manifest: DEFAULT_MANIFEST,
-              status: this.toThemeStatus(t.status),
-              config,
-              installedAt: t.installedAt,
-              directory: t.directory,
-            };
-            this.entries.set(t.name, entry);
-            themeRegistry.register(
-              t.name,
-              t.directory,
-              DEFAULT_MANIFEST,
-              config,
-            );
-            themeRegistry.updateStatus(t.name, this.toThemeStatus(t.status));
-            if (t.status === "active") {
-              themeRegistry.setActive(t.name);
-            }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const dbNames = new Set(dbThemes.map((t: any) => t.name));
+        for (const t of dbThemes) {
+          const config = this.safeParseConfig(t.config);
+          const manifest = this.getManifestFor(t.name);
+          const entry: ThemeEntry = {
+            manifest,
+            status: this.toThemeStatus(t.status),
+            config,
+            installedAt: t.installedAt,
+            directory: t.directory,
+          };
+          this.entries.set(t.name, entry);
+          themeRegistry.register(t.name, t.directory, manifest, config);
+          themeRegistry.updateStatus(t.name, this.toThemeStatus(t.status));
+          if (t.status === "active") {
+            themeRegistry.setActive(t.name);
           }
-          return;
         }
+        for (const name of ["default", "madelin", "zoomji", "zoomg"]) {
+          if (!dbNames.has(name) && !this.entries.has(name)) {
+            this.seedInMemory(name);
+          }
+        }
+        return;
       } catch {
         // DB unreachable — fall through to in-memory seed
       }
     }
 
-    if (!this.entries.has("default")) {
-      this.seedDefaultInMemory();
-    }
-    if (!this.entries.has("madelin")) {
-      this.seedMadelinInMemory();
-    }
-    if (!this.entries.has("zoomji")) {
-      this.seedZoomjiInMemory();
-    }
-    if (!this.entries.has("zoomg")) {
-      this.seedZoomgInMemory();
+    for (const name of ["default", "madelin", "zoomji", "zoomg"]) {
+      if (!this.entries.has(name)) {
+        this.seedInMemory(name);
+      }
     }
   }
 
-  private seedDefaultInMemory(): void {
-    const entry: ThemeEntry = {
-      manifest: DEFAULT_MANIFEST,
-      status: "inactive",
-      config: DEFAULT_CONFIG,
-      installedAt: new Date(),
-      directory: "themes/default",
-    };
-    this.entries.set("default", entry);
-    themeRegistry.register(
-      "default",
-      "themes/default",
-      DEFAULT_MANIFEST,
-      DEFAULT_CONFIG,
-    );
+  private getManifestFor(name: string): ThemeManifest {
+    switch (name) {
+      case "madelin":
+        return MadelinManifest;
+      case "zoomji":
+        return ZoomjiManifest;
+      case "zoomg":
+        return ZoomgManifest;
+      default:
+        return DEFAULT_MANIFEST;
+    }
   }
 
-  private seedMadelinInMemory(): void {
-    const entry: ThemeEntry = {
-      manifest: MadelinManifest,
-      status: "inactive",
-      config: MadelinConfig,
-      installedAt: new Date(),
-      directory: "themes/madelin",
-    };
-    this.entries.set("madelin", entry);
-    themeRegistry.register(
-      "madelin",
-      "themes/madelin",
-      MadelinManifest,
-      MadelinConfig,
-    );
+  private getDefaultConfigFor(name: string): ThemeConfigValues {
+    switch (name) {
+      case "madelin":
+        return MadelinConfig;
+      case "zoomji":
+        return ZoomjiConfig;
+      case "zoomg":
+        return ZoomgConfig;
+      default:
+        return DEFAULT_CONFIG;
+    }
   }
 
-  private seedZoomjiInMemory(): void {
+  private seedInMemory(name: string): void {
+    const manifest = this.getManifestFor(name);
+    const config = this.getDefaultConfigFor(name);
     const entry: ThemeEntry = {
-      manifest: ZoomjiManifest,
+      manifest,
       status: "inactive",
-      config: ZoomjiConfig,
+      config,
       installedAt: new Date(),
-      directory: "themes/zoomji",
+      directory: `themes/${name}`,
     };
-    this.entries.set("zoomji", entry);
-    themeRegistry.register(
-      "zoomji",
-      "themes/zoomji",
-      ZoomjiManifest,
-      ZoomjiConfig,
-    );
-  }
-
-  private seedZoomgInMemory(): void {
-    const entry: ThemeEntry = {
-      manifest: ZoomgManifest,
-      status: "inactive",
-      config: ZoomgConfig,
-      installedAt: new Date(),
-      directory: "themes/zoomg",
-    };
-    this.entries.set("zoomg", entry);
-    themeRegistry.register(
-      "zoomg",
-      "themes/zoomg",
-      ZoomgManifest,
-      ZoomgConfig,
-    );
+    this.entries.set(name, entry);
+    themeRegistry.register(name, `themes/${name}`, manifest, config);
   }
 
   async activate(name: string): Promise<boolean> {
