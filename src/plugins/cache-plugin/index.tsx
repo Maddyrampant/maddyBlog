@@ -25,6 +25,20 @@ class CachePlugin extends BasePlugin {
   constructor() {
     super();
 
+    this.addDataHook("afterPostSave", async (data: unknown) => {
+      const { cacheStore } = await import("@/lib/cache/CacheStore");
+      cacheStore.invalidateByPrefix("post:");
+      cacheStore.invalidateByPrefix("page:");
+      return data;
+    });
+
+    this.addDataHook("afterPostDeleted", async (data: unknown) => {
+      const { cacheStore } = await import("@/lib/cache/CacheStore");
+      cacheStore.invalidateByPrefix("post:");
+      cacheStore.invalidateByPrefix("page:");
+      return data;
+    });
+
     this.addApiHook((router: ApiRouter) => {
       router.registerRoute({
         method: "GET",

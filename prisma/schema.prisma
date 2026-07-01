@@ -54,6 +54,9 @@ model User {
   activities         Activity[]
   mentionedIn        Notification[] @relation("mentionedUser")
 
+  resetToken       String?
+  resetTokenExpiry DateTime?
+
   createdAt    DateTime  @default(now())
 }
 

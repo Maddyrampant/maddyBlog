@@ -98,6 +98,9 @@ export default function LoginPage() {
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
+              <div className="text-right mt-1">
+                <Link href="/forgot-password" className="text-xs text-theme-primary hover:underline">Forgot password?</Link>
+              </div>
             </div>
 
             <button type="submit" disabled={loading} className="admin-btn admin-btn-primary w-full justify-center py-2.5">

@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { generateSlug } from "@/lib/slug";
 import { createPostSchema, updatePostSchema, type CreatePostInput, type UpdatePostInput } from "@/validations/postSchema";
 import { postRepository } from "./postRepository";
+import { runHook } from "@/lib/plugin/hooksRunner";
 
 export const postService = {
   async create(input: CreatePostInput, authorId: string) {
@@ -29,6 +30,7 @@ export const postService = {
       },
     });
 
+    await runHook("afterPostSave", post);
     return post;
   },
 
@@ -55,6 +57,7 @@ export const postService = {
       },
     });
 
+    await runHook("afterPostSave", post);
     return post;
   },
 
@@ -63,6 +66,7 @@ export const postService = {
     if (!existing) throw new Error("Post not found");
     if (existing.authorId !== userId) throw new Error("Not authorized");
 
+    await runHook("afterPostDeleted", existing);
     await postRepository.delete(postId);
   },
 
@@ -71,6 +75,7 @@ export const postService = {
       status: "PUBLISHED",
       publishedAt: new Date(),
     });
+    await runHook("afterPostSave", post);
     return post;
   },
 
@@ -79,6 +84,7 @@ export const postService = {
       status: "DRAFT",
       publishedAt: null,
     });
+    await runHook("afterPostSave", post);
     return post;
   },
 };

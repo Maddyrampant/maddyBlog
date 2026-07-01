@@ -14,6 +14,8 @@ import {
 import PageHeader from "@/components/admin/PageHeader";
 import { useTranslation } from "@/i18n/provider";
 import PluginInjector from "@/components/plugin/PluginInjector";
+import { RecentCommentsWidget } from "@/components/dashboard/RecentCommentsWidget";
+import { SystemHealthWidget } from "@/components/dashboard/SystemHealthWidget";
 
 interface PostSummary {
   id: string;
@@ -298,6 +300,11 @@ export default function AdminDashboard() {
         extensionPoint="admin:dashboard:widget"
         context={{ stats, recentPosts }}
       />
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-5">
+        <RecentCommentsWidget />
+        <SystemHealthWidget />
+      </div>
     </div>
   );
 }

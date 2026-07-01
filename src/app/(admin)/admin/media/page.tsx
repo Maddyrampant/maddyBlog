@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Image, Upload, File, X, Copy, Check } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Image, Upload, File, Copy, Check, Trash2 } from "lucide-react";
 import PageHeader from "@/components/admin/PageHeader";
 import { useTranslation } from "@/i18n/provider";
 
@@ -16,8 +16,17 @@ type MediaItem = {
 export default function MediaPage() {
   const t = useTranslation();
   const [media, setMedia] = useState<MediaItem[]>([]);
+  const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch("/api/media")
+      .then((r) => r.ok && r.json())
+      .then((data) => { if (data) setMedia(data); })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
 
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -42,6 +51,15 @@ export default function MediaPage() {
     } finally {
       setUploading(false);
     }
+  }
+
+  async function handleDelete(url: string) {
+    const res = await fetch("/api/media", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ url }),
+    });
+    if (res.ok) setMedia((prev) => prev.filter((m) => m.url !== url));
   }
 
   function copyUrl(url: string) {
@@ -77,7 +95,11 @@ export default function MediaPage() {
         </div>
       )}
 
-      {media.length === 0 ? (
+      {loading ? (
+        <div className="admin-card p-8 text-center">
+          <div className="animate-spin w-6 h-6 border-2 border-theme-primary border-t-transparent rounded-full mx-auto" />
+        </div>
+      ) : media.length === 0 ? (
         <div className="admin-card p-12 text-center">
           <Image size={40} className="mx-auto text-zinc-200 dark:text-zinc-700 mb-4" />
           <p className="text-zinc-500 font-medium">{t("media.noMedia")}</p>
@@ -95,12 +117,20 @@ export default function MediaPage() {
                     <File size={32} className="text-zinc-300" />
                   </div>
                 )}
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/60 transition-colors flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
                   <button
                     onClick={() => copyUrl(item.url)}
                     className="p-2 bg-white rounded-full shadow-lg hover:scale-110 transition-transform"
+                    title="Copy URL"
                   >
                     {copied === item.url ? <Check size={14} className="text-green-600" /> : <Copy size={14} />}
+                  </button>
+                  <button
+                    onClick={() => handleDelete(item.url)}
+                    className="p-2 bg-white rounded-full shadow-lg hover:scale-110 transition-transform hover:text-red-500"
+                    title="Delete"
+                  >
+                    <Trash2 size={14} />
                   </button>
                 </div>
               </div>

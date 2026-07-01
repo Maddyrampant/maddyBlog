@@ -4,6 +4,8 @@ import type {
   PluginManifest,
   PluginHook,
   PluginPermission,
+  HookType,
+  PluginContext,
 } from "./types";
 import type { ApiRouter } from "./types";
 
@@ -36,6 +38,17 @@ export abstract class BasePlugin implements Plugin {
       type: "ui",
       hook,
       component,
+    });
+  }
+
+  protected addDataHook(
+    hook: HookType,
+    handler: (data: unknown, context: PluginContext) => unknown,
+  ): void {
+    this.registerHook({
+      type: "data",
+      hook,
+      handler,
     });
   }
 

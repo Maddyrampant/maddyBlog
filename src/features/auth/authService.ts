@@ -7,6 +7,7 @@ import {
   type LoginInput,
 } from "@/validations/authSchema";
 import * as authRepository from "./authRepository";
+import { runHook } from "@/lib/plugin/hooksRunner";
 
 export async function register(input: RegisterInput) {
   const data = registerSchema.parse(input);
@@ -21,17 +22,24 @@ export async function register(input: RegisterInput) {
     throw new Error("Username already taken");
   }
 
-  const passwordHash = await hashPassword(data.password);
+  const processed = await runHook("beforeUserRegister", { ...data });
+  const hookResult = processed as { email: string; username: string; password: string } | null;
+  const finalData = hookResult || data;
+
+  const passwordHash = await hashPassword(finalData.password);
 
   const user = await authRepository.create({
-    username: data.username,
-    email: data.email,
+    username: finalData.username,
+    email: finalData.email,
     passwordHash,
   });
 
   await createSession({ userId: user.id, email: user.email, role: user.role });
 
-  return { id: user.id, username: user.username, email: user.email };
+  const result = { id: user.id, username: user.username, email: user.email };
+  await runHook("afterUserRegister", result);
+
+  return result;
 }
 
 export async function login(input: LoginInput) {

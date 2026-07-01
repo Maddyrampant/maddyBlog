@@ -71,7 +71,7 @@ export default function Header() {
                   <p className="text-xs text-zinc-400">admin@maddyblog.com</p>
                 </div>
                 <Link
-                  href="/admin"
+                  href="/admin/profile"
                   className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
                   onClick={() => setProfileOpen(false)}
                 >

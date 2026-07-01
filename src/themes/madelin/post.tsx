@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import "../madelin/styles/theme.css";
+import { ReactionsBar } from "@/components/social/ReactionsBar";
 
 type PostPageProps = {
   post: {
@@ -154,6 +155,8 @@ export default function MadelinPostPage({
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
       </article>
+
+      <ReactionsBar postId={post.id} />
 
       <section
         className="mt-20 pt-12"

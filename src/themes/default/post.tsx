@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { ReactionsBar } from "@/components/social/ReactionsBar";
 
 type PostPageProps = {
   post: {
@@ -111,6 +112,8 @@ export default function DefaultPostPage({
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
       </article>
+
+      <ReactionsBar postId={post.id} />
 
       <section className="mt-16 border-t border-zinc-200 dark:border-zinc-800 pt-12">
         <h2 className="text-2xl font-bold mb-2">

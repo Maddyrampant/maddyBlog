@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Mail, ExternalLink } from "lucide-react";
+import { Mail, ExternalLink, Trash2, Download } from "lucide-react";
 import PageHeader from "@/components/admin/PageHeader";
 import { useTranslation } from "@/i18n/provider";
 
@@ -18,16 +18,41 @@ export default function SubscribersPage() {
 
   useEffect(() => {
     fetch("/api/subscribers")
-      .then((r) => r.json())
-      .then(setSubscribers)
+      .then((r) => r.ok && r.json())
+      .then((data) => { if (data) setSubscribers(data); })
+      .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
+
+  const handleDelete = async (id: string) => {
+    const res = await fetch(`/api/subscribers/${id}`, { method: "DELETE" });
+    if (res.ok) setSubscribers((prev) => prev.filter((s) => s.id !== id));
+  };
+
+  const handleExportCSV = () => {
+    const header = "Email,Date\n";
+    const rows = subscribers.map((s) => `${s.email},${s.createdAt}`).join("\n");
+    const blob = new Blob([header + rows], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "subscribers.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div>
       <PageHeader
         title={t("subscribers.title")}
         subtitle={t("subscribers.subtitle", { count: subscribers.length })}
+        actions={
+          subscribers.length > 0 ? (
+            <button onClick={handleExportCSV} className="admin-btn admin-btn-secondary">
+              <Download size={16} /> Export CSV
+            </button>
+          ) : undefined
+        }
       />
 
       {loading ? (
@@ -47,6 +72,7 @@ export default function SubscribersPage() {
                 <tr>
                   <th>{t("subscribers.email")}</th>
                   <th>{t("subscribers.date")}</th>
+                  <th className="text-right">{t("comments.actions")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -65,6 +91,15 @@ export default function SubscribersPage() {
                       {new Date(sub.createdAt).toLocaleDateString("en-US", {
                         month: "short", day: "numeric", year: "numeric",
                       })}
+                    </td>
+                    <td className="text-right">
+                      <button
+                        onClick={() => handleDelete(sub.id)}
+                        className="p-1.5 text-zinc-400 hover:text-red-500 transition-colors"
+                        title="Delete"
+                      >
+                        <Trash2 size={14} />
+                      </button>
                     </td>
                   </tr>
                 ))}

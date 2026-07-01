@@ -19,6 +19,7 @@ import {
   Mail,
   Image,
   Settings,
+  User,
 } from "lucide-react";
 import { useTranslation, useI18n } from "@/i18n/provider";
 import PluginInjector from "@/components/plugin/PluginInjector";
@@ -74,6 +75,7 @@ export default function Sidebar() {
         { href: "/admin/users", label: t("nav.users"), icon: Users },
         { href: "/admin/subscribers", label: t("nav.subscribers"), icon: Mail },
         { href: "/admin/settings", label: t("nav.settings"), icon: Settings },
+        { href: "/admin/profile", label: "Profile", icon: User },
       ],
     },
   ];

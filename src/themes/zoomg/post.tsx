@@ -3,6 +3,7 @@
 import "./styles/theme.css";
 import Link from "next/link";
 import Image from "next/image";
+import { ReactionsBar } from "@/components/social/ReactionsBar";
 
 type PostPageProps = {
   post: {
@@ -173,6 +174,8 @@ export default function ZoomgPostPage({
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
         </article>
+
+        <ReactionsBar postId={post.id} />
 
         <section
           className="mt-16 pt-10"

@@ -1,6 +1,7 @@
 import { commentRepository } from "./commentRepository";
 import { createCommentSchema } from "@/validations/comment";
 import type { Comment } from "@/generated/prisma/client";
+import { runHook } from "@/lib/plugin/hooksRunner";
 
 export type CommentWithAuthor = Comment & {
   author: { id: string; username: string };
@@ -31,12 +32,19 @@ function buildCommentTree(comments: CommentWithAuthor[]): CommentTreeNode[] {
 export const commentService = {
   async create(input: { content: string; postId: string; parentId?: string }, authorId: string) {
     const data = createCommentSchema.parse(input);
+
+    const processed = await runHook("beforeCommentCreate", { ...data, authorId });
+    const hookResult = processed as { content: string; postId: string; parentId?: string; authorId: string } | null;
+    const finalData = hookResult || { content: data.content, postId: data.postId, parentId: data.parentId, authorId };
+
     const comment = await commentRepository.create({
-      content: data.content,
-      postId: data.postId,
-      authorId,
-      parentId: data.parentId,
+      content: finalData.content,
+      postId: finalData.postId,
+      authorId: finalData.authorId,
+      parentId: finalData.parentId,
     });
+
+    await runHook("afterCommentCreated", comment);
     return comment;
   },
 
@@ -50,6 +58,7 @@ export const commentService = {
   },
 
   async delete(id: string) {
+    await runHook("afterCommentDeleted", { id });
     return commentRepository.remove(id);
   },
 
