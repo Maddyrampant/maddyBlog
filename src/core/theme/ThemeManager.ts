@@ -114,6 +114,31 @@ import {
   defaultConfig as ZoomgConfig,
 } from "@/themes/zoomg/theme.config";
 
+import {
+  manifest as DigiTechManifest,
+  defaultConfig as DigiTechConfig,
+} from "@/themes/digitech/theme.config";
+
+import {
+  manifest as GameVerseManifest,
+  defaultConfig as GameVerseConfig,
+} from "@/themes/gameverse/theme.config";
+
+import {
+  manifest as PersonalBlogManifest,
+  defaultConfig as PersonalBlogConfig,
+} from "@/themes/personalblog/theme.config";
+
+import {
+  manifest as NewsWireManifest,
+  defaultConfig as NewsWireConfig,
+} from "@/themes/newswire/theme.config";
+
+import {
+  manifest as EduProManifest,
+  defaultConfig as EduProConfig,
+} from "@/themes/edupro/theme.config";
+
 const DEFAULT_CONFIG: ThemeConfigValues = {
   primaryColor: "#6366f1",
   fontFamily: "Inter",
@@ -174,7 +199,17 @@ class ThemeManager {
             themeRegistry.setActive(t.name);
           }
         }
-        for (const name of ["default", "madelin", "zoomji", "zoomg"]) {
+        for (const name of [
+          "default",
+          "madelin",
+          "zoomji",
+          "zoomg",
+          "digitech",
+          "gameverse",
+          "personalblog",
+          "newswire",
+          "edupro",
+        ]) {
           if (!dbNames.has(name) && !this.entries.has(name)) {
             this.seedInMemory(name);
           }
@@ -185,7 +220,17 @@ class ThemeManager {
       }
     }
 
-    for (const name of ["default", "madelin", "zoomji", "zoomg"]) {
+    for (const name of [
+      "default",
+      "madelin",
+      "zoomji",
+      "zoomg",
+      "digitech",
+      "gameverse",
+      "personalblog",
+      "newswire",
+      "edupro",
+    ]) {
       if (!this.entries.has(name)) {
         this.seedInMemory(name);
       }
@@ -200,6 +245,16 @@ class ThemeManager {
         return ZoomjiManifest;
       case "zoomg":
         return ZoomgManifest;
+      case "digitech":
+        return DigiTechManifest;
+      case "gameverse":
+        return GameVerseManifest;
+      case "personalblog":
+        return PersonalBlogManifest;
+      case "newswire":
+        return NewsWireManifest;
+      case "edupro":
+        return EduProManifest;
       default:
         return DEFAULT_MANIFEST;
     }
@@ -213,6 +268,16 @@ class ThemeManager {
         return ZoomjiConfig;
       case "zoomg":
         return ZoomgConfig;
+      case "digitech":
+        return DigiTechConfig;
+      case "gameverse":
+        return GameVerseConfig;
+      case "personalblog":
+        return PersonalBlogConfig;
+      case "newswire":
+        return NewsWireConfig;
+      case "edupro":
+        return EduProConfig;
       default:
         return DEFAULT_CONFIG;
     }

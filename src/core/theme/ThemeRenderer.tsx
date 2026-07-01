@@ -3,6 +3,11 @@ import * as DefaultTheme from "@/themes/default";
 import * as MadelinTheme from "@/themes/madelin";
 import * as ZoomjiTheme from "@/themes/zoomji";
 import * as ZoomgTheme from "@/themes/zoomg";
+import * as DigiTechTheme from "@/themes/digitech";
+import * as GameVerseTheme from "@/themes/gameverse";
+import * as PersonalBlogTheme from "@/themes/personalblog";
+import * as NewsWireTheme from "@/themes/newswire";
+import * as EduProTheme from "@/themes/edupro";
 
 export type ThemeComponentName =
   | "Layout"
@@ -123,9 +128,131 @@ componentRegistry.set(
   zoomjiComponents as Record<string, AnyComponent>,
 );
 
+componentRegistry.set("zoomg", zoomgComponents as Record<string, AnyComponent>);
+
+const digitechComponents: Record<string, AnyComponent | undefined> = {
+  Layout: DigiTechTheme.Layout,
+  PostPage: DigiTechTheme.PostPage,
+  HomePage: DigiTechTheme.HomePage,
+  Header: DigiTechTheme.Header,
+  Footer: DigiTechTheme.Footer,
+  AuthorCard: DigiTechTheme.AuthorCard,
+  RelatedPosts: DigiTechTheme.RelatedPosts,
+  Sidebar: DigiTechTheme.Sidebar,
+  NewsletterSignup: DigiTechTheme.NewsletterSignup,
+  PostCard: DigiTechTheme.PostCard,
+  CategoryBadge: DigiTechTheme.CategoryBadge,
+  TagBadge: DigiTechTheme.TagBadge,
+  ReadingTime: DigiTechTheme.ReadingTime,
+  SearchBar: DigiTechTheme.SearchBar,
+  Pagination: DigiTechTheme.Pagination,
+  CommentList: DigiTechTheme.CommentList,
+  CommentForm: DigiTechTheme.CommentForm,
+};
+
+const gameverseComponents: Record<string, AnyComponent | undefined> = {
+  Layout: GameVerseTheme.Layout,
+  PostPage: GameVerseTheme.PostPage,
+  HomePage: GameVerseTheme.HomePage,
+  Header: GameVerseTheme.Header,
+  Footer: GameVerseTheme.Footer,
+  AuthorCard: GameVerseTheme.AuthorCard,
+  RelatedPosts: GameVerseTheme.RelatedPosts,
+  Sidebar: GameVerseTheme.Sidebar,
+  NewsletterSignup: GameVerseTheme.NewsletterSignup,
+  PostCard: GameVerseTheme.PostCard,
+  CategoryBadge: GameVerseTheme.CategoryBadge,
+  TagBadge: GameVerseTheme.TagBadge,
+  ReadingTime: GameVerseTheme.ReadingTime,
+  SearchBar: GameVerseTheme.SearchBar,
+  Pagination: GameVerseTheme.Pagination,
+  CommentList: GameVerseTheme.CommentList,
+  CommentForm: GameVerseTheme.CommentForm,
+};
+
+const personalblogComponents: Record<string, AnyComponent | undefined> = {
+  Layout: PersonalBlogTheme.Layout,
+  PostPage: PersonalBlogTheme.PostPage,
+  HomePage: PersonalBlogTheme.HomePage,
+  Header: PersonalBlogTheme.Header,
+  Footer: PersonalBlogTheme.Footer,
+  AuthorCard: PersonalBlogTheme.AuthorCard,
+  RelatedPosts: PersonalBlogTheme.RelatedPosts,
+  Sidebar: PersonalBlogTheme.Sidebar,
+  NewsletterSignup: PersonalBlogTheme.NewsletterSignup,
+  PostCard: PersonalBlogTheme.PostCard,
+  CategoryBadge: PersonalBlogTheme.CategoryBadge,
+  TagBadge: PersonalBlogTheme.TagBadge,
+  ReadingTime: PersonalBlogTheme.ReadingTime,
+  SearchBar: PersonalBlogTheme.SearchBar,
+  Pagination: PersonalBlogTheme.Pagination,
+  CommentList: PersonalBlogTheme.CommentList,
+  CommentForm: PersonalBlogTheme.CommentForm,
+};
+
+const newswireComponents: Record<string, AnyComponent | undefined> = {
+  Layout: NewsWireTheme.Layout,
+  PostPage: NewsWireTheme.PostPage,
+  HomePage: NewsWireTheme.HomePage,
+  Header: NewsWireTheme.Header,
+  Footer: NewsWireTheme.Footer,
+  AuthorCard: NewsWireTheme.AuthorCard,
+  RelatedPosts: NewsWireTheme.RelatedPosts,
+  Sidebar: NewsWireTheme.Sidebar,
+  NewsletterSignup: NewsWireTheme.NewsletterSignup,
+  PostCard: NewsWireTheme.PostCard,
+  CategoryBadge: NewsWireTheme.CategoryBadge,
+  TagBadge: NewsWireTheme.TagBadge,
+  ReadingTime: NewsWireTheme.ReadingTime,
+  SearchBar: NewsWireTheme.SearchBar,
+  Pagination: NewsWireTheme.Pagination,
+  CommentList: NewsWireTheme.CommentList,
+  CommentForm: NewsWireTheme.CommentForm,
+};
+
+const eduproComponents: Record<string, AnyComponent | undefined> = {
+  Layout: EduProTheme.Layout,
+  PostPage: EduProTheme.PostPage,
+  HomePage: EduProTheme.HomePage,
+  Header: EduProTheme.Header,
+  Footer: EduProTheme.Footer,
+  AuthorCard: EduProTheme.AuthorCard,
+  RelatedPosts: EduProTheme.RelatedPosts,
+  Sidebar: EduProTheme.Sidebar,
+  NewsletterSignup: EduProTheme.NewsletterSignup,
+  PostCard: EduProTheme.PostCard,
+  CategoryBadge: EduProTheme.CategoryBadge,
+  TagBadge: EduProTheme.TagBadge,
+  ReadingTime: EduProTheme.ReadingTime,
+  SearchBar: EduProTheme.SearchBar,
+  Pagination: EduProTheme.Pagination,
+  CommentList: EduProTheme.CommentList,
+  CommentForm: EduProTheme.CommentForm,
+};
+
 componentRegistry.set(
-  "zoomg",
-  zoomgComponents as Record<string, AnyComponent>,
+  "digitech",
+  digitechComponents as Record<string, AnyComponent>,
+);
+
+componentRegistry.set(
+  "gameverse",
+  gameverseComponents as Record<string, AnyComponent>,
+);
+
+componentRegistry.set(
+  "personalblog",
+  personalblogComponents as Record<string, AnyComponent>,
+);
+
+componentRegistry.set(
+  "newswire",
+  newswireComponents as Record<string, AnyComponent>,
+);
+
+componentRegistry.set(
+  "edupro",
+  eduproComponents as Record<string, AnyComponent>,
 );
 
 export function registerThemeComponents(
