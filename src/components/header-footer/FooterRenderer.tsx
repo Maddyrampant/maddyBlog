@@ -12,6 +12,7 @@ export default function FooterRenderer({
 }: FooterRendererProps) {
   return (
     <footer
+      className="px-4 sm:px-6"
       style={{
         backgroundColor:
           config.settings.backgroundColor || `var(--${themeName}-bg, #ffffff)`,

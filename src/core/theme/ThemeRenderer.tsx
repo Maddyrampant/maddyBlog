@@ -276,11 +276,10 @@ export function ThemeRenderer<T extends Record<string, unknown>>({
   const registry =
     componentRegistry.get(activeName) || componentRegistry.get("default")!;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const Component = registry[name] as React.ComponentType<any> | undefined;
+  const Component = registry[name] as
+    React.ComponentType<Record<string, unknown>> | undefined;
   if (Component) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return <Component {...(props as any)} />;
+    return <Component {...(props as Record<string, unknown>)} />;
   }
 
   return fallback ?? null;

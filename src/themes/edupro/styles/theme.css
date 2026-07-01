@@ -18,6 +18,10 @@
   --edupro-shadow-hover:
     0 10px 30px rgba(0, 0, 0, 0.08), 0 4px 10px rgba(0, 0, 0, 0.04);
   --edupro-radius: 0.75rem;
+  --edupro-focus-ring: 3px solid #059669;
+  --edupro-touch-target: 44px;
+  --edupro-font-size-base: 1rem;
+  --edupro-font-size-lg: 1.125rem;
 }
 
 .dark {
@@ -33,6 +37,7 @@
   --edupro-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.15);
   --edupro-shadow-hover:
     0 10px 30px rgba(0, 0, 0, 0.3), 0 4px 10px rgba(0, 0, 0, 0.2);
+  --edupro-focus-ring: 3px solid #10b981;
 }
 
 .edupro-gradient-text {
@@ -46,17 +51,75 @@
   background-clip: text;
 }
 
+.edupro-hero-title {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
 .edupro-card {
   background: var(--edupro-card-bg);
   border: 1px solid var(--edupro-border);
   border-radius: var(--edupro-radius);
   box-shadow: var(--edupro-shadow);
   transition: all 0.25s ease;
+  min-height: var(--edupro-touch-target);
 }
 
 .edupro-card:hover {
   box-shadow: var(--edupro-shadow-hover);
   transform: translateY(-2px);
+}
+
+.edupro-card:focus-within {
+  outline: var(--edupro-focus-ring);
+  outline-offset: 2px;
+}
+
+.edupro-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--edupro-touch-target);
+  padding: 0.5rem 1.25rem;
+  font-size: var(--edupro-font-size-base);
+  font-weight: 600;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edupro-btn:focus-visible {
+  outline: var(--edupro-focus-ring);
+  outline-offset: 2px;
+}
+
+.edupro-btn-primary {
+  background: var(--edupro-accent);
+  color: #fff;
+}
+
+.edupro-btn-primary:hover {
+  filter: brightness(1.1);
+}
+
+.edupro-link {
+  color: var(--edupro-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: opacity 0.2s;
+}
+
+.edupro-link:hover {
+  opacity: 0.85;
+}
+
+.edupro-link:focus-visible {
+  outline: var(--edupro-focus-ring);
+  outline-offset: 2px;
+  border-radius: 2px;
 }
 
 .edupro-course-card {
@@ -74,6 +137,15 @@
     var(--edupro-accent-blue)
   );
   transition: width 0.6s ease;
+  min-height: 8px;
+  border-radius: 4px;
+}
+
+.edupro-progress-track {
+  background: var(--edupro-border);
+  border-radius: 4px;
+  min-height: 8px;
+  overflow: hidden;
 }
 
 .edupro-subject-badge {
@@ -184,4 +256,23 @@
 
 .prose a:hover {
   border-bottom-width: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .edupro-fade-in {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+:focus-visible {
+  outline: var(--edupro-focus-ring);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--edupro-accent);
+  color: #fff;
 }

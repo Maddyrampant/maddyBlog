@@ -8,9 +8,18 @@ type RowRendererProps = {
 };
 
 export default function RowRenderer({ row, themeName }: RowRendererProps) {
+  const visible = row.settings.visible;
+  const hiddenClasses = [
+    !visible.desktop ? "hidden lg:flex" : "",
+    !visible.tablet ? "hidden md:flex sm:hidden" : "",
+    !visible.mobile ? "hidden sm:hidden" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
     <div
-      className={`flex flex-col sm:flex-row w-full ${row.className || ""}`}
+      className={`flex flex-col sm:flex-row w-full ${hiddenClasses} ${row.className || ""}`}
       style={{
         backgroundColor: row.settings.backgroundColor || "transparent",
         color: row.settings.textColor || `var(--${themeName}-text)`,

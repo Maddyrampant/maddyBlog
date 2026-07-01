@@ -1,4 +1,9 @@
-import type { Plugin, PluginManifest, PluginStatus } from "./types";
+import type {
+  Plugin,
+  PluginManifest,
+  PluginPermission,
+  PluginStatus,
+} from "./types";
 
 export type PluginRegistryEntry = {
   name: string;
@@ -55,9 +60,8 @@ export class PluginRegistry {
   }
 
   getByPermission(permission: string): PluginRegistryEntry[] {
-    return this.getAllEntries().filter(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (e) => e.manifest.permissions.includes(permission as any),
+    return this.getAllEntries().filter((e) =>
+      e.manifest.permissions.includes(permission as PluginPermission),
     );
   }
 

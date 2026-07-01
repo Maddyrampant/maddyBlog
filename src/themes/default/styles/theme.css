@@ -3,12 +3,27 @@
   --theme-font-family: "Inter", system-ui, sans-serif;
   --theme-layout: classic;
   --default-bg: #ffffff;
+  --default-card-bg: #f8fafc;
   --default-text: #0f172a;
+  --default-text-muted: #64748b;
+  --default-border: #e2e8f0;
+  --default-accent: #6366f1;
+  --default-accent-glow: rgba(99, 102, 241, 0.12);
+  --default-radius: 0.75rem;
+  --default-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --default-header-bg: rgba(255, 255, 255, 0.9);
 }
 
 .dark {
   --default-bg: #0f172a;
+  --default-card-bg: #1e293b;
   --default-text: #f8fafc;
+  --default-text-muted: #94a3b8;
+  --default-border: #334155;
+  --default-accent: #818cf8;
+  --default-accent-glow: rgba(129, 140, 248, 0.12);
+  --default-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  --default-header-bg: rgba(15, 23, 42, 0.9);
 }
 
 .theme-primary {
@@ -21,4 +36,69 @@
 
 .theme-primary-border {
   border-color: var(--theme-primary);
+}
+
+.default-card {
+  background: var(--default-card-bg);
+  border: 1px solid var(--default-border);
+  border-radius: var(--default-radius);
+  box-shadow: var(--default-shadow);
+  transition: all 0.2s ease;
+}
+
+.default-card:hover {
+  border-color: var(--default-accent);
+  box-shadow: 0 4px 16px var(--default-accent-glow);
+}
+
+.default-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1.25rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+  min-height: 44px;
+}
+
+.default-btn-primary {
+  background: var(--default-accent);
+  color: #fff;
+}
+
+.default-btn-primary:hover {
+  filter: brightness(1.1);
+}
+
+default-section-title {
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.default-divider {
+  border: none;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--default-border),
+    transparent
+  );
+}
+
+@media (max-width: 640px) {
+  .default-card:hover {
+    transform: none;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--default-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
 }

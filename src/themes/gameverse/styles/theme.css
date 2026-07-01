@@ -13,6 +13,8 @@
   --gameverse-neon-cyan: #22d3ee;
   --gameverse-neon-pink: #ec4899;
   --gameverse-font: "Inter", system-ui, sans-serif;
+  --gameverse-font-mono: "JetBrains Mono", monospace;
+  --gameverse-neon-glow-strength: 20px;
 }
 
 .dark {
@@ -37,6 +39,41 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+.gameverse-hero-title {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  background: linear-gradient(
+    135deg,
+    var(--gameverse-neon-purple),
+    var(--gameverse-neon-pink),
+    var(--gameverse-neon-cyan)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 30px var(--gameverse-accent-glow));
+}
+
+.gameverse-section-title {
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  position: relative;
+  display: inline-block;
+}
+
+.gameverse-section-title::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 60%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gameverse-neon-purple), transparent);
 }
 
 .gameverse-glass {
@@ -170,6 +207,45 @@
     transparent
   );
   opacity: 0.4;
+}
+
+.gameverse-scanlines {
+  position: relative;
+  overflow: hidden;
+}
+
+.gameverse-scanlines::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(255, 255, 255, 0.03) 2px,
+    rgba(255, 255, 255, 0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.gameverse-glow-text {
+  text-shadow:
+    0 0 10px var(--gameverse-accent-glow),
+    0 0 20px var(--gameverse-accent-glow),
+    0 0 40px var(--gameverse-accent-glow);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gameverse-scanlines::before {
+    display: none;
+  }
+  .gameverse-pulse {
+    animation: none;
+  }
+  .gameverse-shimmer {
+    animation: none;
+  }
 }
 
 .prose {

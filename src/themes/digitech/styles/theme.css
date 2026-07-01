@@ -11,6 +11,10 @@
   --digitech-neon: #22d3ee;
   --digitech-neon-glow: rgba(34, 211, 238, 0.2);
   --digitech-font: "Inter", system-ui, sans-serif;
+  --digitech-font-mono: "JetBrains Mono", monospace;
+  --digitech-gradient-start: #06b6d4;
+  --digitech-gradient-end: #8b5cf6;
+  --digitech-radius: 0.75rem;
 }
 
 .dark {
@@ -31,12 +35,45 @@
 .digitech-gradient-text {
   background: linear-gradient(
     135deg,
-    var(--digitech-accent),
-    var(--digitech-neon)
+    var(--digitech-gradient-start),
+    var(--digitech-gradient-end)
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+.digitech-hero-title {
+  font-size: clamp(2.25rem, 5vw, 4rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  background: linear-gradient(
+    135deg,
+    var(--digitech-accent),
+    var(--digitech-gradient-end)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.digitech-section-title {
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  position: relative;
+  display: inline-block;
+}
+
+.digitech-section-title::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--digitech-accent), transparent);
 }
 
 .digitech-glass {
@@ -49,7 +86,7 @@
 .digitech-card {
   background: var(--digitech-card-bg);
   border: 1px solid var(--digitech-border);
-  border-radius: 1rem;
+  border-radius: var(--digitech-radius);
   transition: all 0.25s ease;
   backdrop-filter: blur(4px);
 }
@@ -62,9 +99,35 @@
   transform: translateY(-2px);
 }
 
+.digitech-card:focus-within {
+  outline: 2px solid var(--digitech-accent);
+  outline-offset: 2px;
+}
+
 .digitech-neon-border {
   border-color: var(--digitech-neon);
   box-shadow: 0 0 12px var(--digitech-neon-glow);
+}
+
+.digitech-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-radius: 0.25rem;
+  background: var(--digitech-glass-bg);
+  border: 1px solid var(--digitech-accent);
+  color: var(--digitech-accent);
+}
+
+.digitech-badge-accent {
+  background: var(--digitech-accent);
+  color: #fff;
+  border: none;
+  box-shadow: 0 0 12px var(--digitech-accent-glow);
 }
 
 @keyframes digitech-fade-in {
@@ -162,4 +225,26 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--digitech-text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .digitech-fade-in {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .digitech-shimmer {
+    animation: none;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--digitech-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--digitech-accent);
+  color: #fff;
 }

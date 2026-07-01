@@ -21,8 +21,15 @@ export async function getHeaderFooterConfig(
   const prisma = await getPrisma();
   if (!prisma) return null;
   try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const record = await (prisma as any).headerFooter.findUnique({
+    const record = await (
+      prisma as unknown as {
+        headerFooter: {
+          findUnique: (opts: {
+            where: { themeName: string };
+          }) => Promise<{ header: string; footer: string } | null>;
+        };
+      }
+    ).headerFooter.findUnique({
       where: { themeName },
     });
     if (record) {
@@ -45,8 +52,17 @@ export async function saveHeaderFooterConfig(
   const prisma = await getPrisma();
   if (!prisma) return false;
   try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await (prisma as any).headerFooter.upsert({
+    await (
+      prisma as unknown as {
+        headerFooter: {
+          upsert: (opts: {
+            where: { themeName: string };
+            update: { header: string; footer: string };
+            create: { themeName: string; header: string; footer: string };
+          }) => Promise<unknown>;
+        };
+      }
+    ).headerFooter.upsert({
       where: { themeName },
       update: {
         header: JSON.stringify(header),

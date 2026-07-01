@@ -89,8 +89,7 @@ function createPluginDb() {
       findUnique: async (args: Record<string, unknown>) => {
         const prisma = await prismaPromise;
         return prisma.post.findUnique({
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          where: args.where as any,
+          where: args.where as unknown as { id: string } | { slug: string },
           select: {
             id: true,
             title: true,
@@ -103,8 +102,7 @@ function createPluginDb() {
       },
       count: async (args?: Record<string, unknown>) => {
         const prisma = await prismaPromise;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return prisma.post.count(args as any);
+        return prisma.post.count(args as { where?: Record<string, unknown> });
       },
     },
     comment: {
@@ -124,8 +122,9 @@ function createPluginDb() {
       },
       count: async (args?: Record<string, unknown>) => {
         const prisma = await prismaPromise;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return prisma.comment.count(args as any);
+        return prisma.comment.count(
+          args as { where?: Record<string, unknown> },
+        );
       },
     },
     category: {

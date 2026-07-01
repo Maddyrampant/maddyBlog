@@ -7,6 +7,7 @@ export type PostListItem = {
   excerpt: string | null;
   coverImage: string | null;
   status: string;
+  views: number;
   createdAt: Date;
   author: { username: string };
   category: { name: string; slug: string } | null;

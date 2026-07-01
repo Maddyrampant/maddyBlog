@@ -10,7 +10,11 @@
   --personalblog-border: #e7e5e4;
   --personalblog-font-body: "Inter", system-ui, sans-serif;
   --personalblog-font-heading: "Lora", Georgia, serif;
+  --personalblog-font-display: "Playfair Display", Georgia, serif;
   --personalblog-prose-bg: #ffffff;
+  --personalblog-radius: 0.75rem;
+  --personalblog-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --personalblog-shadow-md: 0 4px 20px rgba(0, 0, 0, 0.06);
 }
 
 .dark {
@@ -24,6 +28,8 @@
   --personalblog-text-muted: #78716c;
   --personalblog-border: #44403c;
   --personalblog-prose-bg: #292524;
+  --personalblog-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.15);
+  --personalblog-shadow-md: 0 4px 20px rgba(0, 0, 0, 0.25);
 }
 
 body {
@@ -41,6 +47,14 @@ body {
   background-clip: text;
 }
 
+.personalblog-hero-title {
+  font-family: var(--personalblog-font-display);
+  font-size: clamp(2.25rem, 6vw, 4.5rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+}
+
 .personalblog-heading {
   font-family: var(--personalblog-font-heading);
   font-weight: 700;
@@ -50,13 +64,14 @@ body {
 .personalblog-card {
   background: var(--personalblog-card-bg);
   border: 1px solid var(--personalblog-border);
-  border-radius: 1rem;
+  border-radius: var(--personalblog-radius);
+  box-shadow: var(--personalblog-shadow-sm);
   transition: all 0.25s ease;
 }
 
 .personalblog-card:hover {
   border-color: var(--personalblog-accent);
-  box-shadow: 0 4px 20px var(--personalblog-accent-glow);
+  box-shadow: var(--personalblog-shadow-md);
   transform: translateY(-2px);
 }
 
@@ -90,6 +105,11 @@ body {
   font-family: var(--personalblog-font-body);
   color: var(--personalblog-text);
   line-height: 1.8;
+  font-size: 1.0625rem;
+}
+
+.prose p {
+  margin-bottom: 1.5em;
 }
 
 .prose h1,
@@ -102,26 +122,55 @@ body {
   color: var(--personalblog-text);
   font-weight: 700;
   letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.prose h1 {
+  font-size: clamp(2rem, 5vw, 3rem);
+}
+.prose h2 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
 }
 
 .prose a {
   color: var(--personalblog-accent);
   text-decoration: none;
-  transition: opacity 0.2s;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s;
 }
 
 .prose a:hover {
-  opacity: 0.8;
+  border-bottom-color: var(--personalblog-accent);
 }
 
 .prose blockquote {
   border-left: 3px solid var(--personalblog-accent);
   font-style: italic;
   color: var(--personalblog-text-muted);
+  margin: 2em 0;
+  padding: 0.5em 1.25em;
+  font-size: 1.1em;
 }
 
 .prose img {
-  border-radius: 0.75rem;
+  border-radius: var(--personalblog-radius);
+  margin: 2em 0;
+}
+
+.prose p:first-child::first-letter {
+  font-family: var(--personalblog-font-display);
+  font-size: 3.5em;
+  font-weight: 700;
+  float: left;
+  line-height: 0.8;
+  padding-right: 0.5rem;
+  color: var(--personalblog-accent);
+}
+
+@media (max-width: 640px) {
+  .prose p:first-child::first-letter {
+    font-size: 2.5em;
+  }
 }
 
 ::-webkit-scrollbar {
@@ -139,4 +188,23 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--personalblog-text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .personalblog-fade-in {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--personalblog-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--personalblog-accent);
+  color: #fff;
 }

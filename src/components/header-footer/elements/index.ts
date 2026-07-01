@@ -11,6 +11,8 @@ import SpacerElement from "./SpacerElement";
 import CopyrightElement from "./CopyrightElement";
 import NewsletterElement from "./NewsletterElement";
 import BackToTopElement from "./BackToTopElement";
+import CartIconElement from "./CartIconElement";
+import LanguageSwitcherElement from "./LanguageSwitcherElement";
 
 export const elementRenderers: Record<
   string,
@@ -28,6 +30,8 @@ export const elementRenderers: Record<
   copyright: CopyrightElement,
   newsletter: NewsletterElement,
   "back-to-top": BackToTopElement,
+  "cart-icon": CartIconElement,
+  "language-switcher": LanguageSwitcherElement,
 };
 
 export { default as LogoElement } from "./LogoElement";
@@ -42,3 +46,5 @@ export { default as SpacerElement } from "./SpacerElement";
 export { default as CopyrightElement } from "./CopyrightElement";
 export { default as NewsletterElement } from "./NewsletterElement";
 export { default as BackToTopElement } from "./BackToTopElement";
+export { default as CartIconElement } from "./CartIconElement";
+export { default as LanguageSwitcherElement } from "./LanguageSwitcherElement";

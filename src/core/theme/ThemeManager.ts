@@ -5,6 +5,7 @@ import type {
   ThemeManifest,
   ThemeStatus,
 } from "./ThemeTypes";
+import type { PrismaClient } from "@/generated/prisma/client";
 import { themeRegistry } from "./ThemeRegistry";
 import { themeLoader } from "./ThemeLoader";
 
@@ -149,15 +150,17 @@ const DEFAULT_CONFIG: ThemeConfigValues = {
   maxPostsPerPage: 9,
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let prismaClient: any = null;
+type PrismaTheme = NonNullable<
+  Awaited<ReturnType<PrismaClient["theme"]["findMany"]>>
+>[number];
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function getPrisma(): Promise<any | null> {
+let prismaClient: PrismaClient | null = null;
+
+async function getPrisma(): Promise<PrismaClient | null> {
   if (typeof window !== "undefined") return null;
   if (prismaClient) return prismaClient;
   try {
-    const mod = await import("@/lib/prisma");
+    const mod: { prisma: PrismaClient } = await import("@/lib/prisma");
     prismaClient = mod.prisma;
     return prismaClient;
   } catch {
@@ -179,9 +182,8 @@ class ThemeManager {
     const prisma = await getPrisma();
     if (prisma) {
       try {
-        const dbThemes = await prisma.theme.findMany();
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const dbNames = new Set(dbThemes.map((t: any) => t.name));
+        const dbThemes = (await prisma.theme.findMany()) as PrismaTheme[];
+        const dbNames = new Set(dbThemes.map((t) => t.name));
         for (const t of dbThemes) {
           const config = this.safeParseConfig(t.config);
           const manifest = this.getManifestFor(t.name);

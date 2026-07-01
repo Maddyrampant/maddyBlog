@@ -6,11 +6,11 @@ import { Plus, FileText } from "lucide-react";
 import DeleteButton from "./DeleteButton";
 import PageHeader from "@/components/admin/PageHeader";
 import { useTranslation } from "@/i18n/provider";
+import type { PostListItem } from "@/types";
 
 export default function AdminPostsPage() {
   const t = useTranslation();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [posts, setPosts] = useState<any[]>([]);
+  const [posts, setPosts] = useState<PostListItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -67,8 +67,7 @@ export default function AdminPostsPage() {
                 </tr>
               </thead>
               <tbody>
-                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                {posts.map((post: any) => (
+                {posts.map((post) => (
                   <tr key={post.id}>
                     <td className="font-medium max-w-xs truncate">
                       <div className="flex items-center gap-2">

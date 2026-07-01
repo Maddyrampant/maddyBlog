@@ -114,3 +114,110 @@
   );
   opacity: 0.3;
 }
+
+.madelin-hero-title {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(2.25rem, 5vw, 4rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+
+.madelin-section-title {
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.madelin-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1.25rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+  min-height: 44px;
+}
+
+.madelin-btn-primary {
+  background: var(--madelin-accent);
+  color: #fff;
+}
+
+.madelin-btn-primary:hover {
+  filter: brightness(1.1);
+}
+
+.madelin-btn-outline {
+  background: transparent;
+  border: 1px solid var(--madelin-border);
+  color: var(--madelin-text);
+}
+
+.madelin-btn-outline:hover {
+  border-color: var(--madelin-accent);
+  color: var(--madelin-accent);
+}
+
+.madelin-input {
+  width: 100%;
+  padding: 0.625rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--madelin-border);
+  background: transparent;
+  color: var(--madelin-text);
+  font-size: 0.9375rem;
+  transition: all 0.2s;
+  outline: none;
+  min-height: 44px;
+}
+
+.madelin-input:focus {
+  border-color: var(--madelin-accent);
+  box-shadow: 0 0 0 3px var(--madelin-accent-glow);
+}
+
+.madelin-section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--madelin-border);
+}
+
+@media (max-width: 640px) {
+  .madelin-card:hover {
+    transform: none;
+  }
+  .madelin-glass {
+    backdrop-filter: blur(8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .madelin-shimmer {
+    animation: none;
+  }
+  .madelin-fade-in {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--madelin-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--madelin-accent);
+  color: #fff;
+}
