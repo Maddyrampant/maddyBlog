@@ -306,6 +306,13 @@ model Slide {
   @@index([active, order])
 }
 
+model Setting {
+  key        String   @id
+  value      String
+  updatedAt  DateTime @updatedAt
+  createdAt  DateTime @default(now())
+}
+
 model Theme {
   id        String   @id @default(uuid())
   name      String   @unique

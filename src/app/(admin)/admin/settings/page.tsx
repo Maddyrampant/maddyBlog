@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Settings, Save, Globe, FileText, Mail } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Save, Globe, FileText, Mail } from "lucide-react";
 import PageHeader from "@/components/admin/PageHeader";
 import { useTranslation, useI18n } from "@/i18n/provider";
 import PluginInjector from "@/components/plugin/PluginInjector";
@@ -11,17 +11,63 @@ export default function SettingsPage() {
   const t = useTranslation();
   const { locale, setLocale } = useI18n();
   const [saved, setSaved] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [form, setForm] = useState({
     siteName: "maddyBlog",
     siteDescription: "A modern blogging platform",
     language: locale,
   });
 
-  function handleSave(e: React.FormEvent) {
+  useEffect(() => {
+    fetch("/api/settings")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to load settings");
+        return res.json();
+      })
+      .then((data) => {
+        setForm({
+          siteName: data.siteName || "maddyBlog",
+          siteDescription: data.siteDescription || "A modern blogging platform",
+          language: (data.language as Locale) || locale,
+        });
+      })
+      .catch(() => setError(t("settings.loadError")))
+      .finally(() => setLoading(false));
+  }, [locale, t]);
+
+  async function handleSave(e: React.FormEvent) {
     e.preventDefault();
-    setLocale(form.language as typeof locale);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+    setError("");
+    setSaved(false);
+
+    try {
+      const res = await fetch("/api/settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) throw new Error("Failed to save settings");
+      setLocale(form.language as typeof locale);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } catch {
+      setError(t("settings.saveError"));
+    }
+  }
+
+  if (loading) {
+    return (
+      <div>
+        <PageHeader
+          title={t("settings.title")}
+          subtitle={t("settings.subtitle")}
+        />
+        <div className="admin-card p-12 text-center">
+          <div className="animate-spin w-6 h-6 border-2 border-theme-primary border-t-transparent rounded-full mx-auto" />
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -32,6 +78,12 @@ export default function SettingsPage() {
       />
 
       <form onSubmit={handleSave} className="max-w-2xl space-y-6">
+        {error && (
+          <div className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-900 rounded-lg px-4 py-3">
+            {error}
+          </div>
+        )}
+
         <div className="admin-card p-6">
           <h3 className="text-sm font-semibold flex items-center gap-2 mb-5">
             <Globe size={16} className="text-theme-primary" />
@@ -57,7 +109,9 @@ export default function SettingsPage() {
               </label>
               <textarea
                 value={form.siteDescription}
-                onChange={(e) => setForm({ ...form, siteDescription: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, siteDescription: e.target.value })
+                }
                 className="admin-input h-24 resize-none"
               />
             </div>
@@ -68,11 +122,15 @@ export default function SettingsPage() {
               </label>
               <select
                 value={form.language}
-                onChange={(e) => setForm({ ...form, language: e.target.value as Locale })}
+                onChange={(e) =>
+                  setForm({ ...form, language: e.target.value as Locale })
+                }
                 className="admin-input w-48"
               >
                 {locales.map((l) => (
-                  <option key={l} value={l}>{localeNames[l]}</option>
+                  <option key={l} value={l}>
+                    {localeNames[l]}
+                  </option>
                 ))}
               </select>
             </div>

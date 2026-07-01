@@ -1,6 +1,24 @@
 import { z } from "zod";
 
-const HookTypeSchema = z.enum(["data", "ui", "api", "ai"]);
+const HookNameSchema = z.enum([
+  "beforePostSave",
+  "afterPostSave",
+  "afterPostDeleted",
+  "beforeCommentCreate",
+  "afterCommentCreated",
+  "afterCommentDeleted",
+  "beforeUserRegister",
+  "afterUserRegister",
+  "beforeRenderPost",
+  "afterRenderPost",
+  "injectAdminSidebar",
+  "injectPostView",
+  "injectPostHeader",
+  "injectPostFooter",
+  "injectProfilePage",
+  "registerRoutes",
+  "registerPrompts",
+]);
 
 const PluginPermissionSchema = z.enum([
   "READ_POST",
@@ -12,6 +30,8 @@ const PluginPermissionSchema = z.enum([
   "SEND_EMAIL",
   "ACCESS_ANALYTICS",
   "MANAGE_PLUGINS",
+  "USE_AI",
+  "MANAGE_AI",
 ]);
 
 const PluginManifestSchema = z.object({
@@ -29,7 +49,7 @@ const PluginManifestSchema = z.object({
   description: z.string().max(500).optional().default(""),
   author: z.string().max(128).optional().default(""),
   permissions: z.array(PluginPermissionSchema).optional().default([]),
-  hooks: z.array(HookTypeSchema).optional().default([]),
+  hooks: z.array(HookNameSchema).optional().default([]),
   icon: z.string().optional(),
 });
 

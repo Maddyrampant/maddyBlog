@@ -1,5 +1,6 @@
 import { HookEngine } from "./HookEngine";
 import type { Plugin, DataHook } from "../types";
+import { buildPluginContext } from "../context";
 
 export class PluginRuntime {
   private hookEngine: HookEngine;
@@ -24,7 +25,8 @@ export class PluginRuntime {
           const unsub = this.hookEngine.register(dataHook.hook, {
             id: `${pluginId}:${dataHook.hook}`,
             handler: async (data) => {
-              return dataHook.handler(data, {} as never);
+              const context = await buildPluginContext();
+              return dataHook.handler(data, context);
             },
           });
           unsubs.add(unsub);
@@ -51,7 +53,10 @@ export class PluginRuntime {
   execute<TContext, TResult>(
     hook: string,
     context: TContext,
-  ): Promise<{ results: TResult[]; errors: import("./HookEngine").HookExecutionError[] }> {
+  ): Promise<{
+    results: TResult[];
+    errors: import("./HookEngine").HookExecutionError[];
+  }> {
     return this.hookEngine.execute<TContext, TResult>(hook, context);
   }
 

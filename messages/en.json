@@ -210,7 +210,9 @@
     "siteDescription": "Site Description",
     "language": "Language",
     "save": "Save Settings",
-    "saved": "Settings saved successfully!"
+    "saved": "Settings saved successfully!",
+    "loadError": "Failed to load settings",
+    "saveError": "Failed to save settings"
   },
   "common": {
     "loading": "Loading...",
