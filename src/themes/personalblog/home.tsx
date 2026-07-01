@@ -63,23 +63,12 @@ export default function PersonalBlogHomePage({
 
       <section className="mb-16">
         <ImageSlider
-          slides={[
-            {
-              image: "/slides/writing.jpg",
-              title: "Writing",
-              link: "/categories/writing",
-            },
-            {
-              image: "/slides/ideas.jpg",
-              title: "Ideas",
-              link: "/categories/ideas",
-            },
-            {
-              image: "/slides/life.jpg",
-              title: "Life",
-              link: "/categories/life",
-            },
-          ]}
+          slides={posts.slice(0, 5).map((p) => ({
+            image: p.coverImage ?? "/placeholder.jpg",
+            title: p.title,
+            slug: p.slug,
+            excerpt: p.excerpt ?? undefined,
+          }))}
         />
       </section>
 

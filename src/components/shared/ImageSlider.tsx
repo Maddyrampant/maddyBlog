@@ -38,35 +38,59 @@ export function ImageSlider({ slides }: { slides: Slide[] }) {
 
   const slide = slides[current];
 
-  const Wrapper = slide.slug ? Link : "div";
-  const wrapperProps = slide.slug ? { href: `/posts/${slide.slug}` } : {};
-
   return (
     <div
       className="relative w-full overflow-hidden rounded-2xl group"
       dir={dir}
     >
-      <Wrapper {...wrapperProps} className="relative aspect-[21/9] block">
-        <Image
-          src={slide.image}
-          alt={slide.title}
-          fill
-          className="object-cover transition-transform duration-700 group-hover:scale-105"
-          sizes="100vw"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-10">
-          <h3 className="text-xl sm:text-3xl font-bold text-white mb-2">
-            {slide.title}
-          </h3>
-          {slide.excerpt && (
-            <p className="text-sm sm:text-base text-white/80 line-clamp-2 max-w-2xl">
-              {slide.excerpt}
-            </p>
-          )}
+      {slide.slug ? (
+        <Link
+          href={`/posts/${slide.slug}`}
+          className="relative aspect-[21/9] block"
+        >
+          <Image
+            src={slide.image}
+            alt={slide.title}
+            fill
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
+            sizes="100vw"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-10">
+            <h3 className="text-xl sm:text-3xl font-bold text-white mb-2">
+              {slide.title}
+            </h3>
+            {slide.excerpt && (
+              <p className="text-sm sm:text-base text-white/80 line-clamp-2 max-w-2xl">
+                {slide.excerpt}
+              </p>
+            )}
+          </div>
+        </Link>
+      ) : (
+        <div className="relative aspect-[21/9] block">
+          <Image
+            src={slide.image}
+            alt={slide.title}
+            fill
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
+            sizes="100vw"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-10">
+            <h3 className="text-xl sm:text-3xl font-bold text-white mb-2">
+              {slide.title}
+            </h3>
+            {slide.excerpt && (
+              <p className="text-sm sm:text-base text-white/80 line-clamp-2 max-w-2xl">
+                {slide.excerpt}
+              </p>
+            )}
+          </div>
         </div>
-      </Wrapper>
+      )}
 
       {slides.length > 1 && (
         <>

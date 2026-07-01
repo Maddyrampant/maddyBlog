@@ -50,7 +50,14 @@ export default function EduProHomePage({
   return (
     <main className="flex-1 mx-auto max-w-6xl w-full px-4 sm:px-6 py-10">
       <section className="mb-12">
-        <ImageSlider />
+        <ImageSlider
+          slides={posts.slice(0, 5).map((p) => ({
+            image: p.coverImage ?? "/placeholder.jpg",
+            title: p.title,
+            slug: p.slug,
+            excerpt: p.excerpt ?? undefined,
+          }))}
+        />
       </section>
 
       <section className="mb-12">
@@ -66,7 +73,15 @@ export default function EduProHomePage({
             Topics to explore
           </h2>
         </div>
-        <StoriesBar />
+        <StoriesBar
+          stories={posts.slice(0, 8).map((p) => ({
+            id: p.id,
+            title: p.title,
+            slug: p.slug,
+            coverImage: p.coverImage,
+            category: p.category?.name,
+          }))}
+        />
       </section>
 
       {featured && (
