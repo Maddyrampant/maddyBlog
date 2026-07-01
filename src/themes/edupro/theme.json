@@ -1,0 +1,17 @@
+{
+  "name": "edupro",
+  "version": "1.0.0",
+  "author": "maddyBlog",
+  "description": "EduPro — a clean, focused learning theme with academic green/blue accents, card-based course layouts, progress indicators, and readability-optimized typography. Built for tutorials and educational content.",
+  "supportedFeatures": [
+    "author-card",
+    "related-posts",
+    "sidebar",
+    "newsletter",
+    "search",
+    "categories",
+    "tags",
+    "reading-time",
+    "dark-mode"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "name": "digitech",
+  "version": "1.0.0",
+  "author": "maddyBlog",
+  "description": "DigiTech — a dark-mode-first tech theme with neon accents, glassmorphism, and a futuristic reading experience. Inspired by top developer blogs.",
+  "supportedFeatures": [
+    "author-card",
+    "related-posts",
+    "sidebar",
+    "newsletter",
+    "search",
+    "categories",
+    "tags",
+    "reading-time",
+    "dark-mode"
+  ]
+}

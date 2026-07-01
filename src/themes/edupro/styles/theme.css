@@ -1,0 +1,187 @@
+:root {
+  --edupro-bg: #f8fafc;
+  --edupro-card-bg: #ffffff;
+  --edupro-accent: #059669;
+  --edupro-accent-light: #ecfdf5;
+  --edupro-accent-blue: #3b82f6;
+  --edupro-accent-blue-light: #eff6ff;
+  --edupro-text: #0f172a;
+  --edupro-text-muted: #64748b;
+  --edupro-border: #e2e8f0;
+  --edupro-font: "Inter", system-ui, sans-serif;
+  --edupro-font-heading: "Merriweather", Georgia, serif;
+  --edupro-success: #10b981;
+  --edupro-warning: #f59e0b;
+  --edupro-gradient-start: #059669;
+  --edupro-gradient-end: #3b82f6;
+  --edupro-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --edupro-shadow-hover:
+    0 10px 30px rgba(0, 0, 0, 0.08), 0 4px 10px rgba(0, 0, 0, 0.04);
+  --edupro-radius: 0.75rem;
+}
+
+.dark {
+  --edupro-bg: #0f172a;
+  --edupro-card-bg: #1e293b;
+  --edupro-accent: #10b981;
+  --edupro-accent-light: #064e3b;
+  --edupro-accent-blue: #60a5fa;
+  --edupro-accent-blue-light: #1e3a5f;
+  --edupro-text: #e2e8f0;
+  --edupro-text-muted: #94a3b8;
+  --edupro-border: #334155;
+  --edupro-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.15);
+  --edupro-shadow-hover:
+    0 10px 30px rgba(0, 0, 0, 0.3), 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.edupro-gradient-text {
+  background: linear-gradient(
+    135deg,
+    var(--edupro-gradient-start),
+    var(--edupro-gradient-end)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.edupro-card {
+  background: var(--edupro-card-bg);
+  border: 1px solid var(--edupro-border);
+  border-radius: var(--edupro-radius);
+  box-shadow: var(--edupro-shadow);
+  transition: all 0.25s ease;
+}
+
+.edupro-card:hover {
+  box-shadow: var(--edupro-shadow-hover);
+  transform: translateY(-2px);
+}
+
+.edupro-course-card {
+  border-left: 3px solid var(--edupro-accent);
+}
+
+.edupro-course-card:hover {
+  border-left-color: var(--edupro-accent-blue);
+}
+
+.edupro-progress {
+  background: linear-gradient(
+    90deg,
+    var(--edupro-accent),
+    var(--edupro-accent-blue)
+  );
+  transition: width 0.6s ease;
+}
+
+.edupro-subject-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--edupro-accent-light);
+  color: var(--edupro-accent);
+  transition: all 0.2s ease;
+}
+
+.edupro-subject-badge:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+@keyframes edupro-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.edupro-fade-in {
+  animation: edupro-fade-in 0.4s ease forwards;
+}
+
+.edupro-divider {
+  border: none;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--edupro-accent),
+    transparent
+  );
+  opacity: 0.25;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--edupro-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--edupro-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--edupro-text-muted);
+}
+
+.edupro-card .group-hover {
+  transition: color 0.2s ease;
+}
+
+.group:hover .group-hover {
+  color: var(--edupro-accent);
+}
+
+.prose pre {
+  background: #0f172a !important;
+  border-radius: 0.5rem;
+  border: 1px solid var(--edupro-border);
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+
+.prose code {
+  font-size: 0.875em;
+  font-weight: 500;
+  padding: 0.2em 0.4em;
+  border-radius: 0.25rem;
+  background: var(--edupro-accent-light);
+}
+
+.prose blockquote {
+  font-style: normal;
+  font-weight: 500;
+  background: var(--edupro-accent-light);
+  padding: 0.75rem 1.25rem;
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.prose img {
+  border-radius: 0.5rem;
+  box-shadow: var(--edupro-shadow);
+}
+
+.prose a {
+  text-decoration: none;
+  border-bottom: 1px solid var(--edupro-accent);
+}
+
+.prose a:hover {
+  border-bottom-width: 2px;
+}

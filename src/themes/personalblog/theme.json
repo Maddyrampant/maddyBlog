@@ -1,0 +1,18 @@
+{
+  "name": "personalblog",
+  "version": "1.0.0",
+  "author": "maddyBlog",
+  "description": "PersonalBlog — a warm, minimal, typography-first theme for personal writers. Clean sans-serif body, elegant serif headings, soft colors, and plenty of whitespace.",
+  "previewImage": "/themes/personalblog/preview.png",
+  "supportedFeatures": [
+    "author-card",
+    "related-posts",
+    "sidebar",
+    "newsletter",
+    "search",
+    "categories",
+    "tags",
+    "reading-time",
+    "dark-mode"
+  ]
+}

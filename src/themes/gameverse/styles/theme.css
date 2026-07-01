@@ -1,0 +1,204 @@
+:root {
+  --gameverse-bg: #0f0a1a;
+  --gameverse-card-bg: #1a1230;
+  --gameverse-accent: #a855f7;
+  --gameverse-accent-light: #3b1f6e;
+  --gameverse-accent-glow: rgba(168, 85, 247, 0.25);
+  --gameverse-text: #e4e2ed;
+  --gameverse-text-muted: #8b7fac;
+  --gameverse-border: #2a1f45;
+  --gameverse-glass-bg: rgba(26, 18, 48, 0.85);
+  --gameverse-glass-border: rgba(168, 85, 247, 0.15);
+  --gameverse-neon-purple: #a855f7;
+  --gameverse-neon-cyan: #22d3ee;
+  --gameverse-neon-pink: #ec4899;
+  --gameverse-font: "Inter", system-ui, sans-serif;
+}
+
+.dark {
+  --gameverse-bg: #0f0a1a;
+  --gameverse-card-bg: #1a1230;
+  --gameverse-accent: #a855f7;
+  --gameverse-accent-light: #3b1f6e;
+  --gameverse-accent-glow: rgba(168, 85, 247, 0.25);
+  --gameverse-text: #e4e2ed;
+  --gameverse-text-muted: #8b7fac;
+  --gameverse-border: #2a1f45;
+  --gameverse-glass-bg: rgba(26, 18, 48, 0.85);
+  --gameverse-glass-border: rgba(168, 85, 247, 0.15);
+}
+
+.gameverse-gradient-text {
+  background: linear-gradient(
+    135deg,
+    var(--gameverse-neon-purple),
+    var(--gameverse-neon-cyan)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gameverse-glass {
+  background: var(--gameverse-glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--gameverse-glass-border);
+}
+
+.gameverse-card {
+  background: var(--gameverse-card-bg);
+  border: 1px solid var(--gameverse-border);
+  border-radius: 1rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.gameverse-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 1rem;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    transparent,
+    var(--gameverse-neon-purple),
+    transparent
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.gameverse-card:hover::before {
+  opacity: 1;
+}
+
+.gameverse-card:hover {
+  border-color: var(--gameverse-neon-purple);
+  box-shadow:
+    0 0 30px var(--gameverse-accent-glow),
+    0 8px 32px rgba(0, 0, 0, 0.3);
+  transform: translateY(-4px);
+}
+
+.gameverse-neon-glow {
+  box-shadow:
+    0 0 20px var(--gameverse-accent-glow),
+    0 0 40px rgba(168, 85, 247, 0.1);
+}
+
+.gameverse-badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-radius: 0.25rem;
+  background: linear-gradient(135deg, var(--gameverse-neon-pink), #7c3aed);
+  color: #fff;
+  box-shadow: 0 0 12px rgba(236, 72, 153, 0.4);
+}
+
+@keyframes gameverse-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.gameverse-fade-in {
+  animation: gameverse-fade-in 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes gameverse-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 12px var(--gameverse-accent-glow);
+  }
+  50% {
+    box-shadow:
+      0 0 30px var(--gameverse-accent-glow),
+      0 0 60px rgba(168, 85, 247, 0.15);
+  }
+}
+
+.gameverse-pulse {
+  animation: gameverse-pulse 2s ease-in-out infinite;
+}
+
+@keyframes gameverse-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.gameverse-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--gameverse-accent-glow) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: gameverse-shimmer 3s ease-in-out infinite;
+}
+
+.gameverse-divider {
+  border: none;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--gameverse-neon-purple),
+    var(--gameverse-neon-cyan),
+    transparent
+  );
+  opacity: 0.4;
+}
+
+.prose {
+  --tw-prose-body: var(--gameverse-text);
+  --tw-prose-headings: var(--gameverse-text);
+  --tw-prose-links: var(--gameverse-neon-purple);
+  --tw-prose-bold: var(--gameverse-text);
+  --tw-prose-quotes: var(--gameverse-text);
+  --tw-prose-quote-borders: var(--gameverse-neon-purple);
+  --tw-prose-code: var(--gameverse-neon-cyan);
+  --tw-prose-pre-bg: var(--gameverse-card-bg);
+  --tw-prose-hr: var(--gameverse-border);
+  --tw-prose-th-borders: var(--gameverse-border);
+  color: var(--gameverse-text);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--gameverse-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gameverse-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gameverse-neon-purple);
+}
