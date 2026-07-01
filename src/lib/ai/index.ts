@@ -1,5 +1,8 @@
 export { AIService, aiService } from "./service";
 export { OpenAIProvider } from "./openai";
+export { AnthropicProvider } from "./providers/anthropic";
+export { GeminiProvider } from "./providers/gemini";
+export { OllamaProvider } from "./providers/ollama";
 export { PromptTemplates } from "./prompts";
 export { AICostTracker, globalCostTracker } from "./cost-tracker";
 export { AICache, globalAICache } from "./cache";

@@ -46,6 +46,12 @@ const actions: AIAction[] = [
     endpoint: "/api/ai/generate-title",
     kind: "title",
   },
+  {
+    label: "Translate",
+    description: "Translate selected text",
+    endpoint: "/api/ai/translate",
+    kind: "replace",
+  },
 ];
 
 export default function AIActionMenu({ editor }: AIActionMenuProps) {
@@ -106,7 +112,15 @@ export default function AIActionMenu({ editor }: AIActionMenuProps) {
 
     const content = action.kind === "title" ? editor.getText() : selectedText;
 
-    if (action.kind === "replace") {
+    if (action.label === "Translate") {
+      const targetLanguage = prompt("Translate to language (e.g., persian, spanish, french, german):");
+      if (!targetLanguage) { setActiveAction(null); return; }
+      streamAI(action.endpoint, {
+        text: content,
+        targetLanguage: targetLanguage.toLowerCase().trim(),
+        action: "translate",
+      });
+    } else if (action.kind === "replace") {
       streamAI(action.endpoint, {
         text: content,
         action:

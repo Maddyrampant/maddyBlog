@@ -76,6 +76,7 @@ export function useAIStream(options: UseAIStreamOptions = {}) {
         } else {
           const result = await response.json();
           const text =
+            result.translatedText ??
             result.text ??
             result.title ??
             result.summary ??
