@@ -44,24 +44,25 @@ export default function AdminDashboard() {
     async function load() {
       try {
         const [postsRes, commentsRes, usersRes] = await Promise.all([
-          fetch("/api/posts"),
+          fetch("/api/admin/posts"),
           fetch("/api/comments?count=true"),
           fetch("/api/users"),
         ]);
-        const posts: PostSummary[] = await postsRes.json();
+        const body: { posts?: PostSummary[] } = await postsRes.json();
+        const posts: PostSummary[] = body.posts ?? [];
         const published = posts.filter((p) => p.status === "PUBLISHED").length;
         const draft = posts.length - published;
         const comments = commentsRes.ok
-          ? ((await commentsRes.json()).length ?? 0)
+          ? (((await commentsRes.json()) as { count?: number }).count ?? 0)
           : 0;
-        const users = usersRes.ok ? ((await usersRes.json()).length ?? 0) : 0;
+        const users: unknown[] = usersRes.ok ? await usersRes.json() : [];
         const views = posts.reduce((sum, p) => sum + (p.views || 0), 0);
         setStats({
           totalPosts: posts.length,
           publishedPosts: published,
           draftPosts: draft,
           totalComments: comments,
-          totalUsers: users,
+          totalUsers: users.length,
           totalViews: views,
         });
         setRecentPosts(posts.slice(0, 8));

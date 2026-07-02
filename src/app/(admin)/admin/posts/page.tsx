@@ -14,9 +14,10 @@ export default function AdminPostsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/posts")
+    fetch("/api/admin/posts")
       .then((r) => r.json())
-      .then(setPosts)
+      .then((data) => setPosts(data.posts ?? []))
+      .catch(() => setPosts([]))
       .finally(() => setLoading(false));
   }, []);
 

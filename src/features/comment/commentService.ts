@@ -2,6 +2,12 @@ import { commentRepository } from "./commentRepository";
 import { createCommentSchema } from "@/validations/comment";
 import type { Comment } from "@/generated/prisma/client";
 import { runHook } from "@/lib/plugin/hooksRunner";
+import {
+  notifyComment,
+  notifyMention,
+  parseMentions,
+} from "@/services/notificationHelper";
+import { prisma } from "@/lib/prisma";
 
 export type CommentWithAuthor = Comment & {
   author: { id: string; username: string };
@@ -30,18 +36,70 @@ function buildCommentTree(comments: CommentWithAuthor[]): CommentTreeNode[] {
 }
 
 export const commentService = {
-  async create(input: { content: string; postId: string; parentId?: string }, authorId: string) {
+  async create(
+    input: { content: string; postId: string; parentId?: string },
+    authorId: string,
+  ) {
     const data = createCommentSchema.parse(input);
 
-    const processed = await runHook("beforeCommentCreate", { ...data, authorId });
-    const hookResult = processed as { content: string; postId: string; parentId?: string; authorId: string } | null;
-    const finalData = hookResult || { content: data.content, postId: data.postId, parentId: data.parentId, authorId };
+    const processed = await runHook("beforeCommentCreate", {
+      ...data,
+      authorId,
+    });
+    const hookResult = processed as {
+      content: string;
+      postId: string;
+      parentId?: string;
+      authorId: string;
+    } | null;
+    const finalData = hookResult || {
+      content: data.content,
+      postId: data.postId,
+      parentId: data.parentId,
+      authorId,
+    };
 
     const comment = await commentRepository.create({
       content: finalData.content,
       postId: finalData.postId,
       authorId: finalData.authorId,
       parentId: finalData.parentId,
+    });
+
+    Promise.resolve().then(async () => {
+      try {
+        const post = await prisma.post.findUnique({
+          where: { id: finalData.postId },
+          select: { authorId: true, title: true },
+        });
+        if (post) {
+          await notifyComment(
+            post.authorId,
+            finalData.authorId,
+            "",
+            finalData.postId,
+            post.title,
+          );
+          const usernames = parseMentions(finalData.content);
+          if (usernames.length > 0) {
+            const mentionedUsers = await prisma.user.findMany({
+              where: { username: { in: usernames } },
+              select: { id: true, username: true },
+            });
+            for (const mu of mentionedUsers) {
+              await notifyMention(
+                mu.id,
+                finalData.authorId,
+                "",
+                finalData.postId,
+                post.title,
+              );
+            }
+          }
+        }
+      } catch {
+        /* background notification failure is non-critical */
+      }
     });
 
     await runHook("afterCommentCreated", comment);
@@ -55,6 +113,10 @@ export const commentService = {
 
   async getCount(slug: string) {
     return commentRepository.countByPostSlug(slug);
+  },
+
+  async getTotalCount() {
+    return commentRepository.countAll();
   },
 
   async delete(id: string) {

@@ -1,8 +1,14 @@
 import { prisma } from "@/lib/prisma";
 import { generateSlug } from "@/lib/slug";
-import { createPostSchema, updatePostSchema, type CreatePostInput, type UpdatePostInput } from "@/validations/postSchema";
+import {
+  createPostSchema,
+  updatePostSchema,
+  type CreatePostInput,
+  type UpdatePostInput,
+} from "@/validations/postSchema";
 import { postRepository } from "./postRepository";
 import { runHook } from "@/lib/plugin/hooksRunner";
+import { notifyPublish } from "@/services/notificationHelper";
 
 export const postService = {
   async create(input: CreatePostInput, authorId: string) {
@@ -26,7 +32,9 @@ export const postService = {
       include: {
         author: { select: { id: true, username: true } },
         category: { select: { id: true, name: true, slug: true } },
-        tags: { include: { tag: { select: { id: true, name: true, slug: true } } } },
+        tags: {
+          include: { tag: { select: { id: true, name: true, slug: true } } },
+        },
       },
     });
 
@@ -75,6 +83,29 @@ export const postService = {
       status: "PUBLISHED",
       publishedAt: new Date(),
     });
+
+    Promise.resolve().then(async () => {
+      try {
+        const followers = await prisma.follow.findMany({
+          where: { followingId: post.authorId },
+          select: { followerId: true },
+        });
+        if (followers.length > 0 && "title" in post) {
+          for (const f of followers) {
+            await notifyPublish(
+              f.followerId,
+              post.authorId,
+              "",
+              postId,
+              (post as { title: string }).title,
+            );
+          }
+        }
+      } catch {
+        /* background publish notification */
+      }
+    });
+
     await runHook("afterPostSave", post);
     return post;
   },

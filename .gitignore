@@ -44,3 +44,6 @@ next-env.d.ts
 
 # plugins (loaded at runtime)
 /plugins
+
+# opencode skills (local only)
+.opencode/

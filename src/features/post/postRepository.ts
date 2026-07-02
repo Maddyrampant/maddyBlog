@@ -15,7 +15,9 @@ export const postRepository = {
         include: {
           author: { select: { id: true, username: true } },
           category: { select: { id: true, name: true, slug: true } },
-          tags: { include: { tag: { select: { id: true, name: true, slug: true } } } },
+          tags: {
+            include: { tag: { select: { id: true, name: true, slug: true } } },
+          },
           _count: { select: { comments: true } },
         },
         orderBy: { createdAt: "desc" },
@@ -34,7 +36,9 @@ export const postRepository = {
       include: {
         author: { select: { id: true, username: true } },
         category: { select: { id: true, name: true, slug: true } },
-        tags: { include: { tag: { select: { id: true, name: true, slug: true } } } },
+        tags: {
+          include: { tag: { select: { id: true, name: true, slug: true } } },
+        },
         _count: { select: { comments: true } },
         comments: {
           where: { parentId: null },
@@ -57,13 +61,38 @@ export const postRepository = {
       include: {
         author: { select: { id: true, username: true } },
         category: { select: { id: true, name: true, slug: true } },
-        tags: { include: { tag: { select: { id: true, name: true, slug: true } } } },
+        tags: {
+          include: { tag: { select: { id: true, name: true, slug: true } } },
+        },
       },
     });
   },
 
   async update(id: string, data: Prisma.PostUpdateInput) {
     return prisma.post.update({ where: { id }, data });
+  },
+
+  async findAll(page = 1, pageSize = 50) {
+    const skip = (page - 1) * pageSize;
+
+    const [posts, total] = await Promise.all([
+      prisma.post.findMany({
+        include: {
+          author: { select: { id: true, username: true } },
+          category: { select: { id: true, name: true, slug: true } },
+          tags: {
+            include: { tag: { select: { id: true, name: true, slug: true } } },
+          },
+          _count: { select: { comments: true } },
+        },
+        orderBy: { createdAt: "desc" },
+        skip,
+        take: pageSize,
+      }),
+      prisma.post.count(),
+    ]);
+
+    return { posts, total };
   },
 
   async delete(id: string) {

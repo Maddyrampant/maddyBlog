@@ -8,6 +8,13 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const postSlug = searchParams.get("postSlug");
+    const countOnly = searchParams.get("count");
+
+    if (countOnly === "true") {
+      const total = await commentService.getTotalCount();
+      return Response.json({ count: total });
+    }
+
     if (!postSlug) {
       return Response.json(
         { error: "Missing postSlug query param" },

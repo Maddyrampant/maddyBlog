@@ -18,13 +18,18 @@ export default function NotificationBell() {
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    fetch("/api/notifications?pageSize=5")
-      .then((r) => r.json())
-      .then((data) => {
-        setNotifications(data.notifications || []);
-        setUnreadCount(data.unreadCount || 0);
-      })
-      .catch(() => {});
+    function fetchNotifs() {
+      fetch("/api/notifications?pageSize=5")
+        .then((r) => r.json())
+        .then((data) => {
+          setNotifications(data.notifications || []);
+          setUnreadCount(data.unreadCount || 0);
+        })
+        .catch(() => {});
+    }
+    fetchNotifs();
+    const interval = setInterval(fetchNotifs, 15_000);
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {

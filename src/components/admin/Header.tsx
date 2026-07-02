@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Search, Bell, ChevronDown, LogOut, User, Settings } from "lucide-react";
+import { Search, ChevronDown, LogOut, User, Settings } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslation, useI18n } from "@/i18n/provider";
 import LanguageSwitcher from "./LanguageSwitcher";
 import PluginInjector from "@/components/plugin/PluginInjector";
+import NotificationBell from "@/components/social/NotificationBell";
 
 export default function Header() {
   const router = useRouter();
@@ -16,7 +17,10 @@ export default function Header() {
   const [profileOpen, setProfileOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => { setMounted(true); }, []);
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   async function handleLogout() {
     try {
@@ -28,7 +32,10 @@ export default function Header() {
   }
 
   return (
-    <header className="admin-header flex items-center justify-between px-6" dir={mounted ? dir : "ltr"}>
+    <header
+      className="admin-header flex items-center justify-between px-6"
+      dir={mounted ? dir : "ltr"}
+    >
       <div className="flex items-center gap-4">
         <button
           onClick={() => setSearchOpen(!searchOpen)}
@@ -47,10 +54,7 @@ export default function Header() {
 
         <PluginInjector extensionPoint="header:right" />
 
-        <button className="relative p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
-          <Bell size={20} className="text-zinc-500 dark:text-zinc-400" />
-          <span className="notif-dot" />
-        </button>
+        <NotificationBell />
 
         <div className="relative">
           <button
@@ -58,16 +62,25 @@ export default function Header() {
             className="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
           >
             <div className="admin-avatar w-8 h-8 text-xs">A</div>
-            <div className={`text-left ${dir === "rtl" ? "text-right" : ""} hidden sm:block`}>
-              <p className="text-sm font-medium leading-tight">{t("header.admin")}</p>
-              <p className="text-[10px] text-zinc-400 dark:text-zinc-500 leading-tight">{t("header.administrator")}</p>
+            <div
+              className={`text-left ${dir === "rtl" ? "text-right" : ""} hidden sm:block`}
+            >
+              <p className="text-sm font-medium leading-tight">
+                {t("header.admin")}
+              </p>
+              <p className="text-[10px] text-zinc-400 dark:text-zinc-500 leading-tight">
+                {t("header.administrator")}
+              </p>
             </div>
             <ChevronDown size={14} className="text-zinc-400" />
           </button>
 
           {profileOpen && (
             <>
-              <div className="fixed inset-0 z-10" onClick={() => setProfileOpen(false)} />
+              <div
+                className="fixed inset-0 z-10"
+                onClick={() => setProfileOpen(false)}
+              />
               <div className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-zinc-900 rounded-xl shadow-lg border border-zinc-200 dark:border-zinc-800 py-2 z-20">
                 <div className="px-4 py-2 border-b border-zinc-100 dark:border-zinc-800">
                   <p className="text-sm font-medium">{t("header.admin")}</p>

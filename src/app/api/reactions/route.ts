@@ -8,6 +8,7 @@ import {
   AuthenticationError,
   ValidationError,
 } from "@/lib/errors";
+import { notifyReaction } from "@/services/notificationHelper";
 
 const reactionTypeEnum = z.enum(["LIKE", "FIRE", "CLAP"]);
 
@@ -64,6 +65,26 @@ export async function POST(request: NextRequest) {
         postId: parsed.data.postId,
         type: parsed.data.type,
       },
+    });
+
+    Promise.resolve().then(async () => {
+      try {
+        const post = await prisma.post.findUnique({
+          where: { id: parsed.data.postId },
+          select: { authorId: true },
+        });
+        if (post) {
+          await notifyReaction(
+            post.authorId,
+            session.userId,
+            "",
+            parsed.data.postId,
+            parsed.data.type,
+          );
+        }
+      } catch {
+        /* background reaction notification */
+      }
     });
 
     return Response.json(

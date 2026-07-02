@@ -23,7 +23,10 @@ export const commentRepository = {
   },
 
   async findByPostSlug(slug: string) {
-    const post = await prisma.post.findUnique({ where: { slug }, select: { id: true } });
+    const post = await prisma.post.findUnique({
+      where: { slug },
+      select: { id: true },
+    });
     if (!post) return [];
     return prisma.comment.findMany({
       where: { postId: post.id },
@@ -56,8 +59,15 @@ export const commentRepository = {
   },
 
   async countByPostSlug(slug: string) {
-    const post = await prisma.post.findUnique({ where: { slug }, select: { id: true } });
+    const post = await prisma.post.findUnique({
+      where: { slug },
+      select: { id: true },
+    });
     if (!post) return 0;
     return prisma.comment.count({ where: { postId: post.id } });
+  },
+
+  async countAll() {
+    return prisma.comment.count();
   },
 };
