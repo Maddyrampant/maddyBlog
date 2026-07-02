@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { Check, X, Settings, Trash2, Eye, Palette } from "lucide-react";
+import { Check, X, Settings, Trash2, Palette } from "lucide-react";
 
 type ThemeInfo = {
   name: string;
@@ -43,13 +43,16 @@ export default function ThemeManagerClient() {
         const data = await res.json();
         if (mounted) setThemes(data.themes);
       } catch (err) {
-        if (mounted) setError(err instanceof Error ? err.message : "Unknown error");
+        if (mounted)
+          setError(err instanceof Error ? err.message : "Unknown error");
       } finally {
         if (mounted) setLoading(false);
       }
     }
     load();
-    return () => { mounted = false; };
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const fetchThemes = useCallback(async () => {
@@ -77,7 +80,10 @@ export default function ThemeManagerClient() {
     }
   }
 
-  async function handleConfigure(name: string, config: Record<string, string | number | boolean>) {
+  async function handleConfigure(
+    name: string,
+    config: Record<string, string | number | boolean>,
+  ) {
     try {
       const res = await fetch("/api/themes", {
         method: "POST",
@@ -105,7 +111,9 @@ export default function ThemeManagerClient() {
       {error && (
         <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-700 dark:text-red-400 flex items-center justify-between">
           <span>{error}</span>
-          <button onClick={() => setError(null)} className="underline text-xs">Dismiss</button>
+          <button onClick={() => setError(null)} className="underline text-xs">
+            Dismiss
+          </button>
         </div>
       )}
 
@@ -120,10 +128,17 @@ export default function ThemeManagerClient() {
             <div className="p-6">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-4">
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-white ${
-                    theme.active ? "gradient-primary" : "bg-zinc-100 dark:bg-zinc-800"
-                  }`}>
-                    <Palette size={22} className={theme.active ? "text-white" : "text-zinc-400"} />
+                  <div
+                    className={`w-12 h-12 rounded-xl flex items-center justify-center text-white ${
+                      theme.active
+                        ? "gradient-primary"
+                        : "bg-zinc-100 dark:bg-zinc-800"
+                    }`}
+                  >
+                    <Palette
+                      size={22}
+                      className={theme.active ? "text-white" : "text-zinc-400"}
+                    />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
@@ -225,7 +240,10 @@ export default function ThemeManagerClient() {
 
       {themes.length === 0 && (
         <div className="admin-card p-12 text-center">
-          <Palette size={40} className="mx-auto text-zinc-200 dark:text-zinc-700 mb-4" />
+          <Palette
+            size={40}
+            className="mx-auto text-zinc-200 dark:text-zinc-700 mb-4"
+          />
           <p className="text-zinc-500 font-medium">No themes installed</p>
           <p className="text-sm text-zinc-400 mt-1">
             Install a theme to customize your blog appearance.
@@ -245,7 +263,9 @@ function ThemeConfigPanel({
   onSave: (config: Record<string, string | number | boolean>) => void;
   onClose: () => void;
 }) {
-  const [config, setConfig] = useState<Record<string, string | number | boolean>>({
+  const [config, setConfig] = useState<
+    Record<string, string | number | boolean>
+  >({
     ...theme.config,
   });
 
@@ -308,11 +328,17 @@ function ThemeConfigPanel({
       </div>
 
       <div className="flex items-center gap-2 mt-6 pt-4 border-t border-zinc-100 dark:border-zinc-800">
-        <button onClick={() => onSave(config)} className="admin-btn admin-btn-primary admin-btn-sm">
+        <button
+          onClick={() => onSave(config)}
+          className="admin-btn admin-btn-primary admin-btn-sm"
+        >
           <Check size={14} />
           Save Configuration
         </button>
-        <button onClick={onClose} className="admin-btn admin-btn-outline admin-btn-sm">
+        <button
+          onClick={onClose}
+          className="admin-btn admin-btn-outline admin-btn-sm"
+        >
           Cancel
         </button>
       </div>
@@ -360,7 +386,9 @@ function ConfigField({
             className="admin-input w-40 text-sm"
           >
             {field.options?.map((opt) => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
             ))}
           </select>
         </div>
@@ -375,9 +403,11 @@ function ConfigField({
               value ? "bg-theme-primary" : "bg-zinc-300 dark:bg-zinc-700"
             }`}
           >
-            <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-transform ${
-              value ? "translate-x-5" : ""
-            }`} />
+            <span
+              className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-transform ${
+                value ? "translate-x-5" : ""
+              }`}
+            />
           </button>
         </div>
       );
@@ -401,7 +431,9 @@ function ConfigField({
     default:
       return (
         <div>
-          <label className="text-sm font-medium block mb-1">{field.label}</label>
+          <label className="text-sm font-medium block mb-1">
+            {field.label}
+          </label>
           {field.description && (
             <p className="text-xs text-zinc-400 mb-1">{field.description}</p>
           )}

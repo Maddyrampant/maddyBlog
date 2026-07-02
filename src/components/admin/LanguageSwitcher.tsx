@@ -10,7 +10,10 @@ export default function LanguageSwitcher() {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => { setMounted(true); }, []);
+  useEffect(() => {
+    const id = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(id);
+  }, []);
 
   return (
     <div className="relative">
@@ -31,13 +34,20 @@ export default function LanguageSwitcher() {
             {locales.map((l) => (
               <button
                 key={l}
-                onClick={() => { setLocale(l); setOpen(false); }}
+                onClick={() => {
+                  setLocale(l);
+                  setOpen(false);
+                }}
                 className={`flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors ${
-                  locale === l ? "text-theme-primary font-medium" : "text-zinc-600 dark:text-zinc-400"
+                  locale === l
+                    ? "text-theme-primary font-medium"
+                    : "text-zinc-600 dark:text-zinc-400"
                 }`}
               >
                 <span>{localeNames[l]}</span>
-                {locale === l && <span className="ml-auto text-theme-primary">✓</span>}
+                {locale === l && (
+                  <span className="ml-auto text-theme-primary">✓</span>
+                )}
               </button>
             ))}
           </div>

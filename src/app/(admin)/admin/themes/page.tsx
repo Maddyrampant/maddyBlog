@@ -1,6 +1,5 @@
 import { getSession } from "@/lib/jwt";
 import { redirect } from "next/navigation";
-import { Palette } from "lucide-react";
 import ThemeManagerClient from "./ThemeManagerClient";
 import PageHeader from "@/components/admin/PageHeader";
 

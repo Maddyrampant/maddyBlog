@@ -117,7 +117,7 @@ export default function AdminPostsPage() {
                         >
                           {t("posts.edit")}
                         </Link>
-                        <DeleteButton id={post.id} title={post.title} />
+                        <DeleteButton id={post.id} />
                       </div>
                     </td>
                   </tr>

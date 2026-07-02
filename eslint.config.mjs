@@ -20,6 +20,9 @@ const eslintConfig = defineConfig([
     "src/stories/Header*",
     "src/stories/Page*",
     "src/stories/Configure.mdx",
+    // Agent / tooling config - not project source
+    ".opencode/**",
+    "**/.opencode/**",
   ]),
   ...storybook.configs["flat/recommended"]
 ]);

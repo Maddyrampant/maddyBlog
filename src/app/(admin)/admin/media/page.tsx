@@ -1,7 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Image, Upload, File, Copy, Check, Trash2 } from "lucide-react";
+import {
+  Image as ImageIcon,
+  Upload,
+  File,
+  Copy,
+  Check,
+  Trash2,
+} from "lucide-react";
 import PageHeader from "@/components/admin/PageHeader";
 import { useTranslation } from "@/i18n/provider";
 
@@ -23,7 +30,9 @@ export default function MediaPage() {
   useEffect(() => {
     fetch("/api/media")
       .then((r) => r.ok && r.json())
-      .then((data) => { if (data) setMedia(data); })
+      .then((data) => {
+        if (data) setMedia(data);
+      })
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
@@ -35,16 +44,22 @@ export default function MediaPage() {
     const formData = new FormData();
     formData.append("file", file);
     try {
-      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
       if (res.ok) {
         const data = await res.json();
-        setMedia((prev) => [{
-          url: data.url,
-          name: file.name,
-          size: file.size,
-          type: file.type,
-          uploadedAt: new Date().toISOString(),
-        }, ...prev]);
+        setMedia((prev) => [
+          {
+            url: data.url,
+            name: file.name,
+            size: file.size,
+            type: file.type,
+            uploadedAt: new Date().toISOString(),
+          },
+          ...prev,
+        ]);
       }
     } catch {
       /* ignore */
@@ -83,7 +98,12 @@ export default function MediaPage() {
           <label className="admin-btn admin-btn-primary cursor-pointer">
             <Upload size={16} />
             {t("media.upload")}
-            <input type="file" className="hidden" onChange={handleUpload} accept="image/*" />
+            <input
+              type="file"
+              className="hidden"
+              onChange={handleUpload}
+              accept="image/*"
+            />
           </label>
         }
       />
@@ -101,7 +121,10 @@ export default function MediaPage() {
         </div>
       ) : media.length === 0 ? (
         <div className="admin-card p-12 text-center">
-          <Image size={40} className="mx-auto text-zinc-200 dark:text-zinc-700 mb-4" />
+          <ImageIcon
+            size={40}
+            className="mx-auto text-zinc-200 dark:text-zinc-700 mb-4"
+          />
           <p className="text-zinc-500 font-medium">{t("media.noMedia")}</p>
           <p className="text-sm text-zinc-400 mt-1">{t("media.dropHint")}</p>
         </div>
@@ -111,7 +134,11 @@ export default function MediaPage() {
             <div key={i} className="admin-card overflow-hidden group">
               <div className="aspect-square bg-zinc-100 dark:bg-zinc-800 relative overflow-hidden">
                 {item.type.startsWith("image/") ? (
-                  <img src={item.url} alt={item.name} className="w-full h-full object-cover" />
+                  <img
+                    src={item.url}
+                    alt={item.name}
+                    className="w-full h-full object-cover"
+                  />
                 ) : (
                   <div className="flex items-center justify-center h-full">
                     <File size={32} className="text-zinc-300" />
@@ -123,7 +150,11 @@ export default function MediaPage() {
                     className="p-2 bg-white rounded-full shadow-lg hover:scale-110 transition-transform"
                     title="Copy URL"
                   >
-                    {copied === item.url ? <Check size={14} className="text-green-600" /> : <Copy size={14} />}
+                    {copied === item.url ? (
+                      <Check size={14} className="text-green-600" />
+                    ) : (
+                      <Copy size={14} />
+                    )}
                   </button>
                   <button
                     onClick={() => handleDelete(item.url)}
@@ -136,7 +167,9 @@ export default function MediaPage() {
               </div>
               <div className="p-2.5">
                 <p className="text-xs truncate font-medium">{item.name}</p>
-                <p className="text-[10px] text-zinc-400 mt-0.5">{formatSize(item.size)}</p>
+                <p className="text-[10px] text-zinc-400 mt-0.5">
+                  {formatSize(item.size)}
+                </p>
               </div>
             </div>
           ))}

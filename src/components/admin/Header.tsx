@@ -17,9 +17,9 @@ export default function Header() {
   const [profileOpen, setProfileOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
-  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => {
-    setMounted(true);
+    const id = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(id);
   }, []);
 
   async function handleLogout() {

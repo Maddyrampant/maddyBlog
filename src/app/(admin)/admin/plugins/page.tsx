@@ -1,6 +1,5 @@
 import { getSession } from "@/lib/jwt";
 import { redirect } from "next/navigation";
-import { Puzzle } from "lucide-react";
 import PluginManagerClient from "./PluginManagerClient";
 import PageHeader from "@/components/admin/PageHeader";
 

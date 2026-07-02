@@ -10,7 +10,6 @@ type AuthorCardProps = {
 export default function NewsWireAuthorCard({
   username,
   bio,
-  avatarUrl,
   website,
 }: AuthorCardProps) {
   return (

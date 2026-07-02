@@ -2,9 +2,15 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Shield, ArrowUpDown } from "lucide-react";
+import { ArrowUpDown } from "lucide-react";
 
-export default function UserRoleButton({ userId, currentRole }: { userId: string; currentRole: string }) {
+export default function UserRoleButton({
+  userId,
+  currentRole,
+}: {
+  userId: string;
+  currentRole: string;
+}) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
